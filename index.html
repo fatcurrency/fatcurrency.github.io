@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>核医学图像处理 - 专业简介</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            animation: float 6s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0); opacity: 0.3; }
+            50% { transform: translateY(-30px) translateX(20px); opacity: 0.6; }
+        }
+
+        header {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 80px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .language-switch {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .lang-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .lang-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .lang-btn.active {
+            background: rgba(255, 255, 255, 0.9);
+            color: #667eea;
+        }
+
+        h1 {
+            font-size: 3em;
+            color: white;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            animation: fadeInDown 1s ease-out;
+        }
+
+        .subtitle {
+            font-size: 1.3em;
+            color: rgba(255, 255, 255, 0.9);
+            animation: fadeInUp 1s ease-out 0.3s both;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .container {
+            position: relative;
+            z-index: 10;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            animation: slideIn 0.6s ease-out backwards;
+        }
+
+        .card:nth-child(1) { animation-delay: 0.1s; }
+        .card:nth-child(2) { animation-delay: 0.2s; }
+        .card:nth-child(3) { animation-delay: 0.3s; }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            margin-right: 20px;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        h2 {
+            font-size: 2em;
+            color: #667eea;
+            flex: 1;
+        }
+
+        .content {
+            line-height: 1.8;
+            color: #555;
+        }
+
+        .content h3 {
+            font-size: 1.4em;
+            color: #764ba2;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .content h3:before {
+            content: "▸";
+            margin-right: 10px;
+            color: #667eea;
+        }
+
+        .content p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+        
+        .content ul {
+            margin-bottom: 15px;
+            padding-left: 30px;
+        }
+        
+        .content li {
+            margin-bottom: 10px;
+            line-height: 1.8;
+        }
+        
+        .content a {
+            color: #667eea;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .content a:hover {
+            color: #764ba2;
+            text-decoration: underline;
+        }
+
+        .profile-image-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .profile-image {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #667eea;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            transition: transform 0.3s ease;
+        }
+
+        .profile-image:hover {
+            transform: scale(1.05);
+        }
+
+        .highlight {
+            background: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 4px solid #667eea;
+        }
+
+        .tech-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .tag {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            transition: transform 0.2s ease;
+        }
+
+        .tag:hover {
+            transform: scale(1.1);
+        }
+
+        footer {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 40px 20px;
+            background: rgba(0, 0, 0, 0.3);
+            color: white;
+            backdrop-filter: blur(10px);
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            h1 { font-size: 2em; }
+            .subtitle { font-size: 1em; }
+            .card { padding: 25px; }
+            h2 { font-size: 1.5em; }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles" id="particles"></div>
+
+    <header>
+        <div class="language-switch" id="languageSwitch">
+            <button class="lang-btn active" data-lang="en">EN</button>
+            <button class="lang-btn" data-lang="zh">中文</button>
+        </div>
+        <h1 data-translate="title">核医学图像处理</h1>
+        <p class="subtitle" data-translate="subtitle">Nuclear Medicine Image Processing & Analysis</p>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <div class="icon">👤</div>
+                <h2 data-translate="profile_title">个人简介</h2>
+            </div>
+            <div class="content">
+                <div class="profile-image-container">
+                    <img src="img/louis-pic.PNG" alt="Profile Image" class="profile-image">
+                </div>
+                <p data-translate="profile_name">姓名：卢逸君</p>
+                <p data-translate="profile_email">邮箱：fatcoin@smu.edu.cn</p>
+                <p data-translate="profile_github">GitHub：<a href="https://github.com/fatcurrency" target="_blank">https://github.com/fatcurrency</a></p>
+                
+                <h3 data-translate="profile_education">教育经历</h3>
+                <ul>
+                    <li data-translate="profile_edu1">广东工业大学大学 - 本科（自动化）</li>
+                    <li data-translate="profile_edu2">南方医科大学 - 硕士（生物医学工程）</li>
+                    <li data-translate="profile_edu3">广东省人民医院 - 核医学科技师</li>
+                </ul>
+                
+                <h3 data-translate="profile_research">研究方向</h3>
+                <p data-translate="profile_research_desc">核医学图像处理，三维可视化</p>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <div class="icon">🫀</div>
+                <h2 data-translate="card1_title">PET/SPECT 心肌成像</h2>
+            </div>
+            <div class="content">
+                <p data-translate="card1_desc">专注于心脏核医学成像技术的研究与应用，致力于通过先进的图像处理方法提升心血管疾病的诊断精度。</p>
+                
+                <h3 data-translate="card1_h3_1">心肌灌注显像</h3>
+                <p data-translate="card1_p_1">利用SPECT技术进行心肌血流灌注评估，通过放射性示踪剂的分布模式识别心肌缺血区域。我们开发了自动化分割算法，能够精确量化心肌各段的摄取值，生成17段或20段心肌灌注图谱，为冠心病的诊断提供客观依据。</p>
+                
+                <div class="highlight">
+                    <strong data-translate="key_tech">关键技术：</strong><span data-translate="card1_keytech">门控SPECT成像、应力-静息对比分析、左心室功能参数自动提取（射血分数、室壁运动、心肌厚度变化）</span>
+                </div>
+
+                <h3 data-translate="card1_h3_2">心肌代谢显像</h3>
+                <p data-translate="card1_p_2">应用PET技术进行心肌代谢评估，特别是18F-FDG心肌代谢显像。通过分析葡萄糖代谢模式，鉴别存活心肌与坏死心肌，为心肌梗死后的血运重建决策提供重要信息。结合灌注-代谢匹配分析，实现心肌存活性的精准评估。</p>
+
+                <div class="tech-tags">
+                    <span class="tag" data-translate="tag_spect">SPECT成像</span>
+                    <span class="tag" data-translate="tag_pet_metabolic">PET代谢显像</span>
+                    <span class="tag" data-translate="tag_myocardial_segmentation">心肌分段分析</span>
+                    <span class="tag" data-translate="tag_perfusion_metabolic">灌注-代谢匹配</span>
+                    <span class="tag" data-translate="tag_viable_myocardium">存活心肌评估</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <div class="icon">📊</div>
+                <h2 data-translate="card2_title">核医学动力学模型分析</h2>
+            </div>
+            <div class="content">
+                <p data-translate="card2_desc">深入研究放射性示踪剂在体内的动态分布过程，通过数学建模方法定量分析生理和病理状态。</p>
+                
+                <h3 data-translate="card2_h3_1">动态PET成像分析</h3>
+                <p data-translate="card2_p_1">开发基于时间-活度曲线（TAC）的动力学建模工具，实现对示踪剂摄取、分布和清除过程的定量描述。应用房室模型（如Patlak模型、Logan模型）计算关键动力学参数，包括代谢速率、血流量、分布容积等。</p>
+
+                <div class="highlight">
+                    <strong data-translate="application_area">应用领域：</strong><span data-translate="card2_application">肿瘤代谢分析、脑功能成像、心肌血流储备评估、肾小球滤过率测定</span>
+                </div>
+
+                <h3 data-translate="card2_h3_2">参数成像技术</h3>
+                <p data-translate="card2_p_2">将动力学参数以图像形式呈现，生成参数图（Parametric Images），使复杂的生理参数可视化。通过像素级建模，获得组织功能的空间分布信息，提高病灶检出的敏感性和特异性。</p>
+
+                <h3 data-translate="card2_h3_3">输入函数优化</h3>
+                <p data-translate="card2_p_3">研究图像衍生输入函数（IDIF）提取技术，减少动脉采血需求。开发自动化血池分割算法，提取准确的动脉血时间-活度曲线，为动力学建模提供可靠的输入数据。</p>
+
+                <div class="tech-tags">
+                    <span class="tag" data-translate="tag_compartment_model">房室模型</span>
+                    <span class="tag" data-translate="tag_patlak">Patlak分析</span>
+                    <span class="tag" data-translate="tag_parametric_imaging">参数成像</span>
+                    <span class="tag" data-translate="tag_tac">时间-活度曲线</span>
+                    <span class="tag" data-translate="tag_dynamic_pet">动态PET</span>
+                    <span class="tag" data-translate="tag_quantitative_analysis">定量分析</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <div class="icon">🔬</div>
+                <h2 data-translate="card3_title">多模态医学图像融合</h2>
+            </div>
+            <div class="content">
+                <p data-translate="card3_desc">整合不同成像模态的优势，实现解剖与功能信息的完美结合，为精准诊断和治疗规划提供全面支持。</p>
+                
+                <h3 data-translate="card3_h3_1">PET/CT与SPECT/CT融合</h3>
+                <p data-translate="card3_p_1">开发高精度图像配准算法，实现核医学功能图像与CT解剖图像的精确叠加。通过衰减校正和散射校正，提升PET/SPECT图像质量。构建三维可视化平台，支持多平面重建（MPR）、最大密度投影（MIP）和容积再现（VR）。</p>
+
+                <div class="highlight">
+                    <strong data-translate="tech_highlights">技术亮点：</strong><span data-translate="card3_highlights">刚性/非刚性配准算法、自动化器官分割、病灶自动检测与量化、标准化摄取值（SUV）计算</span>
+                </div>
+
+                <h3 data-translate="card3_h3_2">多模态数据整合</h3>
+                <p data-translate="card3_p_2">融合PET、SPECT、CT、MRI等多种影像数据，建立综合性诊断框架。利用MRI的软组织对比度优势与PET的代谢信息，实现肿瘤边界的精确界定。在心脏成像中，结合CT冠脉造影与核医学灌注显像，实现解剖-功能一体化评估。</p>
+
+                <h3 data-translate="card3_h3_3">三维可视化与报告生成</h3>
+                <p data-translate="card3_p_3">构建交互式三维可视化系统，支持任意角度的图像浏览、测量和标注。开发智能化报告生成工具，自动提取关键参数，生成标准化诊断报告，提高工作效率和报告质量的一致性。</p>
+
+                <h3 data-translate="card3_h3_4">AI辅助诊断</h3>
+                <p data-translate="card3_p_4">应用深度学习技术进行图像增强、病灶检测和疾病分类。训练卷积神经网络模型，实现肺结节、淋巴结、骨转移灶等病变的自动识别。通过多模态特征融合，提升诊断的准确性和鲁棒性。</p>
+
+                <div class="tech-tags">
+                    <span class="tag" data-translate="tag_pet_ct_fusion">PET/CT融合</span>
+                    <span class="tag" data-translate="tag_image_registration">图像配准</span>
+                    <span class="tag" data-translate="tag_3d_visualization">三维可视化</span>
+                    <span class="tag" data-translate="tag_deep_learning">深度学习</span>
+                    <span class="tag" data-translate="tag_auto_segmentation">自动分割</span>
+                    <span class="tag" data-translate="tag_ai_diagnosis">AI辅助诊断</span>
+                    <span class="tag" data-translate="tag_mpr">多平面重建</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p data-translate="footer_copyright">&copy; 2025 核医学图像处理研究 | Nuclear Medicine Image Processing</p>
+        <p style="margin-top: 10px; opacity: 0.8;" data-translate="footer_mission">致力于推动核医学成像技术的发展与临床应用</p>
+    </footer>
+
+    <script>
+        // 创建粒子动画
+        const particlesContainer = document.getElementById('particles');
+        const particleCount = 50;
+
+        for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            const size = Math.random() * 4 + 2;
+            particle.style.width = size + 'px';
+            particle.style.height = size + 'px';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.top = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 6 + 's';
+            particle.style.animationDuration = (Math.random() * 4 + 4) + 's';
+            particlesContainer.appendChild(particle);
+        }
+
+        // 卡片悬浮效果增强
+        const cards = document.querySelectorAll('.card');
+        cards.forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                card.style.transform = 'translateY(-5px)';
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(0)';
+            });
+        });
+
+        // 中英文翻译映射
+        const translations = {
+            en: {
+                title: "Nuclear Medicine Image Processing",
+                subtitle: "Nuclear Medicine Image Processing & Analysis",
+                profile_title: "Personal Profile",
+                profile_name: "Name: Lu Yijun",
+                profile_email: "Email: fatcoin@smu.edu.cn",
+                profile_github: "GitHub: <a href=\"https://github.com/fatcurrency\" target=\"_blank\">https://github.com/fatcurrency</a>",
+                profile_education: "Education",
+                profile_edu1: "Guangdong University of Technology - Bachelor (Automation)",
+                profile_edu2: "Southern Medical University - Master (Biomedical Engineering)",
+                profile_edu3: "Guangdong Provincial People's Hospital - Nuclear Medicine Technologist",
+                profile_research: "Research Interests",
+                profile_research_desc: "Nuclear medicine image processing, 3D visualization",
+                card1_title: "PET/SPECT Myocardial Imaging",
+                card1_desc: "Focused on the research and application of cardiac nuclear medicine imaging technology, committed to improving the diagnostic accuracy of cardiovascular diseases through advanced image processing methods.",
+                card1_h3_1: "Myocardial Perfusion Imaging",
+                card1_p_1: "Using SPECT technology for myocardial blood flow perfusion assessment, identifying myocardial ischemia areas through the distribution pattern of radiotracers. We have developed automated segmentation algorithms that can accurately quantify the uptake values of each myocardial segment, generating 17-segment or 20-segment myocardial perfusion maps to provide objective basis for the diagnosis of coronary heart disease.",
+                key_tech: "Key Technologies:",
+                card1_keytech: "Gated SPECT imaging, stress-rest comparison analysis, automatic extraction of left ventricular function parameters (ejection fraction, wall motion, myocardial thickness changes)",
+                card1_h3_2: "Myocardial Metabolism Imaging",
+                card1_p_2: "Applying PET technology for myocardial metabolism assessment, especially 18F-FDG myocardial metabolism imaging. By analyzing glucose metabolism patterns, we can differentiate between viable and necrotic myocardium, providing important information for revascularization decisions after myocardial infarction. Combined with perfusion-metabolism matching analysis, we achieve precise assessment of myocardial viability.",
+                tag_spect: "SPECT Imaging",
+                tag_pet_metabolic: "PET Metabolic Imaging",
+                tag_myocardial_segmentation: "Myocardial Segmentation Analysis",
+                tag_perfusion_metabolic: "Perfusion-Metabolism Matching",
+                tag_viable_myocardium: "Viable Myocardium Assessment",
+                
+                card2_title: "Nuclear Medicine Kinetic Model Analysis",
+                card2_desc: "In-depth study of the dynamic distribution process of radiotracers in the body, quantitative analysis of physiological and pathological states through mathematical modeling methods.",
+                card2_h3_1: "Dynamic PET Imaging Analysis",
+                card2_p_1: "Developing kinetic modeling tools based on Time-Activity Curves (TAC) to achieve quantitative description of tracer uptake, distribution, and clearance processes. Applying compartment models (such as Patlak model, Logan model) to calculate key kinetic parameters, including metabolic rate, blood flow, distribution volume, etc.",
+                application_area: "Application Areas:",
+                card2_application: "Tumor metabolism analysis, brain function imaging, myocardial blood flow reserve assessment, glomerular filtration rate measurement",
+                card2_h3_2: "Parametric Imaging Technology",
+                card2_p_2: "Presenting kinetic parameters in image form, generating Parametric Images to visualize complex physiological parameters. Through pixel-level modeling, we obtain spatial distribution information of tissue function, improving the sensitivity and specificity of lesion detection.",
+                card2_h3_3: "Input Function Optimization",
+                card2_p_3: "Researching Image-Derived Input Function (IDIF) extraction technology to reduce the need for arterial blood sampling. Developing automated blood pool segmentation algorithms to extract accurate arterial blood Time-Activity Curves, providing reliable input data for kinetic modeling.",
+                tag_compartment_model: "Compartment Model",
+                tag_patlak: "Patlak Analysis",
+                tag_parametric_imaging: "Parametric Imaging",
+                tag_tac: "Time-Activity Curve",
+                tag_dynamic_pet: "Dynamic PET",
+                tag_quantitative_analysis: "Quantitative Analysis",
+                
+                card3_title: "Multimodal Medical Image Fusion",
+                card3_desc: "Integrating the advantages of different imaging modalities to achieve the perfect combination of anatomical and functional information, providing comprehensive support for precise diagnosis and treatment planning.",
+                card3_h3_1: "PET/CT and SPECT/CT Fusion",
+                card3_p_1: "Developing high-precision image registration algorithms to achieve precise overlay of nuclear medicine functional images and CT anatomical images. Improving PET/SPECT image quality through attenuation correction and scatter correction. Building a 3D visualization platform supporting multi-planar reconstruction (MPR), maximum intensity projection (MIP), and volume rendering (VR).",
+                tech_highlights: "Technical Highlights:",
+                card3_highlights: "Rigid/non-rigid registration algorithms, automated organ segmentation, automatic lesion detection and quantification, standardized uptake value (SUV) calculation",
+                card3_h3_2: "Multimodal Data Integration",
+                card3_p_2: "Fusing multiple imaging data such as PET, SPECT, CT, MRI to establish a comprehensive diagnostic framework. Utilizing the soft tissue contrast advantage of MRI and metabolic information of PET to achieve precise definition of tumor boundaries. In cardiac imaging, combining CT coronary angiography with nuclear medicine perfusion imaging to achieve integrated anatomical-functional assessment.",
+                card3_h3_3: "3D Visualization and Report Generation",
+                card3_p_3: "Building an interactive 3D visualization system supporting image browsing, measurement, and annotation from any angle. Developing intelligent report generation tools to automatically extract key parameters and generate standardized diagnostic reports, improving work efficiency and report quality consistency.",
+                card3_h3_4: "AI-Assisted Diagnosis",
+                card3_p_4: "Applying deep learning technology for image enhancement, lesion detection, and disease classification. Training convolutional neural network models to achieve automatic identification of lung nodules, lymph nodes, bone metastases, etc. Through multimodal feature fusion, improving the accuracy and robustness of diagnosis.",
+                tag_pet_ct_fusion: "PET/CT Fusion",
+                tag_image_registration: "Image Registration",
+                tag_3d_visualization: "3D Visualization",
+                tag_deep_learning: "Deep Learning",
+                tag_auto_segmentation: "Automatic Segmentation",
+                tag_ai_diagnosis: "AI-Assisted Diagnosis",
+                tag_mpr: "Multi-Planar Reconstruction",
+                
+                footer_copyright: "© 2025 Nuclear Medicine Image Processing Research | Nuclear Medicine Image Processing",
+                footer_mission: "Committed to promoting the development and clinical application of nuclear medicine imaging technology"
+            },
+            zh: {
+                title: "核医学图像处理",
+                subtitle: "Nuclear Medicine Image Processing & Analysis",
+                profile_title: "个人简介",
+                profile_name: "姓名：卢逸君",
+                profile_email: "邮箱：fatcoin.smu.edu.cn",
+                profile_github: "GitHub：<a href=\"https://github.com/fatcurrency\" target=\"_blank\">https://github.com/fatcurrency</a>",
+                profile_education: "教育经历",
+                profile_edu1: "广东工业大学 - 本科（自动化）",
+                profile_edu2: "南方医科大学 - 硕士（生物医学工程）",
+                profile_edu3: "广东省人民医院 - 核医学科技师",
+                profile_research: "研究方向",
+                profile_research_desc: "核医学图像处理，三维可视化",
+                card1_title: "PET/SPECT 心肌成像",
+                card1_desc: "专注于心脏核医学成像技术的研究与应用，致力于通过先进的图像处理方法提升心血管疾病的诊断精度。",
+                card1_h3_1: "心肌灌注显像",
+                card1_p_1: "利用SPECT技术进行心肌血流灌注评估，通过放射性示踪剂的分布模式识别心肌缺血区域。我们开发了自动化分割算法，能够精确量化心肌各段的摄取值，生成17段或20段心肌灌注图谱，为冠心病的诊断提供客观依据。",
+                key_tech: "关键技术：",
+                card1_keytech: "门控SPECT成像、应力-静息对比分析、左心室功能参数自动提取（射血分数、室壁运动、心肌厚度变化）",
+                card1_h3_2: "心肌代谢显像",
+                card1_p_2: "应用PET技术进行心肌代谢评估，特别是18F-FDG心肌代谢显像。通过分析葡萄糖代谢模式，鉴别存活心肌与坏死心肌，为心肌梗死后的血运重建决策提供重要信息。结合灌注-代谢匹配分析，实现心肌存活性的精准评估。",
+                tag_spect: "SPECT成像",
+                tag_pet_metabolic: "PET代谢显像",
+                tag_myocardial_segmentation: "心肌分段分析",
+                tag_perfusion_metabolic: "灌注-代谢匹配",
+                tag_viable_myocardium: "存活心肌评估",
+                
+                card2_title: "核医学动力学模型分析",
+                card2_desc: "深入研究放射性示踪剂在体内的动态分布过程，通过数学建模方法定量分析生理和病理状态。",
+                card2_h3_1: "动态PET成像分析",
+                card2_p_1: "开发基于时间-活度曲线（TAC）的动力学建模工具，实现对示踪剂摄取、分布和清除过程的定量描述。应用房室模型（如Patlak模型、Logan模型）计算关键动力学参数，包括代谢速率、血流量、分布容积等。",
+                application_area: "应用领域：",
+                card2_application: "肿瘤代谢分析、脑功能成像、心肌血流储备评估、肾小球滤过率测定",
+                card2_h3_2: "参数成像技术",
+                card2_p_2: "将动力学参数以图像形式呈现，生成参数图（Parametric Images），使复杂的生理参数可视化。通过像素级建模，获得组织功能的空间分布信息，提高病灶检出的敏感性和特异性。",
+                card2_h3_3: "输入函数优化",
+                card2_p_3: "研究图像衍生输入函数（IDIF）提取技术，减少动脉采血需求。开发自动化血池分割算法，提取准确的动脉血时间-活度曲线，为动力学建模提供可靠的输入数据。",
+                tag_compartment_model: "房室模型",
+                tag_patlak: "Patlak分析",
+                tag_parametric_imaging: "参数成像",
+                tag_tac: "时间-活度曲线",
+                tag_dynamic_pet: "动态PET",
+                tag_quantitative_analysis: "定量分析",
+                
+                card3_title: "多模态医学图像融合",
+                card3_desc: "整合不同成像模态的优势，实现解剖与功能信息的完美结合，为精准诊断和治疗规划提供全面支持。",
+                card3_h3_1: "PET/CT与SPECT/CT融合",
+                card3_p_1: "开发高精度图像配准算法，实现核医学功能图像与CT解剖图像的精确叠加。通过衰减校正和散射校正，提升PET/SPECT图像质量。构建三维可视化平台，支持多平面重建（MPR）、最大密度投影（MIP）和容积再现（VR）。",
+                tech_highlights: "技术亮点：",
+                card3_highlights: "刚性/非刚性配准算法、自动化器官分割、病灶自动检测与量化、标准化摄取值（SUV）计算",
+                card3_h3_2: "多模态数据整合",
+                card3_p_2: "融合PET、SPECT、CT、MRI等多种影像数据，建立综合性诊断框架。利用MRI的软组织对比度优势与PET的代谢信息，实现肿瘤边界的精确界定。在心脏成像中，结合CT冠脉造影与核医学灌注显像，实现解剖-功能一体化评估。",
+                card3_h3_3: "三维可视化与报告生成",
+                card3_p_3: "构建交互式三维可视化系统，支持任意角度的图像浏览、测量和标注。开发智能化报告生成工具，自动提取关键参数，生成标准化诊断报告，提高工作效率和报告质量的一致性。",
+                card3_h3_4: "AI辅助诊断",
+                card3_p_4: "应用深度学习技术进行图像增强、病灶检测和疾病分类。训练卷积神经网络模型，实现肺结节、淋巴结、骨转移灶等病变的自动识别。通过多模态特征融合，提升诊断的准确性和鲁棒性。",
+                tag_pet_ct_fusion: "PET/CT融合",
+                tag_image_registration: "图像配准",
+                tag_3d_visualization: "三维可视化",
+                tag_deep_learning: "深度学习",
+                tag_auto_segmentation: "自动分割",
+                tag_ai_diagnosis: "AI辅助诊断",
+                tag_mpr: "多平面重建",
+                
+                footer_copyright: "© 2025 核医学图像处理研究 | Nuclear Medicine Image Processing",
+                footer_mission: "致力于推动核医学成像技术的发展与临床应用"
+            }
+        };
+
+        // 切换语言函数
+        function switchLanguage(lang) {
+            // 更新按钮状态
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`[data-lang="${lang}"]`).classList.add('active');
+            
+            // 更新所有带data-translate属性的元素
+            document.querySelectorAll('[data-translate]').forEach(element => {
+                const key = element.getAttribute('data-translate');
+                if (translations[lang][key]) {
+                    // 检查内容是否包含HTML标签，使用innerHTML支持HTML内容
+                    element.innerHTML = translations[lang][key];
+                }
+            });
+        }
+
+        // 初始化语言切换按钮事件
+        const languageSwitch = document.getElementById('languageSwitch');
+        languageSwitch.addEventListener('click', (e) => {
+            if (e.target.classList.contains('lang-btn')) {
+                const lang = e.target.getAttribute('data-lang');
+                switchLanguage(lang);
+            }
+        });
+
+        // 初始化为英文
+        switchLanguage('en');
+
+        // 平滑滚动效果
+        document.addEventListener('DOMContentLoaded', () => {
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -100px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+
+            cards.forEach(card => {
+                observer.observe(card);
+            });
+        });
+    </script>
+</body>
+</html>
