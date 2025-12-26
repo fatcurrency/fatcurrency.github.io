@@ -11,6 +11,33 @@
             box-sizing: border-box;
         }
 
+        .main-nav {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .main-nav ul {
+            list-style: none;
+            display: inline-flex;
+            gap: 30px;
+            padding: 0;
+        }
+        .main-nav li {
+            display: inline;
+        }
+        .main-nav a {
+            color: #fff;
+            font-size: 1.1em;
+            text-decoration: none;
+            padding: 8px 18px;
+            border-radius: 18px;
+            transition: background 0.2s, color 0.2s;
+            background: rgba(102, 126, 234, 0.2);
+        }
+        .main-nav a:hover, .main-nav a.active {
+            background: #fff;
+            color: #667eea;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -309,6 +336,15 @@
         </div>
         <h1 data-translate="title">核医学图像处理</h1>
         <p class="subtitle" data-translate="subtitle">Nuclear Medicine Image Processing & Analysis</p>
+        <nav class="main-nav">
+            <ul>
+                <li><a href="index.html">主页</a></li>
+                <li><a href="toolbox.html">工具箱</a></li>
+                <li><a href="ect.html">ECT检查</a></li>
+                <li><a href="pet.html">PET检查</a></li>
+                <li><a href="visualization.html">可视化</a></li>
+            </ul>
+        </nav>
     </header>
 
     <div class="container">
