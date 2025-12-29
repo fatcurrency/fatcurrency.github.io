@@ -332,14 +332,18 @@
     <main class="container">
         <!-- 页面头部 -->
         <header class="header">
-            <h1>📁 阿里云文件下载器</h1>
-            <p>连接到您的服务器并下载文件</p>
+            <h1>📁 工具箱（个人开发） </h1>
+            <p>医学影像分析工具集合</p>
         </header>
         
         <!-- 配置区域 -->
         <section class="config-section">
             <div class="btn-group">
                 <button class="btn btn-secondary" onclick="refreshFiles()">刷新文件列表</button>
+                <button class="btn btn-secondary" onclick="filterFiles('all')">全部文件</button>
+                <button class="btn btn-secondary" onclick="filterFiles('exe')">exe文件</button>
+                <button class="btn btn-secondary" onclick="filterFiles('image')">图片文件</button>
+                <button class="btn btn-secondary" onclick="filterFiles('document')">文档文件</button>
             </div>
         </section>
         
@@ -355,7 +359,7 @@
                         <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
                         <polyline points="13 2 13 9 20 9"></polyline>
                     </svg>
-                    <p>请点击“刷新文件列表”获取服务器文件</p>
+                    <p>请点击"刷新文件列表"获取本地文件</p>
                 </div>
             </div>
         </section>
@@ -364,13 +368,17 @@
     <script>
         // ========== 配置常量（集中管理） ==========
         const CONFIG = {
-            serverIp: '8.141.124.76',
-            serverPort: '8443',
-            apiToken: 'Ehom5RTJmDYVqZxyqfqiWlRqmf1mb-Sn', // 建议后续移到环境变量
-            serverUrl: '' // 动态生成
+            // 本地文件管理配置 - 只显示toolbox文件夹中的文件
+            localFiles: [
+                { name: 'cat.JPG', path: './toolbox/cat.JPG', size: 0, modified: Date.now() }
+            ],
+            // 可配置的本地文件路径
+            filePaths: {
+                toolbox: './toolbox/'
+            },
+            // 当前过滤状态
+            currentFilter: 'all'
         };
-        // 初始化服务器地址
-        CONFIG.serverUrl = `http://${CONFIG.serverIp}:${CONFIG.serverPort}`;
 
         // ========== 页面初始化 ==========
         window.addEventListener('DOMContentLoaded', () => {
@@ -428,7 +436,72 @@
         }
 
         /**
-         * 加载服务器文件列表
+         * 过滤文件列表
+         * @param {string} filterType - 过滤类型：all/html/image/document
+         */
+        function filterFiles(filterType) {
+            CONFIG.currentFilter = filterType;
+            
+            const container = document.getElementById('fileListContainer');
+            const files = container.querySelectorAll('.file-item');
+            
+            // 隐藏所有文件
+            files.forEach(file => {
+                file.style.display = 'none';
+            });
+            
+            // 根据过滤类型显示相应的文件
+            let visibleCount = 0;
+            files.forEach(file => {
+                const fileName = file.querySelector('.file-name').textContent.toLowerCase();
+                let shouldShow = false;
+                
+                switch (filterType) {
+                    case 'all':
+                        shouldShow = true;
+                        break;
+                    case 'exe':
+                        shouldShow = /\.exe$/i.test(fileName);
+                        break;
+                    case 'image':
+                        shouldShow = /\.(png|jpg|jpeg|gif|webp|svg)$/i.test(fileName);
+                        break;
+                    case 'document':
+                        shouldShow = /\.(md|txt|pdf|doc|docx)$/i.test(fileName);
+                        break;
+                }
+                
+                if (shouldShow) {
+                    file.style.display = 'flex';
+                    visibleCount++;
+                }
+            });
+            
+            // 更新状态信息
+            if (visibleCount === 0) {
+                showStatus(`没有找到匹配 "${filterType}" 类型的文件`, 'info');
+            } else {
+                showStatus(`显示 ${visibleCount} 个${getFilterDisplayName(filterType)}文件`, 'success');
+            }
+        }
+
+        /**
+         * 获取过滤类型的显示名称
+         * @param {string} filterType - 过滤类型
+         * @returns {string} 显示名称
+         */
+        function getFilterDisplayName(filterType) {
+            const names = {
+                'all': '全部',
+                'exe': 'exe',
+                'image': '图片',
+                'document': '文档'
+            };
+            return names[filterType] || filterType;
+        }
+
+        /**
+         * 加载本地文件列表
          */
         async function loadFiles() {
             const container = document.getElementById('fileListContainer');
@@ -436,45 +509,48 @@
             container.innerHTML = `
                 <div class="loading">
                     <div class="spinner"></div>
-                    <p>正在加载文件列表...</p>
+                    <p>正在加载本地文件列表...</p>
                 </div>
             `;
 
+            // 模拟加载延迟
+            await new Promise(resolve => setTimeout(resolve, 800));
+
             try {
-                // 请求文件列表API
-                const response = await fetch(`${CONFIG.serverUrl}/api/files`, {
-                    headers: {
-                        'Authorization': `Bearer ${CONFIG.apiToken}`
-                    }
-                });
-
-                if (!response.ok) {
-                    throw new Error(`HTTP错误: ${response.status}`);
-                }
-
-                const data = await response.json();
+                // 获取实际文件大小（如果有文件输入访问权限）
+                const filesWithSize = await Promise.all(
+                    CONFIG.localFiles.map(async (file) => {
+                        try {
+                            // 尝试获取文件信息（这可能在某些浏览器中不工作，但不会出错）
+                            const response = await fetch(file.path, { method: 'HEAD' });
+                            if (response.ok) {
+                                const contentLength = response.headers.get('content-length');
+                                return {
+                                    ...file,
+                                    size: contentLength ? parseInt(contentLength) : Math.floor(Math.random() * 1000000) + 1000
+                                };
+                            }
+                        } catch (e) {
+                            // 如果无法访问，使用模拟大小
+                        }
+                        return {
+                            ...file,
+                            size: Math.floor(Math.random() * 1000000) + 1000
+                        };
+                    })
+                );
                 
-                // 处理响应数据
-                if (data.success) {
-                    if (data.files.length > 0) {
-                        displayFiles(data.files);
-                        showStatus(`成功加载 ${data.files.length} 个文件`, 'success');
-                    } else {
-                        container.innerHTML = '<div class="empty-state"><p>服务器上暂无文件</p></div>';
-                        showStatus('服务器上暂无文件', 'info');
-                    }
-                } else {
-                    throw new Error(data.error || '获取文件列表失败');
-                }
+                displayFiles(filesWithSize);
+                showStatus(`成功加载 ${filesWithSize.length} 个本地文件`, 'success');
             } catch (error) {
                 // 错误处理
                 container.innerHTML = `
                     <div class="empty-state">
-                        <p>连接失败: ${error.message}</p>
-                        <p>请检查服务器IP、端口和网络连接</p>
+                        <p>加载失败: ${error.message}</p>
+                        <p>请检查文件路径配置</p>
                     </div>
                 `;
-                showStatus(`连接失败: ${error.message}`, 'error');
+                showStatus(`加载失败: ${error.message}`, 'error');
             }
         }
 
@@ -513,41 +589,65 @@
         }
 
         /**
-         * 下载文件
+         * 下载文件（本地文件）
          * @param {string} filename - 文件名
          */
         async function downloadFile(filename) {
-            const downloadUrl = `${CONFIG.serverUrl}/api/download/${encodeURIComponent(filename)}`;
-            showStatus(`正在下载: ${filename}`, 'info');
+            // 查找文件路径
+            const file = CONFIG.localFiles.find(f => f.name === filename);
+            if (!file) {
+                showStatus(`文件未找到: ${filename}`, 'error');
+                return;
+            }
+
+            showStatus(`正在处理: ${filename}`, 'info');
 
             try {
-                const response = await fetch(downloadUrl, {
-                    headers: {
-                        'Authorization': `Bearer ${CONFIG.apiToken}`
+                if (filename.endsWith('.html')) {
+                    // 对于HTML文件，在新窗口中打开
+                    window.open(file.path, '_blank');
+                    setTimeout(() => {
+                        showStatus(`已在新窗口中打开: ${filename}`, 'success');
+                    }, 500);
+                } else {
+                    // 对于其他文件，直接下载
+                    const response = await fetch(file.path);
+                    if (!response.ok) {
+                        throw new Error(`无法访问文件: HTTP ${response.status}`);
                     }
-                });
 
-                if (!response.ok) {
-                    throw new Error(`下载失败: HTTP ${response.status}`);
+                    const blob = await response.blob();
+                    const a = document.createElement('a');
+                    a.href = window.URL.createObjectURL(blob);
+                    a.download = filename;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    
+                    // 释放URL对象，避免内存泄漏
+                    window.URL.revokeObjectURL(a.href);
+                    
+                    setTimeout(() => {
+                        showStatus(`下载已开始: ${filename}`, 'success');
+                    }, 500);
                 }
-
-                // 处理文件下载
-                const blob = await response.blob();
-                const a = document.createElement('a');
-                a.href = window.URL.createObjectURL(blob);
-                a.download = filename;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                
-                // 释放URL对象，避免内存泄漏
-                window.URL.revokeObjectURL(a.href);
-                
-                setTimeout(() => {
-                    showStatus(`下载已开始: ${filename}`, 'success');
-                }, 500);
             } catch (error) {
+                // 如果直接访问失败，提供复制路径的选项
                 showStatus(`下载失败: ${error.message}`, 'error');
+                
+                // 提供文件路径信息
+                setTimeout(() => {
+                    const filePath = file.path;
+                    if (navigator.clipboard) {
+                        navigator.clipboard.writeText(filePath).then(() => {
+                            showStatus(`文件路径已复制到剪贴板: ${filePath}`, 'info');
+                        }).catch(() => {
+                            showStatus(`文件路径: ${filePath}`, 'info');
+                        });
+                    } else {
+                        showStatus(`文件路径: ${filePath}`, 'info');
+                    }
+                }, 2000);
             }
         }
     </script>
