@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fleeting Musings - 浮生随笔</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .main-nav {
+            margin: 20px auto 30px;
+            text-align: center;
+            max-width: 900px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 25px;
+            padding: 10px 0;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .main-nav ul {
+            list-style: none;
+            display: inline-flex;
+            gap: 30px;
+            padding: 0;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .main-nav li { display: inline; }
+        .main-nav a {
+            color: #fff;
+            font-size: 1.1em;
+            text-decoration: none;
+            padding: 8px 18px;
+            border-radius: 18px;
+            transition: background 0.2s, color 0.2s;
+            background: rgba(102, 126, 234, 0.2);
+            outline: none;
+        }
+        .main-nav a:hover, .main-nav a.active {
+            background: #fff;
+            color: #667eea;
+        }
+        
+        .main-nav a:active {
+            background: rgba(102, 126, 234, 0.2);
+            color: #fff;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        .content {
+            padding: 30px;
+            line-height: 1.8;
+            color: #333;
+        }
+        .content h2 {
+            margin-top: 30px;
+            margin-bottom: 15px;
+            color: #667eea;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+        .content p {
+            margin-bottom: 20px;
+        }
+        .content .quote {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin: 20px 0;
+            font-style: italic;
+        }
+        
+        /* 工具卡片样式 */
+        .tool-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 25px 0;
+            border: 1px solid #e9ecef;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .tool-card h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 22px;
+        }
+        
+        .tool-link {
+            margin-bottom: 15px;
+        }
+        
+        .tool-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 16px;
+            transition: color 0.3s ease;
+        }
+        
+        .tool-link a:hover {
+            color: #5568d3;
+            text-decoration: underline;
+        }
+        
+        .tool-description {
+            line-height: 1.7;
+            color: #555;
+            margin-bottom: 20px;
+        }
+        
+        .tool-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .feature-tag {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            transition: transform 0.2s ease;
+        }
+        
+        .feature-tag:hover {
+            transform: scale(1.05);
+        }
+        @media (max-width: 768px) {
+            .main-nav ul { gap: 15px; padding: 0 10px; }
+            .main-nav a { padding: 6px 12px; font-size: 1em; }
+            .container { margin: 0 10px; }
+            .header { padding: 20px 15px; }
+            .content { padding: 20px 15px; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="main-nav">
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="toolbox.html">Toolbox</a></li>
+            <li><a href="ect.html">ECT</a></li>
+            <li><a href="pet.html">PET</a></li>
+            <li><a href="visualization.html">Visualization</a></li>
+            <li><a href="fleeting_musings.html" class="active">Fleeting Musings</a></li>
+        </ul>
+    </nav>
+    <main class="container">
+        <header class="header">
+            <h1>Fleeting Musings</h1>
+            <p>记录生活与工作中的点滴思考</p>
+        </header>
+        <section class="content">
+            <p>这里是浮生随笔专栏，我会在这里分享一些关于生活、工作、技术和核医学图像处理领域的思考与感悟。</p>
+            
+            <h2>关于这个专栏</h2>
+            <p>Fleeting Musings（浮生随笔）是一个记录思考和灵感的地方。在繁忙的科研和工作中，总有一些转瞬即逝的想法和感悟值得被记录下来。（同时感谢AI的帮助，让这些想法可以快速落地）</p>
+            
+            <div class="quote">
+                "我们的生活由无数个瞬间组成，每个瞬间都蕴含着智慧和启示。记录这些瞬间，就是记录我们成长的轨迹。"
+            </div>
+            
+            <h2>技术分享</h2>
+            <div class="tool-card">
+                <h3>🎤 随时随地K歌麦克风工具</h3>
+                <p class="tool-link">
+                    <a href="mytool/sing_at_any_time.html" target="_blank">访问工具 →</a>
+                </p>
+                <div class="tool-description">
+                    这款基于Web Audio API开发的KTV效果麦克风模拟工具，以沉浸式暗黑色UI设计为载体，集成专业级音频处理能力。支持麦克风音量精细调节、三段EQ均衡（低频60-200Hz/中频200Hz-3kHz/高频3kHz-10kHz）精准调校，搭配可自定义的混响时间、延迟时长及干湿比参数，还原真实KTV混音效果；内置实时音量监测可视化模块，辅以动态渐变背景与交互反馈，无需安装插件，通过浏览器即可快速启用，为用户提供便捷、专业的音频效果调校体验。
+                </div>
+                <div class="tool-features">
+                    <span class="feature-tag">Web Audio API</span>
+                    <span class="feature-tag">KTV效果</span>
+                    <span class="feature-tag">EQ均衡器</span>
+                    <span class="feature-tag">混响效果</span>
+                    <span class="feature-tag">实时监测</span>
+                </div>
+            </div>
+            
+            <h2>未来计划</h2>
+            <p>在这个专栏中，我计划分享以下内容：</p>
+            <ul>
+                <li>核医学图像处理领域的最新进展和思考</li>
+                <li>技术学习和项目开发中的心得体验</li>
+                <li>生活中的感悟和思考</li>
+                <li>阅读推荐和书籍评论</li>
+                <li>更多实用工具分享</li>
+            </ul>
+            
+            <p>敬请期待更多内容的更新！</p>
+        </section>
+    </main>
+</body>
+</html>

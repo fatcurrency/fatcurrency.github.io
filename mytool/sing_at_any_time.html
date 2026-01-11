@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KTV 效果麦克风</title>
+    <style>
+        /* CSS 样式 (暗黑色主题) */
+        body {
+            font-family: sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #121212;
+            color: #ffffff;
+            overflow: hidden;
+        }
+
+        h2 {
+            color: #ffffff;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+        }
+
+        #status {
+            margin-bottom: 20px;
+            font-size: 1.2em;
+            color: #00ffff;
+            text-shadow: 0 0 5px rgba(0, 255, 255, 0.7);
+        }
+
+        /* 效果控制面板样式 */
+        #controls {
+            margin-top: 30px;
+            padding: 20px;
+            border: 1px solid #333;
+            border-radius: 8px;
+            background-color: #1e1e1e;
+            box-shadow: 0 4px 20px rgba(0, 255, 255, 0.1);
+        }
+
+        .control-group {
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        label {
+            min-width: 120px;
+            font-weight: bold;
+            color: #cccccc;
+        }
+
+        input[type="range"] {
+            width: 150px;
+            background: #333;
+            border-radius: 5px;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            width: 15px;
+            height: 15px;
+            background: #00ffff;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 15px;
+            height: 15px;
+            background: #00ffff;
+            border-radius: 50%;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+        }
+
+        span.value {
+            min-width: 50px;
+            text-align: right;
+            font-weight: bold;
+            color: #00ffff;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+            background-color: #1a73e8;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            transition: all 0.3s;
+            box-shadow: 0 0 10px rgba(26, 115, 232, 0.3);
+        }
+
+        button:hover {
+            background-color: #1557b0;
+            box-shadow: 0 0 15px rgba(26, 115, 232, 0.5);
+        }
+
+        /* 音量条样式 */
+        #volumeMeter {
+            margin-top: 30px;
+            width: 300px;
+            height: 20px;
+            background-color: #333;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+        }
+
+        #volumeBar {
+            height: 100%;
+            background: linear-gradient(90deg, #00ffff, #1a73e8);
+            width: 0%;
+            transition: width 0.1s ease;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.7);
+        }
+
+        /* 背景动态效果 */
+        #backgroundEffect {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(circle at center, #1e3c72, #2a5298, #121212);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 背景动态效果 -->
+    <div id="backgroundEffect"></div>
+
+    <h2>🎤 KTV 效果麦克风模拟</h2>
+    <div id="status">点击“开始”按钮以请求麦克风权限...</div>
+
+    <button id="startButton">开始 KTV 混音</button>
+
+    <!-- 音量条 -->
+    <div id="volumeMeter" style="display:none;">
+        <div id="volumeBar"></div>
+    </div>
+
+    <div id="controls" style="display:none;">
+        <h3>音频效果控制</h3>
+
+        <div class="control-group">
+            <label for="micGain">麦克风音量:</label>
+            <input type="range" id="micGain" min="0" max="2.0" step="0.01" value="1.0">
+            <span id="micGainValue" class="value">1.00</span>
+        </div>
+        
+        <!-- EQ均衡器 -->
+        <h3>EQ均衡器</h3>
+        <div class="control-group">
+            <label for="eqLow">低频 (60-200Hz):</label>
+            <input type="range" id="eqLow" min="-12" max="12" step="0.5" value="0">
+            <span id="eqLowValue" class="value">0.0 dB</span>
+        </div>
+        <div class="control-group">
+            <label for="eqMid">中频 (200Hz-3kHz):</label>
+            <input type="range" id="eqMid" min="-12" max="12" step="0.5" value="0">
+            <span id="eqMidValue" class="value">0.0 dB</span>
+        </div>
+        <div class="control-group">
+            <label for="eqHigh">高频 (3kHz-10kHz):</label>
+            <input type="range" id="eqHigh" min="-12" max="12" step="0.5" value="0">
+            <span id="eqHighValue" class="value">0.0 dB</span>
+        </div>
+        
+        <!-- 混响效果 -->
+        <h3>混响效果</h3>
+        <div class="control-group">
+            <label for="reverbTime">混响时间 (秒):</label>
+            <input type="range" id="reverbTime" min="0.1" max="3.0" step="0.1" value="1.0">
+            <span id="reverbTimeValue" class="value">1.00</span>
+        </div>
+        <div class="control-group">
+            <label for="delayTime">延迟时间 (秒):</label>
+            <input type="range" id="delayTime" min="0.05" max="0.5" step="0.01" value="0.1">
+            <span id="delayTimeValue" class="value">0.10</span>
+        </div>
+        <div class="control-group">
+            <label for="reverbMix">干湿比:</label>
+            <input type="range" id="reverbMix" min="0" max="1.0" step="0.01" value="0.3">
+            <span id="reverbMixValue" class="value">0.30</span>
+        </div>
+        
+        <!-- 一键恢复默认设置按钮 -->
+        <button id="resetButton">一键恢复默认设置</button>
+
+    </div>
+
+    <script>
+        // JavaScript 逻辑
+        const statusDiv = document.getElementById('status');
+        const startButton = document.getElementById('startButton');
+        const controlsDiv = document.getElementById('controls');
+        const volumeMeter = document.getElementById('volumeMeter');
+        const volumeBar = document.getElementById('volumeBar');
+
+        // 控制器元素
+        const micGainInput = document.getElementById('micGain');
+        
+        // EQ控制器元素
+        const eqLowInput = document.getElementById('eqLow');
+        const eqMidInput = document.getElementById('eqMid');
+        const eqHighInput = document.getElementById('eqHigh');
+        
+        // 混响和延迟控制器元素
+        const reverbTimeInput = document.getElementById('reverbTime');
+        const delayTimeInput = document.getElementById('delayTime');
+        const reverbMixInput = document.getElementById('reverbMix');
+        
+        // 显示元素
+        const micGainValueSpan = document.getElementById('micGainValue');
+        const eqLowValueSpan = document.getElementById('eqLowValue');
+        const eqMidValueSpan = document.getElementById('eqMidValue');
+        const eqHighValueSpan = document.getElementById('eqHighValue');
+        const reverbTimeValueSpan = document.getElementById('reverbTimeValue');
+        const delayTimeValueSpan = document.getElementById('delayTimeValue');
+        const reverbMixValueSpan = document.getElementById('reverbMixValue');
+        
+        // 恢复默认设置按钮
+        const resetButton = document.getElementById('resetButton');
+
+        let audioContext;
+        let stream;
+        let micSource;         // 麦克风输入源
+        let micGainNode;       // 麦克风音量控制
+        let analyserNode;      // 分析节点 (用于音量监测)
+        let dataArray;         // 存储音频数据的数组
+        let animationId;       // 动画帧ID
+        
+        // EQ节点
+        let eqLowNode;         // 低频均衡器节点
+        let eqMidNode;         // 中频均衡器节点
+        let eqHighNode;        // 高频均衡器节点
+        
+        // 混响节点
+        let reverbNode;        // 混响效果节点
+        let delayNode;         // 延迟节点 (用于混响中的延迟效果)
+        let dryGainNode;       // 干信号增益节点
+        let wetGainNode;       // 湿信号增益节点
+        
+        /**
+         * @function setupAudioNodes
+         * 设置Web Audio API的节点和效果链
+         * 链条: 麦克风 -> 增益 (音量) -> 分析器 -> (混响/延迟) -> 扬声器 (Destination)
+         */
+        function setupAudioNodes() {
+            // 1. 创建 AudioContext
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            
+            // 2. 创建麦克风源节点
+            micSource = audioContext.createMediaStreamSource(stream);
+
+            // 3. 创建增益节点 (控制麦克风音量)
+            micGainNode = audioContext.createGain();
+            micGainNode.gain.setValueAtTime(parseFloat(micGainInput.value), audioContext.currentTime);
+
+            // 4. 创建分析节点 (用于音量监测)
+            analyserNode = audioContext.createAnalyser();
+            analyserNode.fftSize = 256; // 设置FFT大小
+            const bufferLength = analyserNode.frequencyBinCount;
+            dataArray = new Uint8Array(bufferLength); // 存储音频数据
+
+            // 5. 创建EQ均衡器节点
+            eqLowNode = audioContext.createBiquadFilter();
+            eqLowNode.type = 'lowshelf'; // 低频架式滤波器
+            eqLowNode.frequency.setValueAtTime(100, audioContext.currentTime); // 中心频率
+            eqLowNode.gain.setValueAtTime(parseFloat(eqLowInput.value), audioContext.currentTime); // 增益
+            
+            eqMidNode = audioContext.createBiquadFilter();
+            eqMidNode.type = 'peaking'; // 峰值滤波器
+            eqMidNode.frequency.setValueAtTime(1000, audioContext.currentTime); // 中心频率
+            eqMidNode.Q.setValueAtTime(1, audioContext.currentTime); // 品质因数
+            eqMidNode.gain.setValueAtTime(parseFloat(eqMidInput.value), audioContext.currentTime); // 增益
+            
+            eqHighNode = audioContext.createBiquadFilter();
+            eqHighNode.type = 'highshelf'; // 高频架式滤波器
+            eqHighNode.frequency.setValueAtTime(4000, audioContext.currentTime); // 中心频率
+            eqHighNode.gain.setValueAtTime(parseFloat(eqHighInput.value), audioContext.currentTime); // 增益
+
+            // 6. 创建混响效果节点
+            dryGainNode = audioContext.createGain();
+            wetGainNode = audioContext.createGain();
+            
+            // 使用反馈延迟网络实现混响效果
+            const reverbTime = parseFloat(reverbTimeInput.value);
+            const reverbMix = parseFloat(reverbMixInput.value);
+            
+            // 设置干湿比
+            dryGainNode.gain.setValueAtTime(1 - reverbMix, audioContext.currentTime);
+            wetGainNode.gain.setValueAtTime(reverbMix, audioContext.currentTime);
+            
+            // 创建混响网络
+            const reverbDelay1 = audioContext.createDelay(1.0);
+            const reverbDelay2 = audioContext.createDelay(1.0);
+            const reverbDelay3 = audioContext.createDelay(1.0);
+            const reverbDelay4 = audioContext.createDelay(1.0);
+            
+            const reverbGain1 = audioContext.createGain();
+            const reverbGain2 = audioContext.createGain();
+            const reverbGain3 = audioContext.createGain();
+            const reverbGain4 = audioContext.createGain();
+            
+            // 设置延迟时间（基于混响时间计算）
+            reverbDelay1.delayTime.setValueAtTime(0.0117, audioContext.currentTime);
+            reverbDelay2.delayTime.setValueAtTime(0.0103, audioContext.currentTime);
+            reverbDelay3.delayTime.setValueAtTime(0.0077, audioContext.currentTime);
+            reverbDelay4.delayTime.setValueAtTime(0.0059, audioContext.currentTime);
+            
+            // 设置衰减（基于混响时间）
+            const decayFactor = Math.pow(0.001, (1.0 / reverbTime));
+            reverbGain1.gain.setValueAtTime(decayFactor, audioContext.currentTime);
+            reverbGain2.gain.setValueAtTime(decayFactor, audioContext.currentTime);
+            reverbGain3.gain.setValueAtTime(decayFactor, audioContext.currentTime);
+            reverbGain4.gain.setValueAtTime(decayFactor, audioContext.currentTime);
+            
+            // 连接混响网络
+            reverbDelay1.connect(reverbGain1);
+            reverbGain1.connect(reverbDelay2);
+            reverbGain1.connect(wetGainNode);
+            
+            reverbDelay2.connect(reverbGain2);
+            reverbGain2.connect(reverbDelay3);
+            reverbGain2.connect(wetGainNode);
+            
+            reverbDelay3.connect(reverbGain3);
+            reverbGain3.connect(reverbDelay4);
+            reverbGain3.connect(wetGainNode);
+            
+            reverbDelay4.connect(reverbGain4);
+            reverbGain4.connect(reverbDelay1);
+            reverbGain4.connect(wetGainNode);
+            
+            // 将混响网络存储在变量中以便后续控制
+            reverbNode = {
+                delay1: reverbDelay1,
+                delay2: reverbDelay2,
+                delay3: reverbDelay3,
+                delay4: reverbDelay4,
+                gain1: reverbGain1,
+                gain2: reverbGain2,
+                gain3: reverbGain3,
+                gain4: reverbGain4
+            };
+            
+            // 7. 连接音频处理链 (整合EQ和混响)
+            // 麦克风输入 -> 增益 -> EQ(低->中->高) -> 分析器 -> 干湿分支
+            // 干信号: -> dryGain -> 扬声器
+            // 湿信号: -> 混响 -> wetGain -> 扬声器
+
+            // 主信号链：麦克风 -> 增益 -> EQ -> 分析器
+            micSource.connect(micGainNode);
+            micGainNode.connect(eqLowNode);
+            eqLowNode.connect(eqMidNode);
+            eqMidNode.connect(eqHighNode);
+            eqHighNode.connect(analyserNode);
+            
+            // 创建延迟节点
+            delayNode = audioContext.createDelay(1.0);
+            delayNode.delayTime.setValueAtTime(parseFloat(delayTimeInput.value), audioContext.currentTime);
+            
+            // 干湿分支
+            analyserNode.connect(dryGainNode);
+            analyserNode.connect(delayNode); // 先经过延迟
+            delayNode.connect(reverbNode.delay1); // 延迟后的信号送入混响网络
+            
+            // 输出到扬声器
+            dryGainNode.connect(audioContext.destination);
+            wetGainNode.connect(audioContext.destination);
+
+            statusDiv.textContent = '✅ 麦克风已连接，KTV 效果已激活！';
+            
+            // 开始音量监测
+            startVolumeMonitoring();
+        }
+
+        /**
+         * @function startMicrophone
+         * 启动麦克风并设置Web Audio API
+         */
+        async function startMicrophone() {
+            try {
+                // 请求麦克风权限和扬声器输出
+                stream = await navigator.mediaDevices.getUserMedia({ 
+                    audio: {
+                        echoCancellation: false, // 禁用回音消除，以获得更好的KTV效果
+                        noiseSuppression: false
+                    } 
+                });
+                
+                setupAudioNodes();
+                setupControls();
+
+                startButton.textContent = '停止 KTV 混音';
+            startButton.onclick = stopMicrophone;
+            controlsDiv.style.display = 'block';
+            volumeMeter.style.display = 'block';
+
+            } catch (err) {
+                console.error('获取麦克风失败:', err);
+                statusDiv.textContent = `❌ 错误: 无法获取麦克风权限或设备。请检查设置。(${err.name})`;
+                startButton.textContent = '重新开始';
+                controlsDiv.style.display = 'none';
+            }
+        }
+        
+        /**
+         * @function setupControls
+         * 设置滑块控制器的事件监听
+         */
+        function setupControls() {
+            // 麦克风音量控制
+            micGainInput.oninput = () => {
+                const val = parseFloat(micGainInput.value);
+                micGainNode.gain.setValueAtTime(val, audioContext.currentTime);
+                micGainValueSpan.textContent = val.toFixed(2);
+            };
+
+            // EQ低频控制
+            eqLowInput.oninput = () => {
+                const val = parseFloat(eqLowInput.value);
+                eqLowNode.gain.setValueAtTime(val, audioContext.currentTime);
+                eqLowValueSpan.textContent = val.toFixed(1) + ' dB';
+            };
+
+            // EQ中频控制
+            eqMidInput.oninput = () => {
+                const val = parseFloat(eqMidInput.value);
+                eqMidNode.gain.setValueAtTime(val, audioContext.currentTime);
+                eqMidValueSpan.textContent = val.toFixed(1) + ' dB';
+            };
+
+            // EQ高频控制
+            eqHighInput.oninput = () => {
+                const val = parseFloat(eqHighInput.value);
+                eqHighNode.gain.setValueAtTime(val, audioContext.currentTime);
+                eqHighValueSpan.textContent = val.toFixed(1) + ' dB';
+            };
+
+            // 混响时间控制
+            reverbTimeInput.oninput = () => {
+                const val = parseFloat(reverbTimeInput.value);
+                reverbTimeValueSpan.textContent = val.toFixed(2);
+                
+                // 更新混响网络的衰减因子
+                const decayFactor = Math.pow(0.001, (1.0 / val));
+                reverbNode.gain1.gain.setValueAtTime(decayFactor, audioContext.currentTime);
+                reverbNode.gain2.gain.setValueAtTime(decayFactor, audioContext.currentTime);
+                reverbNode.gain3.gain.setValueAtTime(decayFactor, audioContext.currentTime);
+                reverbNode.gain4.gain.setValueAtTime(decayFactor, audioContext.currentTime);
+            };
+            
+            // 延迟时间控制
+            delayTimeInput.oninput = () => {
+                const val = parseFloat(delayTimeInput.value);
+                delayNode.delayTime.setValueAtTime(val, audioContext.currentTime);
+                delayTimeValueSpan.textContent = val.toFixed(2);
+            };
+
+            // 干湿比控制
+            reverbMixInput.oninput = () => {
+                const val = parseFloat(reverbMixInput.value);
+                reverbMixValueSpan.textContent = val.toFixed(2);
+                
+                // 更新干湿信号增益
+                dryGainNode.gain.setValueAtTime(1 - val, audioContext.currentTime);
+                wetGainNode.gain.setValueAtTime(val, audioContext.currentTime);
+            };
+        }
+
+
+        /**
+         * @function stopMicrophone
+         * 停止麦克风输入并清理资源
+         */
+        function stopMicrophone() {
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+                stream = null;
+            }
+            if (audioContext) {
+                audioContext.close();
+                audioContext = null;
+            }
+            
+            // 停止音量监测动画
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+                animationId = null;
+            }
+
+            statusDiv.textContent = '⏸️ 监控已停止。点击“开始”重新启动。';
+            startButton.textContent = '开始 KTV 混音';
+            startButton.onclick = startMicrophone;
+            controlsDiv.style.display = 'none';
+            volumeMeter.style.display = 'none';
+            volumeBar.style.width = '0%';
+        }
+
+        /**
+         * @function startVolumeMonitoring
+         * 开始实时监测音量并更新UI
+         */
+        function startVolumeMonitoring() {
+            if (!analyserNode) return;
+            
+            // 获取音频数据并更新音量条
+            function updateVolumeBar() {
+                analyserNode.getByteFrequencyData(dataArray);
+                
+                // 计算平均音量
+                let sum = 0;
+                for (let i = 0; i < dataArray.length; i++) {
+                    sum += dataArray[i];
+                }
+                const average = sum / dataArray.length;
+                
+                // 将音量转换为百分比 (0-100%)
+                const volumePercent = Math.min((average / 255) * 100, 100);
+                
+                // 更新音量条宽度
+                volumeBar.style.width = volumePercent + '%';
+                
+                // 继续下一帧
+                animationId = requestAnimationFrame(updateVolumeBar);
+            }
+            
+            updateVolumeBar();
+        }
+
+        /**
+         * @function resetToDefaults
+         * 一键恢复所有设置到默认值
+         */
+        function resetToDefaults() {
+            // 默认值定义
+            const defaults = {
+                micGain: 1.0,
+                eqLow: 0.0,
+                eqMid: 0.0,
+                eqHigh: 0.0,
+                reverbTime: 1.0,
+                delayTime: 0.1,
+                reverbMix: 0.3
+            };
+            
+            // 重置UI控件值
+            micGainInput.value = defaults.micGain;
+            eqLowInput.value = defaults.eqLow;
+            eqMidInput.value = defaults.eqMid;
+            eqHighInput.value = defaults.eqHigh;
+            reverbTimeInput.value = defaults.reverbTime;
+            delayTimeInput.value = defaults.delayTime;
+            reverbMixInput.value = defaults.reverbMix;
+            
+            // 更新显示值
+            micGainValueSpan.textContent = defaults.micGain.toFixed(2);
+            eqLowValueSpan.textContent = defaults.eqLow.toFixed(1) + ' dB';
+            eqMidValueSpan.textContent = defaults.eqMid.toFixed(1) + ' dB';
+            eqHighValueSpan.textContent = defaults.eqHigh.toFixed(1) + ' dB';
+            reverbTimeValueSpan.textContent = defaults.reverbTime.toFixed(2);
+            delayTimeValueSpan.textContent = defaults.delayTime.toFixed(2);
+            reverbMixValueSpan.textContent = defaults.reverbMix.toFixed(2);
+            
+            // 如果音频上下文已创建，更新音频节点参数
+            if (audioContext) {
+                micGainNode.gain.setValueAtTime(defaults.micGain, audioContext.currentTime);
+                eqLowNode.gain.setValueAtTime(defaults.eqLow, audioContext.currentTime);
+                eqMidNode.gain.setValueAtTime(defaults.eqMid, audioContext.currentTime);
+                eqHighNode.gain.setValueAtTime(defaults.eqHigh, audioContext.currentTime);
+                delayNode.delayTime.setValueAtTime(defaults.delayTime, audioContext.currentTime);
+                
+                // 更新混响时间（衰减因子）
+                const decayFactor = Math.pow(0.001, (1.0 / defaults.reverbTime));
+                reverbNode.gain1.gain.setValueAtTime(decayFactor, audioContext.currentTime);
+                reverbNode.gain2.gain.setValueAtTime(decayFactor, audioContext.currentTime);
+                reverbNode.gain3.gain.setValueAtTime(decayFactor, audioContext.currentTime);
+                reverbNode.gain4.gain.setValueAtTime(decayFactor, audioContext.currentTime);
+                
+                // 更新干湿比
+                dryGainNode.gain.setValueAtTime(1 - defaults.reverbMix, audioContext.currentTime);
+                wetGainNode.gain.setValueAtTime(defaults.reverbMix, audioContext.currentTime);
+            }
+        }
+
+        // 初始化：设置按钮点击事件
+        startButton.onclick = startMicrophone;
+        resetButton.onclick = resetToDefaults;
+        
+    </script>
+</body>
+</html>
