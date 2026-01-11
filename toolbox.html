@@ -25,6 +25,11 @@
             margin: 20px auto 30px; /* 优化外边距，居中对齐 */
             text-align: center;
             max-width: 900px; /* 与容器宽度统一 */
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 25px;
+            padding: 10px 0;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
         
         .main-nav ul {
@@ -48,6 +53,7 @@
             border-radius: 18px;
             transition: background 0.2s, color 0.2s;
             background: rgba(102, 126, 234, 0.2);
+            outline: none;
         }
         
         .main-nav a:hover, 
@@ -128,6 +134,7 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
+            outline: none;
         }
         
         .btn-primary {
@@ -242,6 +249,7 @@
             cursor: pointer;
             font-weight: 600;
             transition: all 0.3s;
+            outline: none;
         }
         
         .btn-download:hover {
@@ -320,11 +328,11 @@
     <!-- 导航栏 -->
     <nav class="main-nav">
         <ul>
-            <li><a href="index.html">主页</a></li>
-            <li><a href="toolbox.html" class="active">工具箱</a></li>
-            <li><a href="ect.html">ECT检查</a></li>
-            <li><a href="pet.html">PET检查</a></li>
-            <li><a href="visualization.html">可视化</a></li>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="toolbox.html" class="active">Toolbox</a></li>
+            <li><a href="ect.html">ECT</a></li>
+            <li><a href="pet.html">PET</a></li>
+            <li><a href="visualization.html">Visualization</a></li>
         </ul>
     </nav>
 
