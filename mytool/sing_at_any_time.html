@@ -150,6 +150,9 @@
     <div id="backgroundEffect"></div>
 
     <h2>🎤 KTV 效果麦克风模拟</h2>
+    <div id="usageTips" style="margin: 15px 0; padding: 15px; background-color: rgba(255, 215, 0, 0.1); border: 1px solid rgba(255, 215, 0, 0.5); border-radius: 8px; color: #ffd700; text-shadow: 0 0 3px rgba(255, 215, 0, 0.5);">
+        🎧 <strong>使用提示：</strong>为获得最佳体验，请保持环境相对安静以避免啸叫；建议使用耳机并合理调整音量，保护您的听力健康。
+    </div>
     <div id="status">点击“开始”按钮以请求麦克风权限...</div>
 
     <button id="startButton">开始 KTV 混音</button>
@@ -189,14 +192,14 @@
         <!-- 混响效果 -->
         <h3>混响效果</h3>
         <div class="control-group">
-            <label for="reverbTime">混响时间 (秒):</label>
-            <input type="range" id="reverbTime" min="0.1" max="3.0" step="0.1" value="1.0">
-            <span id="reverbTimeValue" class="value">1.00</span>
+            <label for="delayTime">延迟时间 (秒):</label>
+            <input type="range" id="delayTime" min="0.01" max="0.5" step="0.01" value="0.1">
+            <span id="delayTimeValue" class="value">0.10</span>
         </div>
         <div class="control-group">
-            <label for="delayTime">延迟时间 (秒):</label>
-            <input type="range" id="delayTime" min="0.05" max="0.5" step="0.01" value="0.1">
-            <span id="delayTimeValue" class="value">0.10</span>
+            <label for="feedbackGain">回音反馈强度:</label>
+            <input type="range" id="feedbackGain" min="0" max="1.0" step="0.01" value="0.5">
+            <span id="feedbackGainValue" class="value">0.50</span>
         </div>
         <div class="control-group">
             <label for="reverbMix">干湿比:</label>
@@ -226,8 +229,8 @@
         const eqHighInput = document.getElementById('eqHigh');
         
         // 混响和延迟控制器元素
-        const reverbTimeInput = document.getElementById('reverbTime');
         const delayTimeInput = document.getElementById('delayTime');
+        const feedbackGainInput = document.getElementById('feedbackGain');
         const reverbMixInput = document.getElementById('reverbMix');
         
         // 显示元素
@@ -235,8 +238,8 @@
         const eqLowValueSpan = document.getElementById('eqLowValue');
         const eqMidValueSpan = document.getElementById('eqMidValue');
         const eqHighValueSpan = document.getElementById('eqHighValue');
-        const reverbTimeValueSpan = document.getElementById('reverbTimeValue');
         const delayTimeValueSpan = document.getElementById('delayTimeValue');
+        const feedbackGainValueSpan = document.getElementById('feedbackGainValue');
         const reverbMixValueSpan = document.getElementById('reverbMixValue');
         
         // 恢复默认设置按钮
@@ -258,6 +261,7 @@
         // 混响节点
         let reverbNode;        // 混响效果节点
         let delayNode;         // 延迟节点 (用于混响中的延迟效果)
+        let delayFeedbackNode; // 延迟反馈增益节点
         let dryGainNode;       // 干信号增益节点
         let wetGainNode;       // 湿信号增益节点
         
@@ -305,7 +309,6 @@
             wetGainNode = audioContext.createGain();
             
             // 使用反馈延迟网络实现混响效果
-            const reverbTime = parseFloat(reverbTimeInput.value);
             const reverbMix = parseFloat(reverbMixInput.value);
             
             // 设置干湿比
@@ -323,14 +326,14 @@
             const reverbGain3 = audioContext.createGain();
             const reverbGain4 = audioContext.createGain();
             
-            // 设置延迟时间（基于混响时间计算）
+            // 设置延迟时间
             reverbDelay1.delayTime.setValueAtTime(0.0117, audioContext.currentTime);
             reverbDelay2.delayTime.setValueAtTime(0.0103, audioContext.currentTime);
             reverbDelay3.delayTime.setValueAtTime(0.0077, audioContext.currentTime);
             reverbDelay4.delayTime.setValueAtTime(0.0059, audioContext.currentTime);
             
-            // 设置衰减（基于混响时间）
-            const decayFactor = Math.pow(0.001, (1.0 / reverbTime));
+            // 设置固定衰减因子
+            const decayFactor = 0.8; // 使用固定衰减因子
             reverbGain1.gain.setValueAtTime(decayFactor, audioContext.currentTime);
             reverbGain2.gain.setValueAtTime(decayFactor, audioContext.currentTime);
             reverbGain3.gain.setValueAtTime(decayFactor, audioContext.currentTime);
@@ -377,14 +380,20 @@
             eqMidNode.connect(eqHighNode);
             eqHighNode.connect(analyserNode);
             
-            // 创建延迟节点
+            // 创建延迟节点和反馈增益节点
             delayNode = audioContext.createDelay(1.0);
             delayNode.delayTime.setValueAtTime(parseFloat(delayTimeInput.value), audioContext.currentTime);
+            
+            // 创建延迟反馈增益节点 (控制反馈强度)
+            delayFeedbackNode = audioContext.createGain();
+            delayFeedbackNode.gain.setValueAtTime(0.5, audioContext.currentTime); // 反馈强度设置为0.5
             
             // 干湿分支
             analyserNode.connect(dryGainNode);
             analyserNode.connect(delayNode); // 先经过延迟
             delayNode.connect(reverbNode.delay1); // 延迟后的信号送入混响网络
+            delayNode.connect(delayFeedbackNode); // 延迟信号也送入反馈节点
+            delayFeedbackNode.connect(delayNode); // 反馈信号送回延迟节点，形成循环
             
             // 输出到扬声器
             dryGainNode.connect(audioContext.destination);
@@ -459,17 +468,11 @@
                 eqHighValueSpan.textContent = val.toFixed(1) + ' dB';
             };
 
-            // 混响时间控制
-            reverbTimeInput.oninput = () => {
-                const val = parseFloat(reverbTimeInput.value);
-                reverbTimeValueSpan.textContent = val.toFixed(2);
-                
-                // 更新混响网络的衰减因子
-                const decayFactor = Math.pow(0.001, (1.0 / val));
-                reverbNode.gain1.gain.setValueAtTime(decayFactor, audioContext.currentTime);
-                reverbNode.gain2.gain.setValueAtTime(decayFactor, audioContext.currentTime);
-                reverbNode.gain3.gain.setValueAtTime(decayFactor, audioContext.currentTime);
-                reverbNode.gain4.gain.setValueAtTime(decayFactor, audioContext.currentTime);
+            // 回音反馈强度控制
+            feedbackGainInput.oninput = () => {
+                const val = parseFloat(feedbackGainInput.value);
+                delayFeedbackNode.gain.setValueAtTime(val, audioContext.currentTime);
+                feedbackGainValueSpan.textContent = val.toFixed(2);
             };
             
             // 延迟时间控制
@@ -561,8 +564,8 @@
                 eqLow: 0.0,
                 eqMid: 0.0,
                 eqHigh: 0.0,
-                reverbTime: 1.0,
                 delayTime: 0.1,
+                feedbackGain: 0.5,
                 reverbMix: 0.3
             };
             
@@ -571,8 +574,8 @@
             eqLowInput.value = defaults.eqLow;
             eqMidInput.value = defaults.eqMid;
             eqHighInput.value = defaults.eqHigh;
-            reverbTimeInput.value = defaults.reverbTime;
             delayTimeInput.value = defaults.delayTime;
+            feedbackGainInput.value = defaults.feedbackGain;
             reverbMixInput.value = defaults.reverbMix;
             
             // 更新显示值
@@ -580,8 +583,8 @@
             eqLowValueSpan.textContent = defaults.eqLow.toFixed(1) + ' dB';
             eqMidValueSpan.textContent = defaults.eqMid.toFixed(1) + ' dB';
             eqHighValueSpan.textContent = defaults.eqHigh.toFixed(1) + ' dB';
-            reverbTimeValueSpan.textContent = defaults.reverbTime.toFixed(2);
             delayTimeValueSpan.textContent = defaults.delayTime.toFixed(2);
+            feedbackGainValueSpan.textContent = defaults.feedbackGain.toFixed(2);
             reverbMixValueSpan.textContent = defaults.reverbMix.toFixed(2);
             
             // 如果音频上下文已创建，更新音频节点参数
@@ -591,13 +594,7 @@
                 eqMidNode.gain.setValueAtTime(defaults.eqMid, audioContext.currentTime);
                 eqHighNode.gain.setValueAtTime(defaults.eqHigh, audioContext.currentTime);
                 delayNode.delayTime.setValueAtTime(defaults.delayTime, audioContext.currentTime);
-                
-                // 更新混响时间（衰减因子）
-                const decayFactor = Math.pow(0.001, (1.0 / defaults.reverbTime));
-                reverbNode.gain1.gain.setValueAtTime(decayFactor, audioContext.currentTime);
-                reverbNode.gain2.gain.setValueAtTime(decayFactor, audioContext.currentTime);
-                reverbNode.gain3.gain.setValueAtTime(decayFactor, audioContext.currentTime);
-                reverbNode.gain4.gain.setValueAtTime(decayFactor, audioContext.currentTime);
+                delayFeedbackNode.gain.setValueAtTime(defaults.feedbackGain, audioContext.currentTime);
                 
                 // 更新干湿比
                 dryGainNode.gain.setValueAtTime(1 - defaults.reverbMix, audioContext.currentTime);
