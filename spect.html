@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ECT检查</title>
+    <title>SPECT检查</title>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -163,7 +163,7 @@
         <ul>
             <li><a href="index.html">Home</a></li>
             <li><a href="toolbox.html">Toolbox</a></li>
-            <li><a href="ect.html" class="active">ECT</a></li>
+            <li><a href="spect.html" class="active">SPECT</a></li>
             <li><a href="pet.html">PET</a></li>
             <li><a href="visualization.html">Visualization</a></li>
             <li><a href="fleeting_musings.html">Fleeting Musings</a></li>
@@ -171,9 +171,9 @@
     </nav>
     <div class="container">
         <aside class="sidebar">
-            <h2>ECT目录</h2>
+            <h2>SPECT目录</h2>
             <ul>
-                <li><a href="#" data-file="introduction.md" class="active">ECT介绍</a></li>
+                <li><a href="#" data-file="introduction.md" class="active">SPECT介绍</a></li>
                 <li><a href="#" data-file="spect.md">SPECT技术</a></li>
                 <li><a href="#" data-file="pet.md">PET技术</a></li>
             </ul>
@@ -208,7 +208,7 @@
 
         // 加载并渲染Markdown文件
         function loadMarkdown(file) {
-            fetch(`ect/${file}`)
+            fetch(`spect/${file}`)
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Network response was not ok');
