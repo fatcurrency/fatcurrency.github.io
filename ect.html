@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ECT检查</title>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
@@ -20,7 +21,7 @@
         .main-nav {
             margin: 20px auto 30px;
             text-align: center;
-            max-width: 900px;
+            max-width: 1200px;
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
             border-radius: 25px;
@@ -55,12 +56,52 @@
             color: #fff;
         }
         .container {
-            max-width: 900px;
+            max-width: 1200px;
             margin: 0 auto;
             background: white;
             border-radius: 12px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
             overflow: hidden;
+            display: flex;
+            min-height: 600px;
+        }
+        .sidebar {
+            width: 280px;
+            background: #f5f5f5;
+            border-right: 1px solid #e0e0e0;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        .sidebar h2 {
+            font-size: 1.4em;
+            margin-bottom: 15px;
+            color: #333;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 8px;
+        }
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+        .sidebar li {
+            margin-bottom: 8px;
+        }
+        .sidebar a {
+            display: block;
+            padding: 10px 15px;
+            color: #555;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: background 0.2s, color 0.2s;
+        }
+        .sidebar a:hover, .sidebar a.active {
+            background: #667eea;
+            color: white;
+        }
+        .content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
         }
         .header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -72,10 +113,47 @@
             font-size: 28px;
             margin-bottom: 10px;
         }
+        .markdown-content {
+            line-height: 1.8;
+            color: #333;
+        }
+        .markdown-content h1 {
+            font-size: 2.2em;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+        .markdown-content h2 {
+            font-size: 1.8em;
+            margin: 25px 0 15px;
+            color: #34495e;
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 8px;
+        }
+        .markdown-content p {
+            margin-bottom: 15px;
+        }
+        .markdown-content ul {
+            margin: 15px 0;
+            padding-left: 30px;
+        }
+        .markdown-content li {
+            margin-bottom: 8px;
+        }
         @media (max-width: 768px) {
             .main-nav ul { gap: 15px; padding: 0 10px; }
             .main-nav a { padding: 6px 12px; font-size: 1em; }
-            .container { margin: 0 10px; }
+            .container { 
+                margin: 0 10px; 
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid #e0e0e0;
+            }
+            .content {
+                padding: 20px;
+            }
             .header { padding: 20px 15px; }
         }
     </style>
@@ -91,12 +169,62 @@
             <li><a href="fleeting_musings.html">Fleeting Musings</a></li>
         </ul>
     </nav>
-    <main class="container">
-        <header class="header">
-            <h1>ECT检查</h1>
-            <p>本页面用于展示ECT相关内容，敬请期待。</p>
-        </header>
-        <!-- 这里可添加更多ECT相关内容 -->
-    </main>
+    <div class="container">
+        <aside class="sidebar">
+            <h2>ECT目录</h2>
+            <ul>
+                <li><a href="#" data-file="introduction.md" class="active">ECT介绍</a></li>
+                <li><a href="#" data-file="spect.md">SPECT技术</a></li>
+                <li><a href="#" data-file="pet.md">PET技术</a></li>
+            </ul>
+        </aside>
+        <main class="content">
+            <div class="markdown-content" id="markdown-content">
+                <!-- Markdown内容将在这里渲染 -->
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // 初始化时加载默认Markdown文件
+        document.addEventListener('DOMContentLoaded', function() {
+            loadMarkdown('introduction.md');
+        });
+
+        // 点击目录项时加载对应的Markdown文件
+        document.querySelectorAll('.sidebar a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // 更新活动状态
+                document.querySelectorAll('.sidebar a').forEach(a => a.classList.remove('active'));
+                this.classList.add('active');
+                
+                // 加载对应的Markdown文件
+                const file = this.getAttribute('data-file');
+                loadMarkdown(file);
+            });
+        });
+
+        // 加载并渲染Markdown文件
+        function loadMarkdown(file) {
+            fetch(`ect/${file}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.text();
+                })
+                .then(text => {
+                    // 使用marked渲染Markdown
+                    const html = marked.parse(text);
+                    document.getElementById('markdown-content').innerHTML = html;
+                })
+                .catch(error => {
+                    console.error('Error loading Markdown file:', error);
+                    document.getElementById('markdown-content').innerHTML = '<p>加载文件失败，请检查文件路径是否正确。</p>';
+                });
+        }
+    </script>
 </body>
 </html>
