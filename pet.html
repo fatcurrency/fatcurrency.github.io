@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PET检查</title>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" integrity="sha384-nB0miv6/jRmo5UMMR1wu3Gz6NLsoTkbqJghGIsx//Rlm+ZU03BU6SQNC66uf4l5+" crossorigin="anonymous">
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" integrity="sha384-7zkQWkzuo3B5mTepMUcHkMB5jZaolc2xDwL6VFqjFALcbeS9Ggm/Yr2r3Dy4lfFg" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" integrity="sha384-43gviWU0YVjaDtb/GhzOouOXtLkSj6V3bqfwb5x+Vh3tQ8vBmJzV6wE5H8u3V+Fq" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -223,21 +223,37 @@
                     const container = document.getElementById('markdown-content');
                     container.innerHTML = html;
 
-                    // 渲染数学公式（$...$ / $$...$$）
-                    if (typeof renderMathInElement === 'function') {
-                        renderMathInElement(container, {
-                            delimiters: [
-                                { left: '$$', right: '$$', display: true },
-                                { left: '$', right: '$', display: false },
-                            ],
-                            throwOnError: false,
-                        });
-                    }
+                    // 渲染数学公式（KaTeX auto-render）。
+                    // 说明：线上偶发 KaTeX 资源加载失败/时序问题会导致 renderMathInElement 不存在，
+                    // 这里做一个短暂重试，避免部署到 GitHub Pages 时直接“跳过渲染”。
+                    renderMathWhenReady(container);
                 })
                 .catch(error => {
                     console.error('Error loading Markdown file:', error);
                     document.getElementById('markdown-content').innerHTML = '<p>加载文件失败，请检查文件路径是否正确。</p>';
                 });
+        }
+
+        function renderMathWhenReady(container, attempt = 0) {
+            if (typeof renderMathInElement === 'function') {
+                renderMathInElement(container, {
+                    delimiters: [
+                        { left: '$$', right: '$$', display: true },
+                        { left: '$', right: '$', display: false },
+                        { left: '\\[', right: '\\]', display: true },
+                        { left: '\\(', right: '\\)', display: false },
+                    ],
+                    throwOnError: false,
+                });
+                return;
+            }
+
+            if (attempt >= 30) {
+                console.warn('KaTeX auto-render 未加载，数学公式未渲染。请检查 KaTeX 资源是否被浏览器拦截（Network / Console）。');
+                return;
+            }
+
+            setTimeout(() => renderMathWhenReady(container, attempt + 1), 100);
         }
     </script>
 </body>
