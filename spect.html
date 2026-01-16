@@ -139,6 +139,56 @@
         .markdown-content li {
             margin-bottom: 8px;
         }
+
+        /* Markdown 表格美化 */
+        .markdown-content .table-wrap {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin: 16px 0 22px;
+            border-radius: 10px;
+            box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
+            border: 1px solid #eef0f5;
+            background: #fff;
+        }
+        .markdown-content table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 520px;
+            font-size: 0.98em;
+        }
+        .markdown-content th,
+        .markdown-content td {
+            padding: 12px 14px;
+            border-bottom: 1px solid #eef0f5;
+            vertical-align: top;
+        }
+        .markdown-content th {
+            position: sticky;
+            top: 0;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.14) 0%, rgba(118, 75, 162, 0.14) 100%);
+            color: #2c3e50;
+            font-weight: 700;
+            text-align: left;
+            white-space: nowrap;
+        }
+        .markdown-content tbody tr:nth-child(even) td {
+            background: #fafbff;
+        }
+        .markdown-content tbody tr:hover td {
+            background: rgba(102, 126, 234, 0.08);
+        }
+        .markdown-content td {
+            color: #34495e;
+        }
+        .markdown-content td strong {
+            color: #1f2d3d;
+        }
+        .markdown-content table code {
+            background: rgba(102, 126, 234, 0.10);
+            padding: 2px 6px;
+            border-radius: 6px;
+        }
         @media (max-width: 768px) {
             .main-nav ul { gap: 15px; padding: 0 10px; }
             .main-nav a { padding: 6px 12px; font-size: 1em; }
@@ -218,7 +268,19 @@
                 .then(text => {
                     // 使用marked渲染Markdown
                     const html = marked.parse(text);
-                    document.getElementById('markdown-content').innerHTML = html;
+                    const container = document.getElementById('markdown-content');
+                    container.innerHTML = html;
+
+                    // 表格包裹：支持横向滚动，移动端更友好
+                    container.querySelectorAll('table').forEach(table => {
+                        if (table.parentElement && table.parentElement.classList.contains('table-wrap')) {
+                            return;
+                        }
+                        const wrap = document.createElement('div');
+                        wrap.className = 'table-wrap';
+                        table.parentNode.insertBefore(wrap, table);
+                        wrap.appendChild(table);
+                    });
                 })
                 .catch(error => {
                     console.error('Error loading Markdown file:', error);
