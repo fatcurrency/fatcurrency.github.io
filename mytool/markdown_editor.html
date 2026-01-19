@@ -329,6 +329,44 @@
                 padding: 15px;
             }
         }
+
+        /* 打印样式 */
+        @media print {
+            body {
+                background: white !important;
+                padding: 0 !important;
+            }
+            .container {
+                box-shadow: none !important;
+                height: auto !important;
+                display: block !important;
+                border: none !important;
+            }
+            .header, .toolbar, .editor-section, .section-header {
+                display: none !important;
+            }
+            .content {
+                display: block !important;
+                padding: 0 !important;
+                border: none !important;
+            }
+            .preview-section {
+                display: block !important;
+                width: 100% !important;
+                height: auto !important;
+                overflow: visible !important;
+            }
+            #preview {
+                padding: 0 !important;
+                height: auto !important;
+                overflow: visible !important;
+            }
+            /* 保持颜色和背景（用于代码高亮等） */
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -372,6 +410,7 @@
             <div class="separator"></div>
 
             <button onclick="insertMarkdown('| ', ' | ')">📐 表格</button>
+            <button onclick="exportToPDF(event)" style="background: #4caf50; color: white; border-color: #4caf50;">📄 导出 PDF</button>
             <button onclick="clearEditor()" style="background: #ff6b6b; color: white; border-color: #ff6b6b;">🗑️ 清除</button>
         </div>
 
@@ -593,6 +632,29 @@ console.log('Hello World');
                 isPreviewScrolling = false;
             }, 100);
         });
+
+        // 导出为 PDF
+        function exportToPDF(event) {
+            const element = document.getElementById('preview');
+            if (!element.innerHTML.trim()) {
+                alert('预览区没有内容可以导出');
+                return;
+            }
+
+            // 为了获得高质量、可搜索且可选中的文本 PDF，使用浏览器原生的打印引擎
+            // 这种方案比 html2canvas (图片形式) 效果好得多
+            
+            // 设置临时标题，这将作为导出 PDF 的默认文件名
+            const originalTitle = document.title;
+            document.title = 'Markdown-Export-' + new Date().toISOString().split('T')[0];
+            
+            window.print();
+            
+            // 恢复标题
+            setTimeout(() => {
+                document.title = originalTitle;
+            }, 500);
+        }
     </script>
 </body>
 </html>
