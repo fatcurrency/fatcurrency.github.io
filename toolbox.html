@@ -159,13 +159,25 @@
 
         /* 状态提示 */
         .status {
-            padding: 15px 30px;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 15px 25px;
             background: #e7f3ff;
             color: #004085;
             border-left: 4px solid #004085;
-            margin: 0;
+            border-radius: 6px;
             display: none;
-            transition: opacity 0.3s ease; /* 增加过渡动画 */
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            max-width: 400px;
+            z-index: 1000;
+        }
+        
+        .status.show {
+            display: block;
+            opacity: 1;
         }
         
         .status.error {
@@ -180,81 +192,87 @@
             border-left-color: #155724;
         }
 
-        /* 文件列表区域 */
-        .file-list {
+        /* 工具卡片网格 */
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
             padding: 30px;
         }
         
-        .file-list h2 {
-            color: #343a40;
-            margin-bottom: 20px;
-            font-size: 20px;
-        }
-        
-        .file-item {
-            display: flex;
-            align-items: center;
-            padding: 15px;
+        .tool-card {
+            background: #fff;
             border: 2px solid #e9ecef;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            transition: all 0.3s;
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
         
-        .file-item:hover {
+        .tool-card:hover {
             border-color: #667eea;
-            background: #f8f9ff;
-            transform: translateX(5px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.2);
+            transform: translateY(-5px);
         }
         
-        .file-icon {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            margin-right: 15px;
+        .tool-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+            text-align: center;
         }
         
-        .file-info {
-            flex: 1;
-        }
-        
-        .file-name {
-            font-weight: 600;
+        .tool-name {
+            font-size: 18px;
+            font-weight: 700;
             color: #343a40;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
         }
         
-        .file-meta {
-            font-size: 12px;
+        .tool-description {
+            font-size: 14px;
             color: #6c757d;
+            margin-bottom: 15px;
+            flex-grow: 1;
+            line-height: 1.5;
         }
         
-        .file-actions {
+        .tool-meta {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 15px;
+            padding: 8px 0;
+            border-top: 1px solid #e9ecef;
+            border-bottom: 1px solid #e9ecef;
             display: flex;
-            gap: 10px;
+            justify-content: space-between;
+        }
+        
+        .tool-meta-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         
         .btn-download {
-            background: #28a745;
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
             color: white;
-            padding: 8px 16px;
+            padding: 10px 20px;
             border: none;
             border-radius: 6px;
             cursor: pointer;
             font-weight: 600;
             transition: all 0.3s;
             outline: none;
+            width: 100%;
+            text-align: center;
         }
         
         .btn-download:hover {
-            background: #218838;
-            transform: scale(1.05);
+            background: linear-gradient(135deg, #218838 0%, #1aa179 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
         }
 
         /* 空状态/加载状态 */
@@ -308,18 +326,12 @@
                 margin: 0 10px;
             }
             
-            .header, .config-section, .file-list {
+            .header, .config-section, .tools-grid {
                 padding: 20px 15px;
             }
             
-            .file-item {
-                flex-wrap: wrap;
-            }
-            
-            .file-actions {
-                width: 100%;
-                margin-top: 10px;
-                justify-content: flex-end;
+            .tools-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -348,50 +360,53 @@
         <!-- 配置区域 -->
         <section class="config-section">
             <div class="btn-group">
-                <button class="btn btn-secondary" onclick="refreshFiles()">刷新文件列表</button>
-                <button class="btn btn-secondary" onclick="filterFiles('all')">全部文件</button>
-                <button class="btn btn-secondary" onclick="filterFiles('exe')">exe文件</button>
-                <button class="btn btn-secondary" onclick="filterFiles('image')">图片文件</button>
-                <button class="btn btn-secondary" onclick="filterFiles('document')">文档文件</button>
+                <button class="btn btn-secondary" onclick="refreshTools()">刷新工具列表</button>
             </div>
         </section>
         
         <!-- 状态提示 -->
         <div id="status" class="status"></div>
-        
-        <!-- 文件列表区域 -->
-        <section class="file-list">
-            <h2>文件列表</h2>
-            <div id="fileListContainer">
-                <div class="empty-state">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
-                        <polyline points="13 2 13 9 20 9"></polyline>
-                    </svg>
-                    <p>请点击"刷新文件列表"获取本地文件</p>
-                </div>
+        <section class="tools-grid" id="toolsContainer">
+            <div class="empty-state">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
+                    <polyline points="13 2 13 9 20 9"></polyline>
+                </svg>
+                <p>请点击"刷新工具列表"加载工具</p>
             </div>
         </section>
     </main>
 
     <script>
-        // ========== 配置常量（集中管理） ==========
-        const CONFIG = {
-            // 本地文件管理配置 - 只显示toolbox文件夹中的文件
-            localFiles: [
-                { name: 'cat.JPG', path: './toolbox/cat.JPG', size: 0, modified: Date.now() }
-            ],
-            // 可配置的本地文件路径
-            filePaths: {
-                toolbox: './toolbox/'
+        // ========== 工具配置 ==========
+        const TOOLS_CONFIG = [
+            {
+                id: 'tool1',
+                name: '一只可爱的小猫咪',
+                icon: '🐈',
+                description: '拍摄于荔湾湖公园，表情冷酷的大猫脸，眼神犀利，毛发柔顺光滑。',
+                fileName: 'cat.JPG',
+                filePath: './toolbox/cat.JPG',
+                version: '1.0.0',
+                fileSize: '3.04 MB',
+                category: 'Photos'
             },
-            // 当前过滤状态
-            currentFilter: 'all'
-        };
+            {
+                id: 'tool2',
+                name: 'copy-trans 剪贴板翻译工具',
+                icon: '📚',
+                description: '自动监控剪贴板并实时翻译，专为英语学习场景优化；复制即翻，快速呈现释义与例句，提升阅读与记忆效率。',
+                fileName: 'copy-trans.exe',
+                filePath: './toolbox/copy-trans.exe',
+                version: '1.1.0',
+                fileSize: '43.6 MB',
+                category: 'English Learning'
+            }
+        ];
 
         // ========== 页面初始化 ==========
         window.addEventListener('DOMContentLoaded', () => {
-            loadFiles(); // 页面加载完成后加载文件列表
+            loadTools(); // 页面加载完成后加载工具列表
         });
 
         // ========== 工具函数 ==========
@@ -403,26 +418,12 @@
         function showStatus(message, type = 'info') {
             const statusDiv = document.getElementById('status');
             statusDiv.textContent = message;
-            statusDiv.className = `status ${type}`;
-            statusDiv.style.display = 'block';
+            statusDiv.className = `status show ${type}`;
             
             // 5秒后隐藏
             setTimeout(() => {
-                statusDiv.style.display = 'none';
+                statusDiv.classList.remove('show');
             }, 5000);
-        }
-
-        /**
-         * 格式化文件大小
-         * @param {number} bytes - 文件字节数
-         * @returns {string} 格式化后的大小字符串
-         */
-        function formatFileSize(bytes) {
-            if (bytes === 0) return '0 B';
-            const k = 1024;
-            const sizes = ['B', 'KB', 'MB', 'GB'];
-            const i = Math.floor(Math.log(bytes) / Math.log(k));
-            return (Math.round(bytes / Math.pow(k, i) * 100) / 100) + ' ' + sizes[i];
         }
 
         /**
@@ -438,87 +439,24 @@
 
         // ========== 业务逻辑函数 ==========
         /**
-         * 刷新文件列表（对外暴露的简洁接口）
+         * 刷新工具列表
          */
-        function refreshFiles() {
-            loadFiles();
+        function refreshTools() {
+            loadTools();
         }
 
         /**
-         * 过滤文件列表
-         * @param {string} filterType - 过滤类型：all/html/image/document
+         * 加载工具列表
          */
-        function filterFiles(filterType) {
-            CONFIG.currentFilter = filterType;
-            
-            const container = document.getElementById('fileListContainer');
-            const files = container.querySelectorAll('.file-item');
-            
-            // 隐藏所有文件
-            files.forEach(file => {
-                file.style.display = 'none';
-            });
-            
-            // 根据过滤类型显示相应的文件
-            let visibleCount = 0;
-            files.forEach(file => {
-                const fileName = file.querySelector('.file-name').textContent.toLowerCase();
-                let shouldShow = false;
-                
-                switch (filterType) {
-                    case 'all':
-                        shouldShow = true;
-                        break;
-                    case 'exe':
-                        shouldShow = /\.exe$/i.test(fileName);
-                        break;
-                    case 'image':
-                        shouldShow = /\.(png|jpg|jpeg|gif|webp|svg)$/i.test(fileName);
-                        break;
-                    case 'document':
-                        shouldShow = /\.(md|txt|pdf|doc|docx)$/i.test(fileName);
-                        break;
-                }
-                
-                if (shouldShow) {
-                    file.style.display = 'flex';
-                    visibleCount++;
-                }
-            });
-            
-            // 更新状态信息
-            if (visibleCount === 0) {
-                showStatus(`没有找到匹配 "${filterType}" 类型的文件`, 'info');
-            } else {
-                showStatus(`显示 ${visibleCount} 个${getFilterDisplayName(filterType)}文件`, 'success');
-            }
-        }
-
-        /**
-         * 获取过滤类型的显示名称
-         * @param {string} filterType - 过滤类型
-         * @returns {string} 显示名称
-         */
-        function getFilterDisplayName(filterType) {
-            const names = {
-                'all': '全部',
-                'exe': 'exe',
-                'image': '图片',
-                'document': '文档'
-            };
-            return names[filterType] || filterType;
-        }
-
-        /**
-         * 加载本地文件列表
-         */
-        async function loadFiles() {
-            const container = document.getElementById('fileListContainer');
+        async function loadTools() {
+            const container = document.getElementById('toolsContainer');
             // 显示加载状态
             container.innerHTML = `
-                <div class="loading">
-                    <div class="spinner"></div>
-                    <p>正在加载本地文件列表...</p>
+                <div style="grid-column: 1/-1; text-align: center;">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <p>正在加载工具列表...</p>
+                    </div>
                 </div>
             `;
 
@@ -526,37 +464,15 @@
             await new Promise(resolve => setTimeout(resolve, 800));
 
             try {
-                // 获取实际文件大小（如果有文件输入访问权限）
-                const filesWithSize = await Promise.all(
-                    CONFIG.localFiles.map(async (file) => {
-                        try {
-                            // 尝试获取文件信息（这可能在某些浏览器中不工作，但不会出错）
-                            const response = await fetch(file.path, { method: 'HEAD' });
-                            if (response.ok) {
-                                const contentLength = response.headers.get('content-length');
-                                return {
-                                    ...file,
-                                    size: contentLength ? parseInt(contentLength) : Math.floor(Math.random() * 1000000) + 1000
-                                };
-                            }
-                        } catch (e) {
-                            // 如果无法访问，使用模拟大小
-                        }
-                        return {
-                            ...file,
-                            size: Math.floor(Math.random() * 1000000) + 1000
-                        };
-                    })
-                );
-                
-                displayFiles(filesWithSize);
-                showStatus(`成功加载 ${filesWithSize.length} 个本地文件`, 'success');
+                displayTools(TOOLS_CONFIG);
+                showStatus(`成功加载 ${TOOLS_CONFIG.length} 个工具`, 'success');
             } catch (error) {
                 // 错误处理
                 container.innerHTML = `
-                    <div class="empty-state">
-                        <p>加载失败: ${error.message}</p>
-                        <p>请检查文件路径配置</p>
+                    <div style="grid-column: 1/-1;">
+                        <div class="empty-state">
+                            <p>加载失败: ${error.message}</p>
+                        </div>
                     </div>
                 `;
                 showStatus(`加载失败: ${error.message}`, 'error');
@@ -564,89 +480,82 @@
         }
 
         /**
-         * 渲染文件列表
-         * @param {Array} files - 文件列表数组
+         * 渲染工具卡片
+         * @param {Array} tools - 工具配置数组
          */
-        function displayFiles(files) {
-            const container = document.getElementById('fileListContainer');
+        function displayTools(tools) {
+            const container = document.getElementById('toolsContainer');
             container.innerHTML = '';
             
-            files.forEach(file => {
-                // 提取文件扩展名（最多3个字符）
-                const ext = file.name.split('.').pop().toUpperCase().substring(0, 3);
-                const size = formatFileSize(file.size);
-                const date = new Date(file.modified * 1000).toLocaleString('zh-CN');
-                
-                // 创建文件项元素
-                const fileItem = document.createElement('div');
-                fileItem.className = 'file-item';
-                fileItem.innerHTML = `
-                    <div class="file-icon">${ext}</div>
-                    <div class="file-info">
-                        <div class="file-name">${escapeHtml(file.name)}</div>
-                        <div class="file-meta">${size} • ${date}</div>
+            tools.forEach(tool => {
+                // 创建工具卡片元素
+                const toolCard = document.createElement('div');
+                toolCard.className = 'tool-card';
+                toolCard.innerHTML = `
+                    <div class="tool-icon">${tool.icon}</div>
+                    <div class="tool-name">${escapeHtml(tool.name)}</div>
+                    <div class="tool-description">${escapeHtml(tool.description)}</div>
+                    <div class="tool-meta">
+                        <div class="tool-meta-item">
+                            <span style="font-weight: 600;">${tool.version}</span>
+                            <span>版本</span>
+                        </div>
+                        <div class="tool-meta-item">
+                            <span style="font-weight: 600;">${tool.fileSize}</span>
+                            <span>大小</span>
+                        </div>
                     </div>
-                    <div class="file-actions">
-                        <button class="btn-download" onclick="downloadFile('${escapeHtml(file.name)}')">
-                            ⬇ 下载
-                        </button>
-                    </div>
+                    <button class="btn-download" onclick="downloadTool('${escapeHtml(tool.fileName)}', '${escapeHtml(tool.name)}')">
+                        ⬇ 下载
+                    </button>
                 `;
                 
-                container.appendChild(fileItem);
+                container.appendChild(toolCard);
             });
         }
 
         /**
-         * 下载文件（本地文件）
+         * 下载工具
          * @param {string} filename - 文件名
+         * @param {string} toolname - 工具名称
          */
-        async function downloadFile(filename) {
-            // 查找文件路径
-            const file = CONFIG.localFiles.find(f => f.name === filename);
-            if (!file) {
-                showStatus(`文件未找到: ${filename}`, 'error');
+        async function downloadTool(filename, toolname) {
+            // 查找工具配置
+            const tool = TOOLS_CONFIG.find(t => t.fileName === filename);
+            if (!tool) {
+                showStatus(`工具未找到: ${filename}`, 'error');
                 return;
             }
 
-            showStatus(`正在处理: ${filename}`, 'info');
+            showStatus(`正在处理: ${toolname}`, 'info');
 
             try {
-                if (filename.endsWith('.html')) {
-                    // 对于HTML文件，在新窗口中打开
-                    window.open(file.path, '_blank');
-                    setTimeout(() => {
-                        showStatus(`已在新窗口中打开: ${filename}`, 'success');
-                    }, 500);
-                } else {
-                    // 对于其他文件，直接下载
-                    const response = await fetch(file.path);
-                    if (!response.ok) {
-                        throw new Error(`无法访问文件: HTTP ${response.status}`);
-                    }
-
-                    const blob = await response.blob();
-                    const a = document.createElement('a');
-                    a.href = window.URL.createObjectURL(blob);
-                    a.download = filename;
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
-                    
-                    // 释放URL对象，避免内存泄漏
-                    window.URL.revokeObjectURL(a.href);
-                    
-                    setTimeout(() => {
-                        showStatus(`下载已开始: ${filename}`, 'success');
-                    }, 500);
+                const response = await fetch(tool.filePath);
+                if (!response.ok) {
+                    throw new Error(`无法访问文件: HTTP ${response.status}`);
                 }
+
+                const blob = await response.blob();
+                const a = document.createElement('a');
+                a.href = window.URL.createObjectURL(blob);
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                
+                // 释放URL对象，避免内存泄漏
+                window.URL.revokeObjectURL(a.href);
+                
+                setTimeout(() => {
+                    showStatus(`下载已开始: ${filename}`, 'success');
+                }, 500);
             } catch (error) {
                 // 如果直接访问失败，提供复制路径的选项
                 showStatus(`下载失败: ${error.message}`, 'error');
                 
                 // 提供文件路径信息
                 setTimeout(() => {
-                    const filePath = file.path;
+                    const filePath = tool.filePath;
                     if (navigator.clipboard) {
                         navigator.clipboard.writeText(filePath).then(() => {
                             showStatus(`文件路径已复制到剪贴板: ${filePath}`, 'info');
