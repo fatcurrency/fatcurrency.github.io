@@ -15,17 +15,21 @@
             margin: 20px auto 30px;
             text-align: center;
             max-width: 900px;
+            width: 100%;
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
             border-radius: 25px;
-            padding: 10px 0;
+            padding: 10px 12px;
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
         .main-nav ul {
             list-style: none;
-            display: inline-flex;
-            gap: 30px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 16px 24px;
             padding: 0;
+            margin: 0;
         }
         .main-nav li {
             display: inline;
@@ -331,6 +335,36 @@
             .subtitle { font-size: 1em; }
             .card { padding: 25px; }
             h2 { font-size: 1.5em; }
+            .main-nav {
+                margin: 16px 16px 24px;
+                border-radius: 18px;
+                padding: 10px;
+            }
+            .main-nav ul {
+                gap: 10px 14px;
+            }
+            .main-nav a {
+                font-size: 1em;
+                padding: 8px 14px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-nav {
+                margin: 12px 12px 20px;
+            }
+            .main-nav ul {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .main-nav li {
+                display: block;
+            }
+            .main-nav a {
+                display: block;
+                width: 100%;
+                text-align: center;
+            }
         }
     </style>
 </head>
