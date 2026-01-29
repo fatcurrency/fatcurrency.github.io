@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fleeting Musings - 浮生随笔</title>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -15,20 +18,22 @@
         .main-nav {
             margin: 20px auto 30px;
             text-align: center;
-            max-width: 900px;
+            max-width: 1200px;
+            width: 100%;
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
             border-radius: 25px;
-            padding: 10px 0;
+            padding: 10px 12px;
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
         .main-nav ul {
             list-style: none;
-            display: inline-flex;
-            gap: 30px;
-            padding: 0;
+            display: flex;
             flex-wrap: wrap;
             justify-content: center;
+            gap: 16px 24px;
+            padding: 0;
+            margin: 0;
         }
         .main-nav li { display: inline; }
         .main-nav a {
@@ -50,19 +55,81 @@
             background: rgba(102, 126, 234, 0.2);
             color: #fff;
         }
+
         .container {
-            max-width: 900px;
+            max-width: 1200px;
             margin: 0 auto;
             background: white;
             border-radius: 12px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
             overflow: hidden;
+            display: flex;
+            min-height: 600px;
         }
+
+        .sidebar {
+            width: 250px;
+            background: #f8f9fa;
+            border-right: 1px solid #e0e0e0;
+            padding: 20px;
+            overflow-y: auto;
+            max-height: 80vh;
+        }
+
+        .sidebar h3 {
+            font-size: 14px;
+            color: #667eea;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .sidebar-list {
+            list-style: none;
+        }
+
+        .sidebar-list li {
+            margin-bottom: 8px;
+        }
+
+        .sidebar-list a {
+            display: block;
+            padding: 10px 12px;
+            color: #555;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: background 0.2s, color 0.2s;
+            font-size: 14px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .sidebar-list a:hover, .sidebar-list a.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .sidebar-empty {
+            color: #999;
+            font-size: 13px;
+            padding: 20px 10px;
+            text-align: center;
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
         .header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             padding: 30px;
             text-align: center;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
         }
         .header h1 {
             font-size: 28px;
@@ -72,6 +139,8 @@
             padding: 30px;
             line-height: 1.8;
             color: #333;
+            overflow-y: auto;
+            flex: 1;
         }
         .content h2 {
             margin-top: 30px;
@@ -89,6 +158,114 @@
             padding: 15px;
             margin: 20px 0;
             font-style: italic;
+        }
+
+        .markdown-content {
+            line-height: 1.8;
+            color: #333;
+        }
+
+        .markdown-content h1 {
+            font-size: 2em;
+            margin-bottom: 15px;
+            color: #2c3e50;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .markdown-content h2 {
+            font-size: 1.6em;
+            margin: 20px 0 12px;
+            color: #34495e;
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 8px;
+        }
+
+        .markdown-content h3 {
+            font-size: 1.3em;
+            margin: 15px 0 10px;
+            color: #667eea;
+        }
+
+        .markdown-content p {
+            margin-bottom: 12px;
+        }
+
+        .markdown-content img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 12px auto;
+            border-radius: 6px;
+        }
+
+        .markdown-content ul, .markdown-content ol {
+            margin: 12px 0;
+            padding-left: 30px;
+        }
+
+        .markdown-content li {
+            margin-bottom: 6px;
+        }
+
+        .markdown-content code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            color: #d63384;
+        }
+
+        .markdown-content pre {
+            background: #282c34;
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+
+        .markdown-content pre code {
+            background: none;
+            padding: 0;
+            color: #abb2bf;
+        }
+
+        .markdown-content blockquote {
+            border-left: 4px solid #667eea;
+            padding-left: 15px;
+            margin: 15px 0;
+            color: #666;
+            background: #f9f9f9;
+            padding: 10px 15px;
+            border-radius: 4px;
+        }
+
+        .markdown-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+
+        .markdown-content th, .markdown-content td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        .markdown-content th {
+            background: #f5f5f5;
+            font-weight: bold;
+        }
+
+        .markdown-content a {
+            color: #667eea;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .markdown-content a:hover {
+            color: #764ba2;
+            text-decoration: underline;
         }
         
         /* 工具卡片样式 */
@@ -154,12 +331,26 @@
         .feature-tag:hover {
             transform: scale(1.05);
         }
+
         @media (max-width: 768px) {
-            .main-nav ul { gap: 15px; padding: 0 10px; }
+            .main-nav ul { gap: 10px 14px; }
             .main-nav a { padding: 6px 12px; font-size: 1em; }
-            .container { margin: 0 10px; }
+            .container { 
+                margin: 0 10px;
+                flex-direction: column;
+                min-height: auto;
+            }
+            .sidebar {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid #e0e0e0;
+                max-height: none;
+                padding: 15px;
+            }
             .header { padding: 20px 15px; }
             .content { padding: 20px 15px; }
+            .sidebar h3 { font-size: 13px; }
+            .sidebar-list a { font-size: 13px; padding: 8px 10px; }
         }
     </style>
 </head>
@@ -175,69 +366,228 @@
         </ul>
     </nav>
     <main class="container">
-        <header class="header">
-            <h1>Fleeting Musings</h1>
-            <p>记录生活与工作中的点滴思考</p>
-        </header>
-        <section class="content">
-            <p>这里是浮生随笔专栏，我会在这里分享一些关于生活、工作、技术和核医学图像处理领域的思考与感悟。</p>
-            
-            <h2>关于这个专栏</h2>
-            <p>Fleeting Musings（浮生随笔）是一个记录思考和灵感的地方。在繁忙的科研和工作中，总有一些转瞬即逝的想法和感悟值得被记录下来。（同时感谢AI的帮助，让这些想法可以快速落地）</p>
-            
-            <div class="quote">
-                "我们的生活由无数个瞬间组成，每个瞬间都蕴含着智慧和启示。记录这些瞬间，就是记录我们成长的轨迹。"
-            </div>
-            
-            <h2>工具分享</h2>
-            <div class="tool-card">
-                <h3>🎤 Sing at any time（麦克风工具）</h3>
-                <p class="tool-link">
-                    <a href="mytool/sing_at_any_time.html" target="_blank">访问工具 →</a>
-                </p>
-                <div class="tool-description">
-                    这款基于Web Audio API开发的KTV效果麦克风模拟工具，以沉浸式暗黑色UI设计为载体，集成专业级音频处理能力。支持麦克风音量精细调节、三段EQ均衡（低频60-200Hz/中频200Hz-3kHz/高频3kHz-10kHz）精准调校，搭配可自定义的混响时间、延迟时长及干湿比参数，还原真实KTV混音效果；内置实时音量监测可视化模块，辅以动态渐变背景与交互反馈，无需安装插件，通过浏览器即可快速启用，为用户提供便捷、专业的音频效果调校体验。
-                </div>
-                <div class="tool-features">
-                    <span class="feature-tag">Web Audio API</span>
-                    <span class="feature-tag">KTV效果</span>
-                    <span class="feature-tag">EQ均衡器</span>
-                    <span class="feature-tag">混响效果</span>
-                    <span class="feature-tag">实时监测</span>
-                </div>
-            </div>
-
-            <div class="tool-card">
-                <h3>📝 Markdown 编辑器</h3>
-                <p class="tool-link">
-                    <a href="mytool/markdown_editor.html" target="_blank">访问工具 →</a>
-                </p>
-                <div class="tool-description">
-                    一款支持实时预览、代码高亮和富文本编辑的 Markdown 编辑器。界面现代美观，支持多种 Markdown 语法插入，内置丰富工具栏（标题、加粗、斜体、链接、图片、代码块、列表、表格等），可自定义文字颜色，支持滚动同步和 Tab 键缩进。适合快速撰写、预览和美化 Markdown 文档，无需安装插件，浏览器即可使用。
-                </div>
-                <div class="tool-features">
-                    <span class="feature-tag">Markdown</span>
-                    <span class="feature-tag">实时预览</span>
-                    <span class="feature-tag">代码高亮</span>
-                    <span class="feature-tag">富文本编辑</span>
-                    <span class="feature-tag">滚动同步</span>
-                </div>
-            </div>
-
-            
-
-            <h2>未来计划</h2>
-            <p>在这个专栏中，我计划分享以下内容：</p>
-            <ul>
-                <li>核医学图像处理领域的最新进展和思考</li>
-                <li>技术学习和项目开发中的心得体验</li>
-                <li>生活中的感悟和思考</li>
-                <li>阅读推荐和书籍评论</li>
-                <li>更多实用工具分享</li>
+        <aside class="sidebar">
+            <h3>📚 笔记</h3>
+            <ul class="sidebar-list" id="sidebar-list">
+                <li class="sidebar-empty">暂无笔记</li>
             </ul>
-            
-            <p>敬请期待更多内容的更新！</p>
-        </section>
+        </aside>
+
+        <div class="main-content">
+            <header class="header">
+                <h1>Fleeting Musings</h1>
+                <p>记录生活与工作中的点滴思考</p>
+            </header>
+            <section class="content" id="main-content">
+                <p>这里是浮生随笔专栏，我会在这里分享一些关于生活、工作、技术和核医学图像处理领域的思考与感悟。</p>
+                
+                <h2>关于这个专栏</h2>
+                <p>Fleeting Musings（浮生随笔）是一个记录思考和灵感的地方。在繁忙的科研和工作中，总有一些转瞬即逝的想法和感悟值得被记录下来。（同时感谢AI的帮助，让这些想法可以快速落地）</p>
+                
+                <div class="quote">
+                    "我们的生活由无数个瞬间组成，每个瞬间都蕴含着智慧和启示。记录这些瞬间，就是记录我们成长的轨迹。"
+                </div>
+                
+                <h2>工具分享</h2>
+                <div class="tool-card">
+                    <h3>🎤 Sing at any time（麦克风工具）</h3>
+                    <p class="tool-link">
+                        <a href="mytool/sing_at_any_time.html" target="_blank">访问工具 →</a>
+                    </p>
+                    <div class="tool-description">
+                        这款基于Web Audio API开发的KTV效果麦克风模拟工具，以沉浸式暗黑色UI设计为载体，集成专业级音频处理能力。支持麦克风音量精细调节、三段EQ均衡（低频60-200Hz/中频200Hz-3kHz/高频3kHz-10kHz）精准调校，搭配可自定义的混响时间、延迟时长及干湿比参数，还原真实KTV混音效果；内置实时音量监测可视化模块，辅以动态渐变背景与交互反馈，无需安装插件，通过浏览器即可快速启用，为用户提供便捷、专业的音频效果调校体验。
+                    </div>
+                    <div class="tool-features">
+                        <span class="feature-tag">Web Audio API</span>
+                        <span class="feature-tag">KTV效果</span>
+                        <span class="feature-tag">EQ均衡器</span>
+                        <span class="feature-tag">混响效果</span>
+                        <span class="feature-tag">实时监测</span>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <h3>📝 Markdown 编辑器</h3>
+                    <p class="tool-link">
+                        <a href="mytool/markdown_editor.html" target="_blank">访问工具 →</a>
+                    </p>
+                    <div class="tool-description">
+                        一款支持实时预览、代码高亮和富文本编辑的 Markdown 编辑器。界面现代美观，支持多种 Markdown 语法插入，内置丰富工具栏（标题、加粗、斜体、链接、图片、代码块、列表、表格等），可自定义文字颜色，支持滚动同步和 Tab 键缩进。适合快速撰写、预览和美化 Markdown 文档，无需安装插件，浏览器即可使用。
+                    </div>
+                    <div class="tool-features">
+                        <span class="feature-tag">Markdown</span>
+                        <span class="feature-tag">实时预览</span>
+                        <span class="feature-tag">代码高亮</span>
+                        <span class="feature-tag">富文本编辑</span>
+                        <span class="feature-tag">滚动同步</span>
+                    </div>
+                </div>
+
+                <h2>未来计划</h2>
+                <p>在这个专栏中，我计划分享以下内容：</p>
+                <ul>
+                    <li>核医学图像处理领域的最新进展和思考</li>
+                    <li>技术学习和项目开发中的心得体验</li>
+                    <li>生活中的感悟和思考</li>
+                    <li>阅读推荐和书籍评论</li>
+                    <li>更多实用工具分享</li>
+                </ul>
+                
+                <p>敬请期待更多内容的更新！</p>
+            </section>
+        </div>
     </main>
+
+    <script>
+        // 配置 marked
+        marked.setOptions({
+            breaks: true,
+            gfm: true
+        });
+
+        // 初始化：加载笔记列表
+        document.addEventListener('DOMContentLoaded', function() {
+            loadNotesList();
+        });
+
+        // 加载笔记文件列表
+        async function loadNotesList() {
+            try {
+                // 尝试加载 mynote 文件夹的索引或直接列出已知文件
+                // 由于浏览器无法直接访问文件系统，我们需要使用一个列表配置
+                const response = await fetch('mynote/');
+                
+                if (!response.ok) {
+                    console.warn('无法获取 mynote 文件夹列表');
+                    return;
+                }
+
+                const html = await response.text();
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                
+                // 从目录列表页面提取 .md 文件链接
+                const links = doc.querySelectorAll('a');
+                const mdFiles = Array.from(links)
+                    .map(link => link.getAttribute('href'))
+                    .filter(href => href && href.endsWith('.md') && !href.includes('..'))
+                    .sort();
+
+                if (mdFiles.length > 0) {
+                    displayNotesList(mdFiles);
+                } else {
+                    console.warn('未找到 markdown 文件');
+                }
+            } catch (error) {
+                console.warn('加载笔记列表失败:', error);
+                // 尝试加载示例文件
+                tryLoadSampleNotes();
+            }
+        }
+
+        // 尝试加载已知的示例文件
+        function tryLoadSampleNotes() {
+            const sampleNotes = [
+                'Classification-of-aortic-dissection.md'
+            ];
+            
+            // 检查示例文件是否存在
+            const availableNotes = [];
+            
+            Promise.all(sampleNotes.map(file =>
+                fetch(`mynote/${file}`)
+                    .then(res => res.ok ? file : null)
+                    .catch(() => null)
+            )).then(results => {
+                const notes = results.filter(f => f !== null);
+                if (notes.length > 0) {
+                    displayNotesList(notes);
+                }
+            });
+        }
+
+        // 显示笔记列表
+        function displayNotesList(files) {
+            const sidebarList = document.getElementById('sidebar-list');
+            
+            if (files.length === 0) {
+                sidebarList.innerHTML = '<li class="sidebar-empty">暂无笔记</li>';
+                return;
+            }
+
+            sidebarList.innerHTML = '';
+            
+            files.forEach(file => {
+                const displayName = file.replace(/.md$/, '').replace(/-/g, ' ');
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.href = '#';
+                a.textContent = displayName;
+                a.setAttribute('data-file', file);
+                
+                a.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    loadNote(file);
+                    
+                    // 更新活跃状态
+                    document.querySelectorAll('#sidebar-list a').forEach(link => {
+                        link.classList.remove('active');
+                    });
+                    a.classList.add('active');
+                });
+                
+                li.appendChild(a);
+                sidebarList.appendChild(li);
+            });
+        }
+
+        // 加载单个笔记
+        async function loadNote(filename) {
+            try {
+                const response = await fetch(`mynote/${filename}`);
+                
+                if (!response.ok) {
+                    throw new Error('文件加载失败');
+                }
+
+                const markdown = await response.text();
+                const contentArea = document.getElementById('main-content');
+                
+                // 使用 marked 渲染 markdown
+                let html = marked.parse(markdown);
+                
+                // 高亮代码块
+                html = html.replace(/<pre><code class="language-(\w+)">([\s\S]*?)<\/code><\/pre>/g, (match, lang, code) => {
+                    try {
+                        const highlighted = hljs.highlight(code.trim(), { language: lang }).value;
+                        return `<pre><code class="language-${lang}">${highlighted}</code></pre>`;
+                    } catch (e) {
+                        return match;
+                    }
+                });
+
+                // 处理不带语言标识的代码块
+                html = html.replace(/<pre><code>([\s\S]*?)<\/code><\/pre>/g, (match, code) => {
+                    try {
+                        const highlighted = hljs.highlightAuto(code.trim()).value;
+                        return `<pre><code>${highlighted}</code></pre>`;
+                    } catch (e) {
+                        return match;
+                    }
+                });
+
+                // 更新内容并添加 markdown-content 类
+                contentArea.innerHTML = `<div class="markdown-content">${html}</div>`;
+                
+                // 滚动到顶部
+                contentArea.scrollTop = 0;
+                
+            } catch (error) {
+                console.error('加载笔记失败:', error);
+                document.getElementById('main-content').innerHTML = 
+                    `<div class="markdown-content"><p style="color: red;">加载失败：${error.message}</p></div>`;
+            }
+        }
+    </script>
 </body>
 </html>
