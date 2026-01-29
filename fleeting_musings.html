@@ -447,147 +447,35 @@
 
         // 初始化：加载笔记列表
         document.addEventListener('DOMContentLoaded', function() {
-            loadNotesList();
-        });
-
-        // 加载笔记文件列表
-        async function loadNotesList() {
-            try {
-                // 尝试加载 mynote 文件夹的索引或直接列出已知文件
-                // 由于浏览器无法直接访问文件系统，我们需要使用一个列表配置
-                const response = await fetch('mynote/');
-                
-                if (!response.ok) {
-                    console.warn('无法获取 mynote 文件夹列表');
-                    return;
-                }
-
-                const html = await response.text();
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(html, 'text/html');
-                
-                // 从目录列表页面提取 .md 文件链接
-                const links = doc.querySelectorAll('a');
-                const mdFiles = Array.from(links)
-                    .map(link => link.getAttribute('href'))
-                    .filter(href => href && href.endsWith('.md') && !href.includes('..'))
-                    .sort();
-
-                if (mdFiles.length > 0) {
-                    displayNotesList(mdFiles);
-                } else {
-                    console.warn('未找到 markdown 文件');
-                }
-            } catch (error) {
-                console.warn('加载笔记列表失败:', error);
-                // 尝试加载示例文件
-                tryLoadSampleNotes();
-            }
-        }
-
-        // 尝试加载已知的示例文件
-        function tryLoadSampleNotes() {
-            const sampleNotes = [
+            // 这是一个简化的文件列表，实际应用中可能需要动态生成
+            const noteFiles = [
                 'Classification-of-aortic-dissection.md'
+                // 在这里添加更多 mynote 文件夹中的 .md 文件
             ];
-            
-            // 检查示例文件是否存在
-            const availableNotes = [];
-            
-            Promise.all(sampleNotes.map(file =>
-                fetch(`mynote/${file}`)
-                    .then(res => res.ok ? file : null)
-                    .catch(() => null)
-            )).then(results => {
-                const notes = results.filter(f => f !== null);
-                if (notes.length > 0) {
-                    displayNotesList(notes);
-                }
-            });
-        }
 
-        // 显示笔记列表
-        function displayNotesList(files) {
             const sidebarList = document.getElementById('sidebar-list');
             
-            if (files.length === 0) {
+            if (noteFiles.length === 0) {
                 sidebarList.innerHTML = '<li class="sidebar-empty">暂无笔记</li>';
                 return;
             }
 
-            sidebarList.innerHTML = '';
+            sidebarList.innerHTML = ''; // 清空加载提示
             
-            files.forEach(file => {
+            noteFiles.forEach(file => {
                 const displayName = file.replace(/.md$/, '').replace(/-/g, ' ');
                 const li = document.createElement('li');
                 const a = document.createElement('a');
-                a.href = '#';
-                a.textContent = displayName;
-                a.setAttribute('data-file', file);
                 
-                a.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    loadNote(file);
-                    
-                    // 更新活跃状态
-                    document.querySelectorAll('#sidebar-list a').forEach(link => {
-                        link.classList.remove('active');
-                    });
-                    a.classList.add('active');
-                });
+                // 修改链接，指向新的查看器页面
+                a.href = `note_viewer.html?note=${encodeURIComponent(file)}`;
+                a.textContent = displayName;
+                a.setAttribute('title', displayName); // 鼠标悬停时显示完整标题
                 
                 li.appendChild(a);
                 sidebarList.appendChild(li);
             });
-        }
-
-        // 加载单个笔记
-        async function loadNote(filename) {
-            try {
-                const response = await fetch(`mynote/${filename}`);
-                
-                if (!response.ok) {
-                    throw new Error('文件加载失败');
-                }
-
-                const markdown = await response.text();
-                const contentArea = document.getElementById('main-content');
-                
-                // 使用 marked 渲染 markdown
-                let html = marked.parse(markdown);
-                
-                // 高亮代码块
-                html = html.replace(/<pre><code class="language-(\w+)">([\s\S]*?)<\/code><\/pre>/g, (match, lang, code) => {
-                    try {
-                        const highlighted = hljs.highlight(code.trim(), { language: lang }).value;
-                        return `<pre><code class="language-${lang}">${highlighted}</code></pre>`;
-                    } catch (e) {
-                        return match;
-                    }
-                });
-
-                // 处理不带语言标识的代码块
-                html = html.replace(/<pre><code>([\s\S]*?)<\/code><\/pre>/g, (match, code) => {
-                    try {
-                        const highlighted = hljs.highlightAuto(code.trim()).value;
-                        return `<pre><code>${highlighted}</code></pre>`;
-                    } catch (e) {
-                        return match;
-                    }
-                });
-
-                // 更新内容并添加 markdown-content 类
-                contentArea.innerHTML = `<div class="markdown-content">${html}</div>`;
-                
-                // 滚动到顶部
-                contentArea.scrollTop = 0;
-                
-            } catch (error) {
-                console.error('加载笔记失败:', error);
-                document.getElementById('main-content').innerHTML = 
-                    `<div class="markdown-content"><p style="color: red;">加载失败：${error.message}</p></div>`;
-            }
-        }
+        });
     </script>
 </body>
 </html>
