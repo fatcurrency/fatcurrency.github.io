@@ -56,4 +56,4 @@
 
 资料补充：
 
-![主动脉主要分支](mynote/image/1-0-Aorta-and-major-branches.png)
+![主动脉主要分支](mynote/image/Aorta-and-major-branches.png)
