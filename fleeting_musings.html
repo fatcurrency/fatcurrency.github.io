@@ -110,6 +110,18 @@
             color: white;
         }
 
+        .sidebar-group-title {
+            font-size: 12px;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin: 14px 0 6px;
+            padding: 4px 6px;
+            border-left: 3px solid #667eea;
+            background: #f1f3f5;
+            border-radius: 4px;
+        }
+
         .sidebar-empty {
             color: #999;
             font-size: 13px;
@@ -446,34 +458,55 @@
 
         // 初始化：加载笔记列表
         document.addEventListener('DOMContentLoaded', function() {
-            // 这是一个简化的文件列表，实际应用中可能需要动态生成
-            const noteFiles = [
-                'Classification-of-aortic-dissection.md',
-                'From C++ source code to executable program.md'
-                // 在这里添加更多 mynote 文件夹中的 .md 文件
+            const noteGroups = [
+                {
+                    title: 'program',
+                    files: [
+                        'From C++ source code to executable program.md'
+                    ]
+                },
+                {
+                    title: 'medical',
+                    files: [
+                        'Classification-of-aortic-dissection.md'
+                    ]
+                }
             ];
 
             const sidebarList = document.getElementById('sidebar-list');
-            
-            if (noteFiles.length === 0) {
+
+            const totalNotes = noteGroups.reduce((sum, group) => sum + (group.files ? group.files.length : 0), 0);
+
+            if (totalNotes === 0) {
                 sidebarList.innerHTML = '<li class="sidebar-empty">暂无笔记</li>';
                 return;
             }
 
             sidebarList.innerHTML = ''; // 清空加载提示
-            
-            noteFiles.forEach(file => {
-                const displayName = file.replace(/.md$/, '').replace(/-/g, ' ');
-                const li = document.createElement('li');
-                const a = document.createElement('a');
-                
-                // 修改链接，指向新的查看器页面
-                a.href = `note_viewer.html?note=${encodeURIComponent(file)}`;
-                a.textContent = displayName;
-                a.setAttribute('title', displayName); // 鼠标悬停时显示完整标题
-                
-                li.appendChild(a);
-                sidebarList.appendChild(li);
+
+            noteGroups.forEach(group => {
+                if (!group.files || group.files.length === 0) {
+                    return;
+                }
+
+                const groupTitle = document.createElement('li');
+                groupTitle.className = 'sidebar-group-title';
+                groupTitle.textContent = group.title;
+                sidebarList.appendChild(groupTitle);
+
+                group.files.forEach(file => {
+                    const displayName = file.replace(/.md$/, '').replace(/-/g, ' ');
+                    const li = document.createElement('li');
+                    const a = document.createElement('a');
+
+                    // 修改链接，指向新的查看器页面
+                    a.href = `note_viewer.html?note=${encodeURIComponent(file)}`;
+                    a.textContent = displayName;
+                    a.setAttribute('title', displayName); // 鼠标悬停时显示完整标题
+
+                    li.appendChild(a);
+                    sidebarList.appendChild(li);
+                });
             });
         });
     </script>
