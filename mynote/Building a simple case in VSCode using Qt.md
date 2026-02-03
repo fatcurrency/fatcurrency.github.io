@@ -1,5 +1,3 @@
-# 在 VSCode 中利用 Qt 5.9.8、CMake 和 VS2017 构建简单案例
-
 # VSCode + Qt 5.9.8 + CMake + VS2017 构建简单案例
 
 本文梳理在 VSCode 环境下，结合 Qt 5.9.8、CMake 和 Visual Studio 2017 搭建简单 Qt 案例的完整流程。
