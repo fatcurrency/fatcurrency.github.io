@@ -60,7 +60,7 @@ TotalSegmentator -i mri.nii.gz -o segmentations --task total_mr
 ## （2）子任务
 除了默认任务 (total) 外，还有更多包含更多类别的子任务。如果任务名称以 `_mr` 结尾，则适用于 MR 图像，否则适用于 CT 图像。
 
-![子任务示意图](image/TotalSegmentator-Subtask-diagram.png)
+![子任务示意图](mynote/image/TotalSegmentator-Subtask-diagram.png)
 
 ### 子任务列表（开源部分）
 **开源可用（Apache-2.0 许可证）的任何用途：**
@@ -186,7 +186,7 @@ TotalSegmentator -i ct.nii.gz -o seg -ta lung_nodules --save_probabilities probs
 TotalSegmentator 有以下运行时间和内存需求（使用 Nvidia RTX 3090 GPU）：
 （1.5mm 是正常模型，3mm 是 --fast 模型。在 v2 版本中，由于增加了更多类别，运行时间略有增加。）
 
-![资源需求示意图](image/TotalSegmentator-Resource-demand-diagram.png)
+![资源需求示意图](mynote/image/TotalSegmentator-Resource-demand-diagram.png)
 
 ### 减少内存消耗的选项
 - `--fast`：使用较低分辨率模型
