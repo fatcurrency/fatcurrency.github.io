@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>个人录音室</title>
+  <style>
+    :root{--bg:#0f1724;--card:#0b1220;--accent:#4f46e5;--muted:#94a3b8;--danger:#ef4444}
+    html,body{height:100%;margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue","Noto Sans";background:linear-gradient(180deg,#071020 0%,#0b1320 100%);color:#e6eef8}
+    .wrap{max-width:820px;margin:48px auto;padding:28px;background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);border-radius:14px;box-shadow:0 6px 30px rgba(2,6,23,0.6)}
+    header{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+    .logo{width:52px;height:52px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#06b6d4);display:flex;align-items:center;justify-content:center;font-weight:700}
+    h1{font-size:18px;margin:0}
+    p.lead{margin:4px 0 0;color:var(--muted);font-size:13px}
+
+    .controls{display:flex;gap:12px;align-items:center;margin-top:8px}
+    button{background:#0f1724;border:1px solid rgba(255,255,255,0.06);padding:10px 14px;border-radius:10px;color:inherit;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+    button.primary{background:linear-gradient(90deg,var(--accent),#06b6d4);color:white;border:none;box-shadow:0 6px 20px rgba(79,70,229,0.18)}
+    button.recording{animation:pulse 1s infinite}
+    @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(239,68,68,0.3)}50%{box-shadow:0 0 0 12px rgba(239,68,68,0.06)}100%{box-shadow:0 0 0 0 rgba(239,68,68,0)}}
+    select{background:linear-gradient(180deg,#071022,#0b1220);border:1px solid rgba(255,255,255,0.04);color:var(--muted);padding:10px 12px;border-radius:10px;box-shadow:inset 0 1px 0 rgba(255,255,255,0.02);-webkit-appearance:none;-moz-appearance:none;appearance:none;padding-right:34px;transition:all .18s ease}
+    select:hover{border-color:rgba(79,70,229,0.28);color:#e6eef8}
+    select:focus{outline:none;box-shadow:0 6px 20px rgba(79,70,229,0.12);border-color:rgba(79,70,229,0.34);color:#e6eef8}
+    select{background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");background-repeat:no-repeat;background-position:right 10px center;background-size:14px}
+    select option{ color:#000 !important; background:#fff !important; }
+    select optgroup{ color:#000 !important; }
+    select option:hover{ background:#f3f4f6 !important; }
+
+    button{background:#0f1724;border:1px solid rgba(255,255,255,0.06);padding:10px 14px;border-radius:10px;color:inherit;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:transform .12s ease,box-shadow .12s ease,background .12s ease}
+    button:hover{transform:translateY(-3px);box-shadow:0 10px 30px rgba(2,6,23,0.45)}
+    button:active{transform:translateY(-1px)}
+    button.primary{background:linear-gradient(90deg,var(--accent),#06b6d4);color:white;border:none;box-shadow:0 6px 30px rgba(79,70,229,0.18);padding:10px 16px}
+    button.primary:hover{box-shadow:0 14px 40px rgba(79,70,229,0.22)}
+    .vis{margin-top:18px;background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);border-radius:10px;padding:12px;border:1px solid rgba(255,255,255,0.03)}
+    canvas{width:100%;height:120px;display:block;border-radius:8px;background:linear-gradient(180deg,#041020,#071428)}
+    .player{display:flex;gap:12px;align-items:center;margin-top:12px}
+    .dot{width:12px;height:12px;border-radius:50%;background:var(--danger);box-shadow:0 4px 18px rgba(239,68,68,0.3);opacity:0.9}
+    .meta{color:var(--muted);font-size:13px;margin-left:auto}
+    footer{margin-top:16px;color:var(--muted);font-size:13px}
+    a.link{color:var(--accent);text-decoration:none}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="logo">RS</div>
+      <div>
+        <h1>个人录音室</h1>
+        <p class="lead">录音 · 实时可视化 · 保存为 MP3 / M4A</p>
+      </div>
+    </header>
+
+    <div class="controls">
+      <button id="btnRecord">● 录音</button>
+      <button id="btnStop" disabled>■ 停止</button>
+      <button id="btnPlay" disabled>▶ 播放</button>
+      <select id="formatSelect">
+        <option value="webm">WEBM（原生）</option>
+        <option value="mp3">MP3（转换）</option>
+        <option value="m4a">M4A（如果支持）</option>
+      </select>
+      <button id="btnSave" class="primary" disabled>⬇ 保存</button>
+    </div>
+
+    <div class="vis">
+      <canvas id="wave"></canvas>
+      <div class="player">
+        <div id="recDot" class="dot" style="visibility:hidden"></div>
+        <div class="meta" id="meta">未录制</div>
+      </div>
+    </div>
+
+    <div id="recordings" class="vis" style="margin-top:14px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+        <strong>录音记录</strong>
+        <span class="meta" id="count">0 条</span>
+      </div>
+      <div id="recordingsList"></div>
+    </div>
+
+    <footer>提示：推荐在 Chrome/Edge/Firefox 下使用；MP3 导出使用浏览器内转换，M4A 取决于浏览器对 MediaRecorder 的支持。</footer>
+  </div>
+
+  <script src="https://unpkg.com/lamejs@1.2.0/lame.min.js"></script>
+  <script>
+    const btnRecord = document.getElementById('btnRecord');
+    const btnStop = document.getElementById('btnStop');
+    const btnPlay = document.getElementById('btnPlay');
+    const btnSave = document.getElementById('btnSave');
+    const formatSelect = document.getElementById('formatSelect');
+    const recDot = document.getElementById('recDot');
+    const meta = document.getElementById('meta');
+    const canvas = document.getElementById('wave');
+    const ctx = canvas.getContext('2d');
+
+    let mediaStream = null;
+    let mediaRecorder = null;
+    let audioChunks = [];
+    let audioURL = null;
+    let audioBlob = null;
+    let audioBuffer = null;
+    let recordings = []; // 缓存的录音记录
+    let recordStartTime = null;
+    let recordIntervalId = null;
+
+
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    let analyser = null;
+    let sourceNode = null;
+
+    function resizeCanvas(){
+      const dpr = window.devicePixelRatio || 1;
+      const w = canvas.clientWidth;
+      const h = canvas.clientHeight;
+      canvas.width = Math.floor(w * dpr);
+      canvas.height = Math.floor(h * dpr);
+      // reset any transform then scale to devicePixelRatio
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    function drawVis(){
+      if(!analyser) { requestAnimationFrame(drawVis); return; }
+      const width = canvas.clientWidth; const height = canvas.clientHeight;
+      const bufferLength = analyser.fftSize; const data = new Uint8Array(bufferLength);
+      analyser.getByteTimeDomainData(data);
+      ctx.clearRect(0,0,width,height);
+      ctx.fillStyle = 'rgba(255,255,255,0.02)'; ctx.fillRect(0,0,width,height);
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      const slice = width / bufferLength;
+      for(let i=0;i<bufferLength;i++){
+        const v = data[i]/128.0;
+        const y = (v - 1) * (height/2) + (height/2); // center waveform
+        if(i===0) ctx.moveTo(0,y); else ctx.lineTo(i*slice,y);
+      }
+      const grad = ctx.createLinearGradient(0,0,width,0);
+      grad.addColorStop(0,'rgba(79,70,229,0.9)');
+      grad.addColorStop(1,'rgba(6,182,212,0.9)');
+      ctx.strokeStyle = grad; ctx.stroke();
+      // draw level bar (RMS)
+      let sum=0; for(let i=0;i<bufferLength;i++){ const val=(data[i]-128)/128; sum+=val*val; }
+      const rms = Math.sqrt(sum/bufferLength);
+      const barH = Math.max(4, Math.min(height, rms*height*2.2));
+      ctx.fillStyle = 'rgba(6,182,212,0.9)'; ctx.fillRect(width-12, height-barH-8, 8, barH);
+      requestAnimationFrame(drawVis);
+    }
+
+    async function startCapture(){
+      mediaStream = await navigator.mediaDevices.getUserMedia({audio:true});
+      sourceNode = audioCtx.createMediaStreamSource(mediaStream);
+      analyser = audioCtx.createAnalyser(); analyser.fftSize = 2048;
+      analyser.smoothingTimeConstant = 0.25; // reduce smoothing for more responsive visualization
+      // Ensure AudioContext is running (some browsers start suspended)
+      try{ await audioCtx.resume(); }catch(e){}
+      sourceNode.connect(analyser);
+      drawVis();
+      const preferred = formatSelect.value;
+      let mimeType = '';
+      if(preferred === 'm4a'){
+        if(MediaRecorder.isTypeSupported('audio/mp4')) mimeType='audio/mp4';
+        else if(MediaRecorder.isTypeSupported('audio/aac')) mimeType='audio/aac';
+      }
+      if(!mimeType){
+        if(MediaRecorder.isTypeSupported('audio/webm')) mimeType='audio/webm';
+        else if(MediaRecorder.isTypeSupported('audio/ogg')) mimeType='audio/ogg';
+      }
+      try{
+        mediaRecorder = new MediaRecorder(mediaStream, mimeType ? {mimeType} : undefined);
+      }catch(e){ mediaRecorder = new MediaRecorder(mediaStream); }
+      audioChunks = [];
+      mediaRecorder.ondataavailable = e => { if(e.data && e.data.size>0) audioChunks.push(e.data); };
+      mediaRecorder.onstop = async ()=>{
+        // 停止计时
+        if(recordIntervalId){ clearInterval(recordIntervalId); recordIntervalId = null; }
+        const measuredSecs = recordStartTime ? (Date.now() - recordStartTime)/1000 : 0;
+        recordStartTime = null;
+
+        audioBlob = new Blob(audioChunks, {type: audioChunks[0]?.type || 'audio/webm'});
+        audioURL = URL.createObjectURL(audioBlob);
+        // 尝试解码为 AudioBuffer
+        try{ const ab = await audioBlob.arrayBuffer(); audioBuffer = await audioCtx.decodeAudioData(ab); }catch(e){ audioBuffer = null; }
+
+        // 录音时长优先使用 decode 后的长度，否则使用测量值
+        const durationSec = (audioBuffer && audioBuffer.duration) ? Math.round(audioBuffer.duration) : Math.round(measuredSecs);
+
+        // 创建记录项并缓存
+        const id = Date.now().toString(36) + Math.random().toString(36).slice(2,8);
+        const rec = {
+          id,
+          blob: audioBlob,
+          url: audioURL,
+          sizeKB: Math.round(audioBlob.size/1024),
+          created: new Date().toLocaleString(),
+          buffer: audioBuffer,
+          mime: audioBlob.type || '',
+          duration: durationSec
+        };
+        recordings.unshift(rec);
+        renderRecordings();
+
+        btnPlay.disabled = false; btnSave.disabled = false; meta.textContent = `已录制 • ${rec.sizeKB} KB • ${formatTime(rec.duration)}`;
+      };
+      mediaRecorder.start();
+      // 开始计时
+      recordStartTime = Date.now();
+      if(recordIntervalId) clearInterval(recordIntervalId);
+      recordIntervalId = setInterval(()=>{
+        const secs = (Date.now() - recordStartTime)/1000;
+        meta.textContent = `录音中 • ${formatTime(secs)}`;
+      }, 250);
+      recDot.style.visibility='visible'; btnRecord.classList.add('recording'); btnStop.disabled=false; btnRecord.disabled=true;
+    }
+
+    btnRecord.addEventListener('click', async ()=>{
+      if(!mediaStream) {
+        try{ await startCapture(); }catch(e){ alert('无法获取麦克风：'+e.message); }
+      } else {
+        if(mediaRecorder && mediaRecorder.state === 'inactive') mediaRecorder.start();
+      }
+    });
+
+    btnStop.addEventListener('click', ()=>{
+      if(mediaRecorder && mediaRecorder.state !== 'inactive') mediaRecorder.stop();
+      if(mediaStream){ mediaStream.getTracks().forEach(t=>t.stop()); mediaStream=null; }
+      recDot.style.visibility='hidden'; btnRecord.classList.remove('recording'); btnStop.disabled=true; btnRecord.disabled=false;
+      // 停止时先停止计时显示，最终信息由 onstop 处理
+      if(recordIntervalId){ clearInterval(recordIntervalId); recordIntervalId = null; }
+      recordStartTime = null;
+      meta.textContent = '处理录音...';
+    });
+
+    btnPlay.addEventListener('click', ()=>{
+      if(!audioBlob) return;
+      const a = new Audio(); a.src = audioURL; a.play();
+    });
+
+    async function exportMP3(){
+      if(!audioBuffer){ alert('无法处理音频以转换为 MP3。'); return; }
+      const channelData = audioBuffer.getChannelData(0);
+      const sampleRate = audioBuffer.sampleRate;
+      const mp3enc = new lamejs.Mp3Encoder(1, sampleRate, 128);
+      const samplesPerFrame = 1152;
+      let mp3Data = [];
+      for(let i=0;i<channelData.length;i+=samplesPerFrame){
+        const frame = channelData.subarray(i, i+samplesPerFrame);
+        const buf = convertFloat32ToInt16(frame);
+        const mp3buf = mp3enc.encodeBuffer(buf);
+        if(mp3buf.length>0) mp3Data.push(new Int8Array(mp3buf));
+      }
+      const mp3buf = mp3enc.flush(); if(mp3buf.length>0) mp3Data.push(new Int8Array(mp3buf));
+      const blob = new Blob(mp3Data, {type:'audio/mp3'});
+      downloadBlob(blob, `recording_${Date.now()}.mp3`);
+    }
+
+    function convertFloat32ToInt16(float32Array){
+      const l = float32Array.length; const buf = new Int16Array(l);
+      for(let i=0;i<l;i++){ let s = Math.max(-1, Math.min(1, float32Array[i])); buf[i]=s<0? s*0x8000 : s*0x7FFF; }
+      return buf;
+    }
+
+    function downloadBlob(blob, filename){
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.style.display='none'; a.href=url; a.download = filename; document.body.appendChild(a); a.click(); setTimeout(()=>{ URL.revokeObjectURL(url); a.remove(); },1000);
+    }
+
+    function formatTime(sec){
+      const s = Math.max(0, Math.floor(sec||0));
+      const mm = Math.floor(s/60); const ss = s%60;
+      return `${mm}:${ss.toString().padStart(2,'0')}`;
+    }
+
+    // 渲染录音列表
+    const recordingsListEl = document.getElementById('recordingsList');
+    const countEl = document.getElementById('count');
+    function renderRecordings(){
+      countEl.textContent = `${recordings.length} 条`;
+      if(recordings.length===0){ recordingsListEl.innerHTML = '<div style="color:var(--muted)">暂无录音</div>'; return; }
+      recordingsListEl.innerHTML = recordings.map(r => {
+        return `
+          <div style="display:flex;align-items:center;gap:8px;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);margin-bottom:8px;background:linear-gradient(90deg,rgba(255,255,255,0.02),transparent)">
+            <div style="flex:1">
+              <div style="font-size:13px">录音 • ${r.created}</div>
+              <div style="color:var(--muted);font-size:12px;margin-top:4px">${r.sizeKB} KB • ${formatTime(r.duration || 0)} • ${r.mime || 'unknown'}</div>
+            </div>
+            <div style="display:flex;gap:8px">
+              <button data-act="play" data-id="${r.id}">▶ 播放</button>
+              <button data-act="save" data-id="${r.id}">⬇ 保存</button>
+              <button data-act="del" data-id="${r.id}">✖ 删除</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+      // 绑定事件委托
+      recordingsListEl.querySelectorAll('button').forEach(b=>{
+        b.onclick = (e)=>{
+          const id = b.getAttribute('data-id');
+          const act = b.getAttribute('data-act');
+          if(act === 'play') playRecording(id);
+          else if(act === 'save') saveRecording(id);
+          else if(act === 'del') deleteRecording(id);
+        };
+      });
+    }
+
+    function findRec(id){ return recordings.find(r=>r.id===id); }
+    function playRecording(id){ const r=findRec(id); if(!r) return; const a = new Audio(r.url); a.play(); }
+    function saveRecording(id){ const r=findRec(id); if(!r) return; const ext = r.mime.includes('mp3')? 'mp3' : (r.mime.includes('webm')? 'webm' : 'm4a'); downloadBlob(r.blob, `recording_${id}.${ext}`); }
+    function deleteRecording(id){ const idx = recordings.findIndex(r=>r.id===id); if(idx===-1) return; URL.revokeObjectURL(recordings[idx].url); recordings.splice(idx,1); renderRecordings(); }
+
+
+    btnSave.addEventListener('click', async ()=>{
+      const fmt = formatSelect.value;
+      if(fmt === 'webm'){
+        if(!audioBlob){ alert('暂无录音文件'); return; }
+        downloadBlob(audioBlob, `recording_${Date.now()}.webm`);
+        return;
+      }
+      if(fmt === 'mp3'){
+        meta.textContent='导出 MP3 中...'; await exportMP3(); meta.textContent='已导出 MP3'; return;
+      }
+      if(fmt === 'm4a'){
+        if(audioBlob && audioBlob.type && audioBlob.type.includes('mp4')){ downloadBlob(audioBlob, `recording_${Date.now()}.m4a`); return; }
+        // If we have raw audioBuffer, try to use MediaRecorder with audio/mp4 - not possible after the fact. Fallback: save webm but name m4a
+        if(audioBlob){ downloadBlob(audioBlob, `recording_${Date.now()}.m4a`); meta.textContent='尝试导出 M4A（可能为容器重命名）'; }
+      }
+    });
+
+  </script>
+</body>
+</html>
