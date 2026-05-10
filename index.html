@@ -1,743 +1,1072 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>核医学图像处理 - 专业简介</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title id="page-title">Your Name | Nuclear Medicine Researcher</title>
 
-        .main-nav {
-            margin: 20px auto 30px;
-            text-align: center;
-            max-width: 900px;
-            width: 100%;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 25px;
-            padding: 10px 12px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        .main-nav ul {
-            list-style: none;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 16px 24px;
-            padding: 0;
-            margin: 0;
-        }
-        .main-nav li {
-            display: inline;
-        }
-        .main-nav a {
-            color: #fff;
-            font-size: 1.1em;
-            text-decoration: none;
-            padding: 8px 18px;
-            border-radius: 18px;
-            transition: background 0.2s, color 0.2s;
-            background: rgba(102, 126, 234, 0.2);
-            outline: none;
-        }
-        .main-nav a:hover, .main-nav a.active {
-            background: #fff;
-            color: #667eea;
-        }
+  <!-- ═══════════════════════════════════════════════════════════
+       QUICK EDIT GUIDE
+       ─────────────────────────────────────────────────────────
+       1. Search for [EDIT: ...] tags to find all editable blocks
+       2. Change SITE_DATA object (below) to update core info
+       3. Add publications in the PUBLICATIONS array
+       4. Add notes in the NOTES array
+       ═══════════════════════════════════════════════════════════ -->
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: #333;
-            overflow-x: hidden;
-        }
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet" />
 
-        .particles {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1;
-        }
+  <style>
+    /* ── Design Tokens ── */
+    :root {
+      --bg:          #f5f7fa;
+      --surface:     #ffffff;
+      --surface-alt: #eef2f8;
+      --border:      #dde3ed;
+      --accent:      #1a6fa8;
+      --accent-2:    #0e9aa7;
+      --accent-dark: #10517d;
+      --text:        #1a2336;
+      --text-2:      #4a5568;
+      --text-3:      #7a8799;
+      --tag-bg:      #e8f1fb;
+      --tag-text:    #1a6fa8;
+      --nav-h:       64px;
+      --radius:      12px;
+      --shadow-sm:   0 1px 4px rgba(0,0,0,.07);
+      --shadow:      0 4px 20px rgba(0,0,0,.09);
+      --shadow-lg:   0 8px 40px rgba(0,0,0,.13);
+      --transition:  .22s cubic-bezier(.4,0,.2,1);
+    }
 
-        .particle {
-            position: absolute;
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            animation: float 6s infinite ease-in-out;
-        }
+    /* ── Reset ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body {
+      font-family: 'Inter', 'Noto Sans SC', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    img { max-width: 100%; }
+    ul { list-style: none; }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0) translateX(0); opacity: 0.3; }
-            50% { transform: translateY(-30px) translateX(20px); opacity: 0.6; }
-        }
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 
-        header {
-            position: relative;
-            z-index: 10;
-            text-align: center;
-            padding: 80px 20px;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-        }
+    /* ═══════════════ NAVIGATION ═══════════════ */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      height: var(--nav-h);
+      background: rgba(255,255,255,.92);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center;
+      padding: 0 clamp(1rem, 5vw, 3rem);
+      gap: 2rem;
+      box-shadow: var(--shadow-sm);
+    }
+    .nav-logo {
+      font-weight: 700; font-size: 1rem;
+      color: var(--accent-dark);
+      white-space: nowrap;
+      letter-spacing: -.3px;
+    }
+    .nav-logo span { color: var(--accent-2); }
+    .nav-links {
+      display: flex; align-items: center; gap: .25rem;
+      flex: 1;
+    }
+    .nav-links a {
+      padding: .4rem .85rem;
+      border-radius: 7px;
+      font-size: .88rem; font-weight: 500;
+      color: var(--text-2);
+      transition: background var(--transition), color var(--transition);
+    }
+    .nav-links a:hover,
+    .nav-links a.active { background: var(--tag-bg); color: var(--accent); text-decoration: none; }
 
-        .language-switch {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            display: flex;
-            gap: 10px;
-        }
+    .lang-toggle {
+      display: flex; align-items: center;
+      background: var(--surface-alt);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 3px;
+      gap: 2px;
+      flex-shrink: 0;
+    }
+    .lang-btn {
+      padding: .3rem .75rem;
+      border-radius: 16px;
+      border: none; cursor: pointer;
+      font-size: .8rem; font-weight: 600;
+      background: transparent;
+      color: var(--text-3);
+      transition: all var(--transition);
+    }
+    .lang-btn.active {
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(26,111,168,.35);
+    }
 
-        .lang-btn {
-            background: rgba(255, 255, 255, 0.2);
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            color: white;
-            padding: 8px 16px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-            outline: none;
-        }
+    /* ═══════════════ LAYOUT ═══════════════ */
+    main { padding-top: var(--nav-h); }
+    section {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 5rem clamp(1.25rem, 5vw, 2.5rem);
+    }
+    section + section {
+      border-top: 1px solid var(--border);
+    }
 
-        .lang-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: translateY(-2px);
-        }
+    /* Section heading */
+    .sec-label {
+      font-size: .75rem; font-weight: 700; letter-spacing: 1.5px;
+      text-transform: uppercase; color: var(--accent-2);
+      margin-bottom: .5rem;
+    }
+    .sec-title {
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      font-weight: 700; color: var(--text);
+      margin-bottom: 2.5rem;
+      line-height: 1.3;
+    }
+    .sec-title em { color: var(--accent); font-style: normal; }
 
-        .lang-btn.active {
-            background: rgba(255, 255, 255, 0.9);
-            color: #667eea;
-        }
+    /* ═══════════════ HERO / ABOUT ═══════════════ */
+    #about {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 4rem;
+      align-items: start;
+      padding-top: 5.5rem;
+    }
+    .about-text {}
+    .about-name {
+      font-size: clamp(1.9rem, 4vw, 2.75rem);
+      font-weight: 700; line-height: 1.2;
+      margin-bottom: .5rem;
+    }
+    .about-name .accent { color: var(--accent); }
+    .about-role {
+      font-size: 1.05rem; color: var(--text-2);
+      font-weight: 500; margin-bottom: .3rem;
+    }
+    .about-inst {
+      font-size: .95rem; color: var(--text-3);
+      margin-bottom: 1.75rem;
+    }
+    .about-bio {
+      font-size: .97rem; color: var(--text-2);
+      max-width: 620px; margin-bottom: 2rem;
+      line-height: 1.85;
+    }
+    .about-bio p + p { margin-top: .9rem; }
 
-        h1 {
-            font-size: 3em;
-            color: white;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-            animation: fadeInDown 1s ease-out;
-        }
+    /* Social links */
+    .social-links {
+      display: flex; flex-wrap: wrap; gap: .6rem;
+      margin-bottom: 2rem;
+    }
+    .social-btn {
+      display: inline-flex; align-items: center; gap: .4rem;
+      padding: .45rem 1rem;
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: .83rem; font-weight: 600;
+      color: var(--text-2);
+      transition: all var(--transition);
+      text-decoration: none;
+    }
+    .social-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--tag-bg);
+      text-decoration: none;
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-sm);
+    }
+    .social-btn svg { width: 15px; height: 15px; flex-shrink: 0; }
 
-        .subtitle {
-            font-size: 1.3em;
-            color: rgba(255, 255, 255, 0.9);
-            animation: fadeInUp 1s ease-out 0.3s both;
-        }
+    /* Profile card */
+    .profile-card {
+      width: 280px;
+      flex-shrink: 0;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+    .profile-avatar {
+      width: 100%; aspect-ratio: 1;
+      object-fit: cover;
+      background: linear-gradient(135deg, #1a6fa8 0%, #0e9aa7 100%);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 5rem; color: rgba(255,255,255,.6);
+      user-select: none;
+    }
+    .profile-avatar img {
+      width: 100%; height: 100%; object-fit: cover;
+    }
+    .profile-info {
+      padding: 1.25rem;
+    }
+    .profile-info h3 {
+      font-size: .9rem; font-weight: 700; color: var(--text);
+      margin-bottom: .25rem;
+    }
+    .profile-info p {
+      font-size: .78rem; color: var(--text-3);
+      line-height: 1.5;
+    }
+    .profile-divider {
+      height: 1px; background: var(--border);
+      margin: .8rem 0;
+    }
+    .profile-stat {
+      display: flex; justify-content: space-around;
+      text-align: center;
+    }
+    .profile-stat-item strong {
+      display: block;
+      font-size: 1.15rem; font-weight: 700; color: var(--accent);
+    }
+    .profile-stat-item span {
+      font-size: .72rem; color: var(--text-3);
+    }
 
-        @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+    /* News ticker */
+    .news-list {
+      display: flex; flex-direction: column; gap: .6rem;
+      margin-top: .5rem;
+    }
+    .news-item {
+      display: flex; align-items: flex-start; gap: .75rem;
+      padding: .75rem 1rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent-2);
+      border-radius: 8px;
+      font-size: .88rem;
+      transition: box-shadow var(--transition);
+    }
+    .news-item:hover { box-shadow: var(--shadow-sm); }
+    .news-date {
+      flex-shrink: 0;
+      font-size: .75rem; font-weight: 600;
+      color: var(--accent); white-space: nowrap;
+      padding-top: .1rem;
+    }
+    .news-text { color: var(--text-2); }
 
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+    /* ═══════════════ RESEARCH INTERESTS ═══════════════ */
+    .interests-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.25rem;
+    }
+    .interest-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.75rem;
+      transition: all var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+    .interest-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      opacity: 0;
+      transition: opacity var(--transition);
+    }
+    .interest-card:hover { box-shadow: var(--shadow); transform: translateY(-3px); }
+    .interest-card:hover::before { opacity: 1; }
+    .interest-icon {
+      width: 44px; height: 44px;
+      background: var(--tag-bg);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 1rem;
+      font-size: 1.4rem;
+    }
+    .interest-card h3 {
+      font-size: .97rem; font-weight: 700;
+      color: var(--text); margin-bottom: .5rem;
+    }
+    .interest-card p {
+      font-size: .84rem; color: var(--text-3); line-height: 1.65;
+    }
 
-        .container {
-            position: relative;
-            z-index: 10;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 60px 20px;
-        }
+    /* ═══════════════ RESEARCH / PUBLICATIONS ═══════════════ */
+    .pub-filters {
+      display: flex; flex-wrap: wrap; gap: .5rem;
+      margin-bottom: 2rem;
+    }
+    .filter-btn {
+      padding: .4rem .9rem;
+      border: 1.5px solid var(--border);
+      border-radius: 20px;
+      background: var(--surface);
+      font-size: .8rem; font-weight: 600;
+      color: var(--text-3);
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+    .filter-btn:hover, .filter-btn.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
 
-        .card {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            padding: 40px;
-            margin-bottom: 30px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            animation: slideIn 0.6s ease-out backwards;
-        }
+    .pub-list { display: flex; flex-direction: column; gap: 1.25rem; }
+    .pub-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.6rem 1.75rem;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 1rem;
+      transition: all var(--transition);
+    }
+    .pub-card:hover { box-shadow: var(--shadow); transform: translateY(-2px); }
+    .pub-venue {
+      display: inline-block;
+      font-size: .72rem; font-weight: 700;
+      letter-spacing: .5px; text-transform: uppercase;
+      color: var(--accent-2); margin-bottom: .4rem;
+    }
+    .pub-title {
+      font-size: .97rem; font-weight: 600;
+      color: var(--text); margin-bottom: .35rem;
+      line-height: 1.45;
+    }
+    .pub-authors {
+      font-size: .82rem; color: var(--text-3);
+      margin-bottom: .5rem;
+    }
+    .pub-authors strong { color: var(--accent-dark); }
+    .pub-tags { display: flex; flex-wrap: wrap; gap: .4rem; }
+    .pub-tag {
+      padding: .2rem .6rem;
+      background: var(--tag-bg);
+      color: var(--tag-text);
+      border-radius: 4px;
+      font-size: .73rem; font-weight: 600;
+    }
+    .pub-links {
+      display: flex; flex-direction: column;
+      align-items: flex-end; gap: .5rem;
+      flex-shrink: 0;
+    }
+    .pub-link {
+      display: inline-flex; align-items: center; gap: .3rem;
+      padding: .35rem .75rem;
+      background: var(--tag-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: .75rem; font-weight: 600;
+      color: var(--accent);
+      white-space: nowrap;
+      transition: all var(--transition);
+      text-decoration: none;
+    }
+    .pub-link:hover {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+      text-decoration: none;
+    }
+    .pub-year {
+      font-size: .8rem; font-weight: 700; color: var(--text-3);
+    }
 
-        .card:nth-child(1) { animation-delay: 0.1s; }
-        .card:nth-child(2) { animation-delay: 0.2s; }
-        .card:nth-child(3) { animation-delay: 0.3s; }
+    /* ═══════════════ NOTES / BLOG ═══════════════ */
+    .notes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.25rem;
+    }
+    .note-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      display: flex; flex-direction: column;
+      transition: all var(--transition);
+      cursor: pointer;
+    }
+    .note-card:hover { box-shadow: var(--shadow); transform: translateY(-3px); }
+    .note-meta {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: .75rem;
+    }
+    .note-cat {
+      font-size: .7rem; font-weight: 700; letter-spacing: .5px;
+      text-transform: uppercase; color: var(--accent-2);
+    }
+    .note-date { font-size: .75rem; color: var(--text-3); }
+    .note-title {
+      font-size: 1rem; font-weight: 700;
+      color: var(--text); margin-bottom: .5rem;
+      line-height: 1.4;
+    }
+    .note-excerpt {
+      font-size: .84rem; color: var(--text-3);
+      line-height: 1.65; flex: 1;
+    }
+    .note-footer {
+      margin-top: 1rem;
+      padding-top: .75rem;
+      border-top: 1px solid var(--border);
+      display: flex; gap: .4rem; flex-wrap: wrap;
+    }
 
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateX(-50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
+    /* ═══════════════ FOOTER ═══════════════ */
+    footer {
+      text-align: center;
+      padding: 2.5rem 1rem;
+      border-top: 1px solid var(--border);
+      font-size: .8rem; color: var(--text-3);
+      background: var(--surface);
+    }
+    footer a { color: var(--accent); }
 
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4);
-        }
+    /* ═══════════════ RESPONSIVE ═══════════════ */
+    @media (max-width: 768px) {
+      #about {
+        grid-template-columns: 1fr;
+      }
+      .profile-card {
+        width: 100%;
+        display: grid;
+        grid-template-columns: 120px 1fr;
+      }
+      .profile-avatar { aspect-ratio: auto; height: 120px; }
+      .pub-card { grid-template-columns: 1fr; }
+      .pub-links { flex-direction: row; align-items: flex-start; }
+      .nav-links a { padding: .4rem .55rem; }
+    }
 
-        .card-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 25px;
-            padding-bottom: 20px;
-            border-bottom: 3px solid #667eea;
-        }
+    /* ═══════════════ ANIMATIONS ═══════════════ */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .fade-up { animation: fadeUp .5s ease both; }
 
-        .icon {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-            margin-right: 20px;
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
-        h2 {
-            font-size: 2em;
-            color: #667eea;
-            flex: 1;
-        }
-
-        .content {
-            line-height: 1.8;
-            color: #555;
-        }
-
-        .content h3 {
-            font-size: 1.4em;
-            color: #764ba2;
-            margin-top: 20px;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-        }
-
-        .content h3:before {
-            content: "▸";
-            margin-right: 10px;
-            color: #667eea;
-        }
-
-        .content p {
-            margin-bottom: 15px;
-            text-align: justify;
-        }
-        
-        .content ul {
-            margin-bottom: 15px;
-            padding-left: 30px;
-        }
-        
-        .content li {
-            margin-bottom: 10px;
-            line-height: 1.8;
-        }
-        
-        .content a {
-            color: #667eea;
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-        
-        .content a:hover {
-            color: #764ba2;
-            text-decoration: underline;
-        }
-
-        .profile-image-container {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .profile-image {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 4px solid #667eea;
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-            transition: transform 0.3s ease;
-        }
-
-        .profile-image:hover {
-            transform: scale(1.05);
-        }
-
-        .highlight {
-            background: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%);
-            padding: 20px;
-            border-radius: 10px;
-            margin: 20px 0;
-            border-left: 4px solid #667eea;
-        }
-
-        .tech-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 20px;
-        }
-
-        .tag {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 0.9em;
-            transition: transform 0.2s ease;
-        }
-
-        .tag:hover {
-            transform: scale(1.1);
-        }
-
-        footer {
-            position: relative;
-            z-index: 10;
-            text-align: center;
-            padding: 40px 20px;
-            background: rgba(0, 0, 0, 0.3);
-            color: white;
-            backdrop-filter: blur(10px);
-        }
-
-        /* 响应式设计 */
-        @media (max-width: 768px) {
-            h1 { font-size: 2em; }
-            .subtitle { font-size: 1em; }
-            .card { padding: 25px; }
-            h2 { font-size: 1.5em; }
-            .main-nav {
-                margin: 16px 16px 24px;
-                border-radius: 18px;
-                padding: 10px;
-            }
-            .main-nav ul {
-                gap: 10px 14px;
-            }
-            .main-nav a {
-                font-size: 1em;
-                padding: 8px 14px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .main-nav {
-                margin: 12px 12px 20px;
-            }
-            .main-nav ul {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .main-nav li {
-                display: block;
-            }
-            .main-nav a {
-                display: block;
-                width: 100%;
-                text-align: center;
-            }
-        }
-    </style>
+    /* Active section highlight (via JS scroll) */
+    .section-anchor { scroll-margin-top: calc(var(--nav-h) + 1rem); }
+  </style>
 </head>
 <body>
-    <div class="particles" id="particles"></div>
 
-    <header>
-        <div class="language-switch" id="languageSwitch">
-            <button class="lang-btn active" data-lang="en">EN</button>
-            <button class="lang-btn" data-lang="zh">中文</button>
-        </div>
-        <h1 data-translate="title">核医学图像处理</h1>
-        <p class="subtitle" data-translate="subtitle">Nuclear Medicine Image Processing & Analysis</p>
-        <nav class="main-nav">
-            <ul>
-                <li><a href="index.html">Home</a></li>
-                <li><a href="toolbox.html">Toolbox</a></li>
-                <li><a href="spect.html">SPECT</a></li>
-                <li><a href="pet.html">PET</a></li>
-                <li><a href="visualization.html">Visualization</a></li>
-                <li><a href="fleeting_musings.html" data-translate="nav_musings">Fleeting Musings</a></li>
-            </ul>
-        </nav>
-    </header>
+<!-- ═══════════════════════════════════════════════════════════
+     NAVIGATION
+     ═══════════════════════════════════════════════════════════ -->
+<nav>
+  <!-- [EDIT: Logo text] -->
+  <div class="nav-logo"><span>NM</span>·Lab</div>
 
-    <div class="container">
-        <div class="card">
-            <div class="card-header">
-                <div class="icon">👤</div>
-                <h2 data-translate="profile_title">个人简介</h2>
-            </div>
-            <div class="content">
-                <div class="profile-image-container">
-                    <img src="img/louis-pic.PNG" alt="Profile Image" class="profile-image">
-                </div>
-                <p data-translate="profile_name">姓名：卢逸君</p>
-                <p data-translate="profile_email">邮箱：fatcoin@smu.edu.cn</p>
-                <p data-translate="profile_github">GitHub：<a href="https://github.com/fatcurrency" target="_blank">https://github.com/fatcurrency</a></p>
-                
-                <h3 data-translate="profile_education">教育经历</h3>
-                <ul>
-                    <li data-translate="profile_edu1">广东工业大学大学 - 本科（自动化）</li>
-                    <li data-translate="profile_edu2">南方医科大学 - 硕士（生物医学工程）</li>
-                    <li data-translate="profile_edu3">广东省人民医院 - 核医学科技师</li>
-                </ul>
-                
-                <h3 data-translate="profile_research">研究方向</h3>
-                <p data-translate="profile_research_desc">核医学图像处理，三维可视化</p>
-            </div>
-        </div>
-        
-        <div class="card">
-            <div class="card-header">
-                <div class="icon">🫀</div>
-                <h2 data-translate="card1_title">PET/SPECT 心肌成像</h2>
-            </div>
-            <div class="content">
-                <p data-translate="card1_desc">专注于心脏核医学成像技术的研究与应用，致力于通过先进的图像处理方法提升心血管疾病的诊断精度。</p>
-                
-                <h3 data-translate="card1_h3_1">心肌灌注显像</h3>
-                <p data-translate="card1_p_1">利用SPECT技术进行心肌血流灌注评估，通过放射性示踪剂的分布模式识别心肌缺血区域。我们开发了自动化分割算法，能够精确量化心肌各段的摄取值，生成17段或20段心肌灌注图谱，为冠心病的诊断提供客观依据。</p>
-                
-                <div class="highlight">
-                    <strong data-translate="key_tech">关键技术：</strong><span data-translate="card1_keytech">门控SPECT成像、应力-静息对比分析、左心室功能参数自动提取（射血分数、室壁运动、心肌厚度变化）</span>
-                </div>
+  <div class="nav-links">
+    <a href="#about"     data-i18n="nav_about">About</a>
+    <a href="#interests" data-i18n="nav_interests">Interests</a>
+    <a href="#research"  data-i18n="nav_research">Research</a>
+    <a href="#notes"     data-i18n="nav_notes">Notes</a>
+  </div>
 
-                <h3 data-translate="card1_h3_2">心肌代谢显像</h3>
-                <p data-translate="card1_p_2">应用PET技术进行心肌代谢评估，特别是18F-FDG心肌代谢显像。通过分析葡萄糖代谢模式，鉴别存活心肌与坏死心肌，为心肌梗死后的血运重建决策提供重要信息。结合灌注-代谢匹配分析，实现心肌存活性的精准评估。</p>
+  <div class="lang-toggle">
+    <button class="lang-btn active" onclick="setLang('en')">EN</button>
+    <button class="lang-btn"        onclick="setLang('zh')">中</button>
+  </div>
+</nav>
 
-                <div class="tech-tags">
-                    <span class="tag" data-translate="tag_spect">SPECT成像</span>
-                    <span class="tag" data-translate="tag_pet_metabolic">PET代谢显像</span>
-                    <span class="tag" data-translate="tag_myocardial_segmentation">心肌分段分析</span>
-                    <span class="tag" data-translate="tag_perfusion_metabolic">灌注-代谢匹配</span>
-                    <span class="tag" data-translate="tag_viable_myocardium">存活心肌评估</span>
-                </div>
-            </div>
-        </div>
+<main>
 
-        <div class="card">
-            <div class="card-header">
-                <div class="icon">📊</div>
-                <h2 data-translate="card2_title">核医学动力学模型分析</h2>
-            </div>
-            <div class="content">
-                <p data-translate="card2_desc">深入研究放射性示踪剂在体内的动态分布过程，通过数学建模方法定量分析生理和病理状态。</p>
-                
-                <h3 data-translate="card2_h3_1">动态PET成像分析</h3>
-                <p data-translate="card2_p_1">开发基于时间-活度曲线（TAC）的动力学建模工具，实现对示踪剂摄取、分布和清除过程的定量描述。应用房室模型（如Patlak模型、Logan模型）计算关键动力学参数，包括代谢速率、血流量、分布容积等。</p>
-
-                <div class="highlight">
-                    <strong data-translate="application_area">应用领域：</strong><span data-translate="card2_application">肿瘤代谢分析、脑功能成像、心肌血流储备评估、肾小球滤过率测定</span>
-                </div>
-
-                <h3 data-translate="card2_h3_2">参数成像技术</h3>
-                <p data-translate="card2_p_2">将动力学参数以图像形式呈现，生成参数图（Parametric Images），使复杂的生理参数可视化。通过像素级建模，获得组织功能的空间分布信息，提高病灶检出的敏感性和特异性。</p>
-
-                <h3 data-translate="card2_h3_3">输入函数优化</h3>
-                <p data-translate="card2_p_3">研究图像衍生输入函数（IDIF）提取技术，减少动脉采血需求。开发自动化血池分割算法，提取准确的动脉血时间-活度曲线，为动力学建模提供可靠的输入数据。</p>
-
-                <div class="tech-tags">
-                    <span class="tag" data-translate="tag_compartment_model">房室模型</span>
-                    <span class="tag" data-translate="tag_patlak">Patlak分析</span>
-                    <span class="tag" data-translate="tag_parametric_imaging">参数成像</span>
-                    <span class="tag" data-translate="tag_tac">时间-活度曲线</span>
-                    <span class="tag" data-translate="tag_dynamic_pet">动态PET</span>
-                    <span class="tag" data-translate="tag_quantitative_analysis">定量分析</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-header">
-                <div class="icon">🔬</div>
-                <h2 data-translate="card3_title">多模态医学图像融合</h2>
-            </div>
-            <div class="content">
-                <p data-translate="card3_desc">整合不同成像模态的优势，实现解剖与功能信息的完美结合，为精准诊断和治疗规划提供全面支持。</p>
-                
-                <h3 data-translate="card3_h3_1">PET/CT与SPECT/CT融合</h3>
-                <p data-translate="card3_p_1">开发高精度图像配准算法，实现核医学功能图像与CT解剖图像的精确叠加。通过衰减校正和散射校正，提升PET/SPECT图像质量。构建三维可视化平台，支持多平面重建（MPR）、最大密度投影（MIP）和容积再现（VR）。</p>
-
-                <div class="highlight">
-                    <strong data-translate="tech_highlights">技术亮点：</strong><span data-translate="card3_highlights">刚性/非刚性配准算法、自动化器官分割、病灶自动检测与量化、标准化摄取值（SUV）计算</span>
-                </div>
-
-                <h3 data-translate="card3_h3_2">多模态数据整合</h3>
-                <p data-translate="card3_p_2">融合PET、SPECT、CT、MRI等多种影像数据，建立综合性诊断框架。利用MRI的软组织对比度优势与PET的代谢信息，实现肿瘤边界的精确界定。在心脏成像中，结合CT冠脉造影与核医学灌注显像，实现解剖-功能一体化评估。</p>
-
-                <h3 data-translate="card3_h3_3">三维可视化与报告生成</h3>
-                <p data-translate="card3_p_3">构建交互式三维可视化系统，支持任意角度的图像浏览、测量和标注。开发智能化报告生成工具，自动提取关键参数，生成标准化诊断报告，提高工作效率和报告质量的一致性。</p>
-
-                <h3 data-translate="card3_h3_4">AI辅助诊断</h3>
-                <p data-translate="card3_p_4">应用深度学习技术进行图像增强、病灶检测和疾病分类。训练卷积神经网络模型，实现肺结节、淋巴结、骨转移灶等病变的自动识别。通过多模态特征融合，提升诊断的准确性和鲁棒性。</p>
-
-                <div class="tech-tags">
-                    <span class="tag" data-translate="tag_pet_ct_fusion">PET/CT融合</span>
-                    <span class="tag" data-translate="tag_image_registration">图像配准</span>
-                    <span class="tag" data-translate="tag_3d_visualization">三维可视化</span>
-                    <span class="tag" data-translate="tag_deep_learning">深度学习</span>
-                    <span class="tag" data-translate="tag_auto_segmentation">自动分割</span>
-                    <span class="tag" data-translate="tag_ai_diagnosis">AI辅助诊断</span>
-                    <span class="tag" data-translate="tag_mpr">多平面重建</span>
-                </div>
-            </div>
-        </div>
+<!-- ═══════════════════════════════════════════════════════════
+     SECTION 1 · ABOUT / HOME
+     ═══════════════════════════════════════════════════════════ -->
+<section id="about" class="section-anchor">
+  <div class="about-text fade-up">
+    <!-- [EDIT: Your name] -->
+    <div class="about-name">
+      <span class="accent" data-i18n="name">Your Name</span>
     </div>
 
-    <footer>
-        <p data-translate="footer_copyright">&copy; 2025 核医学图像处理研究 | Nuclear Medicine Image Processing</p>
-        <p style="margin-top: 10px; opacity: 0.8;" data-translate="footer_mission">致力于推动核医学成像技术的发展与临床应用</p>
-    </footer>
+    <!-- [EDIT: Role & Institution] -->
+    <div class="about-role" data-i18n="role">Ph.D. Researcher · Medical Imaging</div>
+    <div class="about-inst" data-i18n="inst">
+      Department of Nuclear Medicine, [Your University], [City, Country]
+    </div>
 
-    <script>
-        // 创建粒子动画
-        const particlesContainer = document.getElementById('particles');
-        const particleCount = 50;
+    <!-- [EDIT: Bio paragraphs] -->
+    <div class="about-bio">
+      <p data-i18n="bio1">
+        I am a Ph.D. researcher at the Department of Nuclear Medicine, [Your University],
+        advised by Prof. [Advisor Name]. My research focuses on the intersection of
+        artificial intelligence and nuclear medicine imaging, with a particular emphasis
+        on PET/CT image reconstruction, image quality enhancement, and AI-driven
+        clinical decision support.
+      </p>
+      <p data-i18n="bio2">
+        I am passionate about translating cutting-edge deep learning methods into
+        clinical practice to improve diagnostic accuracy and reduce radiation dose.
+        I welcome collaborations from researchers in medical physics, radiology,
+        and AI. Feel free to reach out!
+      </p>
+    </div>
 
-        for (let i = 0; i < particleCount; i++) {
-            const particle = document.createElement('div');
-            particle.className = 'particle';
-            const size = Math.random() * 4 + 2;
-            particle.style.width = size + 'px';
-            particle.style.height = size + 'px';
-            particle.style.left = Math.random() * 100 + '%';
-            particle.style.top = Math.random() * 100 + '%';
-            particle.style.animationDelay = Math.random() * 6 + 's';
-            particle.style.animationDuration = (Math.random() * 4 + 4) + 's';
-            particlesContainer.appendChild(particle);
-        }
+    <!-- [EDIT: Social links — replace # with your actual URLs] -->
+    <div class="social-links">
+      <a class="social-btn" href="#" target="_blank">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+        GitHub
+      </a>
+      <a class="social-btn" href="#" target="_blank">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.328 2.002c.53.003 1.067.232 1.457.636l.003.003c.397.41.606.953.594 1.513l-.003 16.696c-.012.558-.225 1.097-.622 1.507l-.003.003c-.4.413-.944.64-1.5.64H2.746c-.558 0-1.103-.228-1.501-.64-.397-.41-.61-.949-.622-1.507V4.154c-.012-.56.197-1.103.594-1.513.39-.404.927-.633 1.457-.636l18.654-.003zM8.33 7.468c-1.035 0-1.875.85-1.875 1.896s.84 1.896 1.875 1.896c1.035 0 1.875-.85 1.875-1.896S9.365 7.468 8.33 7.468zm0 4.79c-2.07 0-3.75 1.696-3.75 3.788v.957h7.5v-.957c0-2.092-1.68-3.788-3.75-3.788zM16.67 11.5h-3.75v1.5h3.75v-1.5zm0-3h-3.75V10h3.75V8.5z"/></svg>
+        Google Scholar
+      </a>
+      <a class="social-btn" href="#" target="_blank">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.338 16.338H13.67V12.16c0-.995-.017-2.277-1.387-2.277-1.389 0-1.601 1.086-1.601 2.207v4.248H8.014v-8.59h2.559v1.174h.037c.356-.675 1.227-1.387 2.526-1.387 2.703 0 3.203 1.778 3.203 4.092v4.711zM5.005 6.575a1.548 1.548 0 11-.003-3.096 1.548 1.548 0 01.003 3.096zm-1.337 9.763H6.34v-8.59H3.667v8.59zM17.668 1H2.328C1.595 1 1 1.581 1 2.298v15.403C1 18.418 1.595 19 2.328 19h15.34c.734 0 1.332-.582 1.332-1.299V2.298C19 1.581 18.402 1 17.668 1z"/></svg>
+        LinkedIn
+      </a>
+      <a class="social-btn" href="#" target="_blank">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        <span data-i18n="cv">CV / Résumé</span>
+      </a>
+      <a class="social-btn" href="mailto:your@email.com">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,12 2,6"/></svg>
+        <!-- [EDIT: your email] -->
+        your@email.com
+      </a>
+    </div>
 
-        // 卡片悬浮效果增强
-        const cards = document.querySelectorAll('.card');
-        cards.forEach(card => {
-            card.addEventListener('mousemove', (e) => {
-                card.style.transform = 'translateY(-5px)';
-            });
-            
-            card.addEventListener('mouseleave', () => {
-                card.style.transform = 'translateY(0)';
-            });
-        });
+    <!-- News / Recent Updates -->
+    <div class="sec-label" data-i18n="news_label">Recent News</div>
+    <div class="news-list" id="news-list">
+      <!-- Populated by JS from NEWS array -->
+    </div>
+  </div>
 
-        // 中英文翻译映射
-        const translations = {
-            en: {
-                title: "Nuclear Medicine Image Processing",
-                subtitle: "Nuclear Medicine Image Processing & Analysis",
-                profile_title: "Personal Profile",
-                profile_name: "Name: Lu Yijun",
-                profile_email: "Email: fatcoin@smu.edu.cn",
-                profile_github: "GitHub: <a href=\"https://github.com/fatcurrency\" target=\"_blank\">https://github.com/fatcurrency</a>",
-                profile_education: "Education",
-                profile_edu1: "Guangdong University of Technology - Bachelor (Automation)",
-                profile_edu2: "Southern Medical University - Master (Biomedical Engineering)",
-                profile_edu3: "Guangdong Provincial People's Hospital - Nuclear Medicine Technologist",
-                profile_research: "Research Interests",
-                profile_research_desc: "Nuclear medicine image processing, 3D visualization",
-                card1_title: "PET/SPECT Myocardial Imaging",
-                card1_desc: "Focused on the research and application of cardiac nuclear medicine imaging technology, committed to improving the diagnostic accuracy of cardiovascular diseases through advanced image processing methods.",
-                card1_h3_1: "Myocardial Perfusion Imaging",
-                card1_p_1: "Using SPECT technology for myocardial blood flow perfusion assessment, identifying myocardial ischemia areas through the distribution pattern of radiotracers. We have developed automated segmentation algorithms that can accurately quantify the uptake values of each myocardial segment, generating 17-segment or 20-segment myocardial perfusion maps to provide objective basis for the diagnosis of coronary heart disease.",
-                key_tech: "Key Technologies:",
-                card1_keytech: "Gated SPECT imaging, stress-rest comparison analysis, automatic extraction of left ventricular function parameters (ejection fraction, wall motion, myocardial thickness changes)",
-                card1_h3_2: "Myocardial Metabolism Imaging",
-                card1_p_2: "Applying PET technology for myocardial metabolism assessment, especially 18F-FDG myocardial metabolism imaging. By analyzing glucose metabolism patterns, we can differentiate between viable and necrotic myocardium, providing important information for revascularization decisions after myocardial infarction. Combined with perfusion-metabolism matching analysis, we achieve precise assessment of myocardial viability.",
-                tag_spect: "SPECT Imaging",
-                tag_pet_metabolic: "PET Metabolic Imaging",
-                tag_myocardial_segmentation: "Myocardial Segmentation Analysis",
-                tag_perfusion_metabolic: "Perfusion-Metabolism Matching",
-                tag_viable_myocardium: "Viable Myocardium Assessment",
-                
-                card2_title: "Nuclear Medicine Kinetic Model Analysis",
-                card2_desc: "In-depth study of the dynamic distribution process of radiotracers in the body, quantitative analysis of physiological and pathological states through mathematical modeling methods.",
-                card2_h3_1: "Dynamic PET Imaging Analysis",
-                card2_p_1: "Developing kinetic modeling tools based on Time-Activity Curves (TAC) to achieve quantitative description of tracer uptake, distribution, and clearance processes. Applying compartment models (such as Patlak model, Logan model) to calculate key kinetic parameters, including metabolic rate, blood flow, distribution volume, etc.",
-                application_area: "Application Areas:",
-                card2_application: "Tumor metabolism analysis, brain function imaging, myocardial blood flow reserve assessment, glomerular filtration rate measurement",
-                card2_h3_2: "Parametric Imaging Technology",
-                card2_p_2: "Presenting kinetic parameters in image form, generating Parametric Images to visualize complex physiological parameters. Through pixel-level modeling, we obtain spatial distribution information of tissue function, improving the sensitivity and specificity of lesion detection.",
-                card2_h3_3: "Input Function Optimization",
-                card2_p_3: "Researching Image-Derived Input Function (IDIF) extraction technology to reduce the need for arterial blood sampling. Developing automated blood pool segmentation algorithms to extract accurate arterial blood Time-Activity Curves, providing reliable input data for kinetic modeling.",
-                tag_compartment_model: "Compartment Model",
-                tag_patlak: "Patlak Analysis",
-                tag_parametric_imaging: "Parametric Imaging",
-                tag_tac: "Time-Activity Curve",
-                tag_dynamic_pet: "Dynamic PET",
-                tag_quantitative_analysis: "Quantitative Analysis",
-                
-                card3_title: "Multimodal Medical Image Fusion",
-                card3_desc: "Integrating the advantages of different imaging modalities to achieve the perfect combination of anatomical and functional information, providing comprehensive support for precise diagnosis and treatment planning.",
-                card3_h3_1: "PET/CT and SPECT/CT Fusion",
-                card3_p_1: "Developing high-precision image registration algorithms to achieve precise overlay of nuclear medicine functional images and CT anatomical images. Improving PET/SPECT image quality through attenuation correction and scatter correction. Building a 3D visualization platform supporting multi-planar reconstruction (MPR), maximum intensity projection (MIP), and volume rendering (VR).",
-                tech_highlights: "Technical Highlights:",
-                card3_highlights: "Rigid/non-rigid registration algorithms, automated organ segmentation, automatic lesion detection and quantification, standardized uptake value (SUV) calculation",
-                card3_h3_2: "Multimodal Data Integration",
-                card3_p_2: "Fusing multiple imaging data such as PET, SPECT, CT, MRI to establish a comprehensive diagnostic framework. Utilizing the soft tissue contrast advantage of MRI and metabolic information of PET to achieve precise definition of tumor boundaries. In cardiac imaging, combining CT coronary angiography with nuclear medicine perfusion imaging to achieve integrated anatomical-functional assessment.",
-                card3_h3_3: "3D Visualization and Report Generation",
-                card3_p_3: "Building an interactive 3D visualization system supporting image browsing, measurement, and annotation from any angle. Developing intelligent report generation tools to automatically extract key parameters and generate standardized diagnostic reports, improving work efficiency and report quality consistency.",
-                card3_h3_4: "AI-Assisted Diagnosis",
-                card3_p_4: "Applying deep learning technology for image enhancement, lesion detection, and disease classification. Training convolutional neural network models to achieve automatic identification of lung nodules, lymph nodes, bone metastases, etc. Through multimodal feature fusion, improving the accuracy and robustness of diagnosis.",
-                tag_pet_ct_fusion: "PET/CT Fusion",
-                tag_image_registration: "Image Registration",
-                tag_3d_visualization: "3D Visualization",
-                tag_deep_learning: "Deep Learning",
-                tag_auto_segmentation: "Automatic Segmentation",
-                tag_ai_diagnosis: "AI-Assisted Diagnosis",
-                tag_mpr: "Multi-Planar Reconstruction",
-                
-                footer_copyright: "© 2025 Nuclear Medicine Image Processing Research | Nuclear Medicine Image Processing",
-                footer_mission: "Committed to promoting the development and clinical application of nuclear medicine imaging technology",
-                nav_musings: "Fleeting Musings"
-            },
-            zh: {
-                title: "核医学图像处理",
-                subtitle: "Nuclear Medicine Image Processing & Analysis",
-                profile_title: "个人简介",
-                profile_name: "姓名：卢逸君",
-                profile_email: "邮箱：fatcoin.smu.edu.cn",
-                profile_github: "GitHub：<a href=\"https://github.com/fatcurrency\" target=\"_blank\">https://github.com/fatcurrency</a>",
-                profile_education: "教育经历",
-                profile_edu1: "广东工业大学 - 本科（自动化）",
-                profile_edu2: "南方医科大学 - 硕士（生物医学工程）",
-                profile_edu3: "广东省人民医院 - 核医学科技师",
-                profile_research: "研究方向",
-                profile_research_desc: "核医学图像处理，三维可视化",
-                card1_title: "PET/SPECT 心肌成像",
-                card1_desc: "专注于心脏核医学成像技术的研究与应用，致力于通过先进的图像处理方法提升心血管疾病的诊断精度。",
-                card1_h3_1: "心肌灌注显像",
-                card1_p_1: "利用SPECT技术进行心肌血流灌注评估，通过放射性示踪剂的分布模式识别心肌缺血区域。我们开发了自动化分割算法，能够精确量化心肌各段的摄取值，生成17段或20段心肌灌注图谱，为冠心病的诊断提供客观依据。",
-                key_tech: "关键技术：",
-                card1_keytech: "门控SPECT成像、应力-静息对比分析、左心室功能参数自动提取（射血分数、室壁运动、心肌厚度变化）",
-                card1_h3_2: "心肌代谢显像",
-                card1_p_2: "应用PET技术进行心肌代谢评估，特别是18F-FDG心肌代谢显像。通过分析葡萄糖代谢模式，鉴别存活心肌与坏死心肌，为心肌梗死后的血运重建决策提供重要信息。结合灌注-代谢匹配分析，实现心肌存活性的精准评估。",
-                tag_spect: "SPECT成像",
-                tag_pet_metabolic: "PET代谢显像",
-                tag_myocardial_segmentation: "心肌分段分析",
-                tag_perfusion_metabolic: "灌注-代谢匹配",
-                tag_viable_myocardium: "存活心肌评估",
-                
-                card2_title: "核医学动力学模型分析",
-                card2_desc: "深入研究放射性示踪剂在体内的动态分布过程，通过数学建模方法定量分析生理和病理状态。",
-                card2_h3_1: "动态PET成像分析",
-                card2_p_1: "开发基于时间-活度曲线（TAC）的动力学建模工具，实现对示踪剂摄取、分布和清除过程的定量描述。应用房室模型（如Patlak模型、Logan模型）计算关键动力学参数，包括代谢速率、血流量、分布容积等。",
-                application_area: "应用领域：",
-                card2_application: "肿瘤代谢分析、脑功能成像、心肌血流储备评估、肾小球滤过率测定",
-                card2_h3_2: "参数成像技术",
-                card2_p_2: "将动力学参数以图像形式呈现，生成参数图（Parametric Images），使复杂的生理参数可视化。通过像素级建模，获得组织功能的空间分布信息，提高病灶检出的敏感性和特异性。",
-                card2_h3_3: "输入函数优化",
-                card2_p_3: "研究图像衍生输入函数（IDIF）提取技术，减少动脉采血需求。开发自动化血池分割算法，提取准确的动脉血时间-活度曲线，为动力学建模提供可靠的输入数据。",
-                tag_compartment_model: "房室模型",
-                tag_patlak: "Patlak分析",
-                tag_parametric_imaging: "参数成像",
-                tag_tac: "时间-活度曲线",
-                tag_dynamic_pet: "动态PET",
-                tag_quantitative_analysis: "定量分析",
-                
-                card3_title: "多模态医学图像融合",
-                card3_desc: "整合不同成像模态的优势，实现解剖与功能信息的完美结合，为精准诊断和治疗规划提供全面支持。",
-                card3_h3_1: "PET/CT与SPECT/CT融合",
-                card3_p_1: "开发高精度图像配准算法，实现核医学功能图像与CT解剖图像的精确叠加。通过衰减校正和散射校正，提升PET/SPECT图像质量。构建三维可视化平台，支持多平面重建（MPR）、最大密度投影（MIP）和容积再现（VR）。",
-                tech_highlights: "技术亮点：",
-                card3_highlights: "刚性/非刚性配准算法、自动化器官分割、病灶自动检测与量化、标准化摄取值（SUV）计算",
-                card3_h3_2: "多模态数据整合",
-                card3_p_2: "融合PET、SPECT、CT、MRI等多种影像数据，建立综合性诊断框架。利用MRI的软组织对比度优势与PET的代谢信息，实现肿瘤边界的精确界定。在心脏成像中，结合CT冠脉造影与核医学灌注显像，实现解剖-功能一体化评估。",
-                card3_h3_3: "三维可视化与报告生成",
-                card3_p_3: "构建交互式三维可视化系统，支持任意角度的图像浏览、测量和标注。开发智能化报告生成工具，自动提取关键参数，生成标准化诊断报告，提高工作效率和报告质量的一致性。",
-                card3_h3_4: "AI辅助诊断",
-                card3_p_4: "应用深度学习技术进行图像增强、病灶检测和疾病分类。训练卷积神经网络模型，实现肺结节、淋巴结、骨转移灶等病变的自动识别。通过多模态特征融合，提升诊断的准确性和鲁棒性。",
-                tag_pet_ct_fusion: "PET/CT融合",
-                tag_image_registration: "图像配准",
-                tag_3d_visualization: "三维可视化",
-                tag_deep_learning: "深度学习",
-                tag_auto_segmentation: "自动分割",
-                tag_ai_diagnosis: "AI辅助诊断",
-                tag_mpr: "多平面重建",
-                
-                footer_copyright: "© 2025 核医学图像处理研究 | Nuclear Medicine Image Processing",
-                footer_mission: "致力于推动核医学成像技术的发展与临床应用",
-                nav_musings: "浮生随笔"
-            }
-        };
+  <!-- Profile card -->
+  <div class="profile-card fade-up" style="animation-delay:.15s">
+    <!-- [EDIT: Replace the emoji with <img src="photo.jpg" alt="photo"> if you have a photo] -->
+    <div class="profile-avatar">
+      <span>🩺</span>
+      <!-- <img src="photo.jpg" alt="Profile photo"> -->
+    </div>
+    <div class="profile-info">
+      <!-- [EDIT: Quick-facts] -->
+      <h3 data-i18n="card_name">Your Name (英文名)</h3>
+      <p data-i18n="card_inst">Nuclear Medicine Dept.<br>[Your University]</p>
+      <div class="profile-divider"></div>
+      <div class="profile-stat">
+        <!-- [EDIT: stats] -->
+        <div class="profile-stat-item">
+          <strong id="stat-pubs">12</strong>
+          <span data-i18n="stat_pub">Papers</span>
+        </div>
+        <div class="profile-stat-item">
+          <strong>3</strong>
+          <span data-i18n="stat_proj">Projects</span>
+        </div>
+        <div class="profile-stat-item">
+          <strong>2026</strong>
+          <span data-i18n="stat_grad">Expected</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-        // 切换语言函数
-        function switchLanguage(lang) {
-            // 更新按钮状态
-            document.querySelectorAll('.lang-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            document.querySelector(`[data-lang="${lang}"]`).classList.add('active');
-            
-            // 更新所有带data-translate属性的元素
-            document.querySelectorAll('[data-translate]').forEach(element => {
-                const key = element.getAttribute('data-translate');
-                if (translations[lang][key]) {
-                    // 检查内容是否包含HTML标签，使用innerHTML支持HTML内容
-                    element.innerHTML = translations[lang][key];
-                }
-            });
-        }
+<!-- ═══════════════════════════════════════════════════════════
+     SECTION 2 · RESEARCH INTERESTS
+     ═══════════════════════════════════════════════════════════ -->
+<section id="interests" class="section-anchor">
+  <div class="sec-label" data-i18n="int_label">Focus Areas</div>
+  <div class="sec-title" data-i18n="int_title">Research <em>Interests</em></div>
 
-        // 初始化语言切换按钮事件
-        const languageSwitch = document.getElementById('languageSwitch');
-        languageSwitch.addEventListener('click', (e) => {
-            if (e.target.classList.contains('lang-btn')) {
-                const lang = e.target.getAttribute('data-lang');
-                switchLanguage(lang);
-            }
-        });
+  <div class="interests-grid" id="interests-grid">
+    <!-- Populated by JS from INTERESTS array -->
+  </div>
+</section>
 
-        // 初始化为英文
-        switchLanguage('en');
+<!-- ═══════════════════════════════════════════════════════════
+     SECTION 3 · RESEARCH / PUBLICATIONS
+     ═══════════════════════════════════════════════════════════ -->
+<section id="research" class="section-anchor">
+  <div class="sec-label" data-i18n="pub_label">Selected Works</div>
+  <div class="sec-title" data-i18n="pub_title">Research & <em>Publications</em></div>
 
-        // 平滑滚动效果
-        document.addEventListener('DOMContentLoaded', () => {
-            const observerOptions = {
-                threshold: 0.1,
-                rootMargin: '0px 0px -100px 0px'
-            };
+  <div class="pub-filters" id="pub-filters">
+    <!-- Populated by JS -->
+  </div>
+  <div class="pub-list" id="pub-list">
+    <!-- Populated by JS from PUBLICATIONS array -->
+  </div>
+</section>
 
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.style.opacity = '1';
-                        entry.target.style.transform = 'translateY(0)';
-                    }
-                });
-            }, observerOptions);
+<!-- ═══════════════════════════════════════════════════════════
+     SECTION 4 · PERSONAL NOTES
+     ═══════════════════════════════════════════════════════════ -->
+<section id="notes" class="section-anchor">
+  <div class="sec-label" data-i18n="notes_label">Blog / Notes</div>
+  <div class="sec-title" data-i18n="notes_title">Personal <em>Notes</em></div>
+  <div class="notes-grid" id="notes-grid">
+    <!-- Populated by JS from NOTES array -->
+  </div>
+</section>
 
-            cards.forEach(card => {
-                observer.observe(card);
-            });
-        });
-    </script>
+</main>
+
+<footer>
+  <!-- [EDIT: footer text] -->
+  <p>
+    <span data-i18n="footer_built">Built with ❤️ by</span>
+    <a href="#about" data-i18n="name">Your Name</a> ·
+    <span data-i18n="footer_copy">© 2025 All rights reserved</span>
+  </p>
+</footer>
+
+
+<script>
+/* ═══════════════════════════════════════════════════════════════════
+   ██████████████████  SITE DATA  ██████████████████
+   ────────────────────────────────────────────────────────────────
+   Edit the objects below to customize your site.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── i18n strings ──────────────────────────────────────────────── */
+const I18N = {
+  en: {
+    /* Nav */
+    nav_about:     'About',
+    nav_interests: 'Interests',
+    nav_research:  'Research',
+    nav_notes:     'Notes',
+    /* Hero */
+    name:      'Your Name',           // [EDIT]
+    role:      'Ph.D. Researcher · Medical Imaging',  // [EDIT]
+    inst:      'Department of Nuclear Medicine, [Your University], [City, Country]', // [EDIT]
+    bio1:      'I am a Ph.D. researcher at the Department of Nuclear Medicine, [Your University], advised by Prof. [Advisor Name]. My research focuses on the intersection of artificial intelligence and nuclear medicine imaging, with a particular emphasis on PET/CT image reconstruction, image quality enhancement, and AI-driven clinical decision support.',
+    bio2:      'I am passionate about translating cutting-edge deep learning methods into clinical practice to improve diagnostic accuracy and reduce radiation dose. I welcome collaborations from researchers in medical physics, radiology, and AI. Feel free to reach out!',
+    cv:        'CV / Résumé',
+    news_label:'Recent News',
+    /* Card */
+    card_name: 'Your Name',           // [EDIT]
+    card_inst: 'Nuclear Medicine Dept.<br>[Your University]', // [EDIT]
+    stat_pub:  'Papers',
+    stat_proj: 'Projects',
+    stat_grad: 'Expected',
+    /* Sections */
+    int_label: 'Focus Areas',
+    int_title: 'Research Interests',
+    pub_label: 'Selected Works',
+    pub_title: 'Research & Publications',
+    notes_label:'Blog / Notes',
+    notes_title:'Personal Notes',
+    /* Footer */
+    footer_built: 'Built with ❤️ by',
+    footer_copy:  '© 2025 All rights reserved',
+  },
+  zh: {
+    nav_about:     '关于我',
+    nav_interests: '研究方向',
+    nav_research:  '研究成果',
+    nav_notes:     '个人笔记',
+    name:      '你的姓名',            // [EDIT]
+    role:      '博士研究生 · 医学图像',             // [EDIT]
+    inst:      '核医学科，[你的大学]，[城市，国家]', // [EDIT]
+    bio1:      '我是[你的大学]核医学科博士研究生，师从[导师姓名]教授。我的研究聚焦于人工智能与核医学影像的交叉领域，重点方向包括 PET/CT 图像重建、图像质量增强以及基于 AI 的临床辅助决策。',
+    bio2:      '我致力于将前沿深度学习方法应用于临床实践，以提高诊断精度并降低辐射剂量。欢迎来自医学物理、放射科及 AI 领域的研究者合作交流！',
+    cv:        '个人简历',
+    news_label:'最新动态',
+    card_name: '你的姓名',            // [EDIT]
+    card_inst: '核医学科<br>[你的大学]',            // [EDIT]
+    stat_pub:  '论文',
+    stat_proj: '项目',
+    stat_grad: '预计毕业',
+    int_label: '研究方向',
+    int_title: '研究兴趣',
+    pub_label: '代表性成果',
+    pub_title: '研究与发表',
+    notes_label:'博客 / 笔记',
+    notes_title:'个人笔记',
+    footer_built: '用 ❤️ 构建 by',
+    footer_copy:  '© 2025 版权所有',
+  }
+};
+
+/* ── News / Updates ─────────────────────────────────────────────
+   [EDIT] Add your news items. Each item: { date, en, zh }
+   ─────────────────────────────────────────────────────────────── */
+const NEWS = [
+  {
+    date: '2025.05',
+    en: 'Paper accepted at <strong>MICCAI 2025</strong> – Low-dose PET reconstruction with score-based diffusion.',
+    zh: '论文被 <strong>MICCAI 2025</strong> 录用 – 基于 Score-based 扩散模型的低剂量 PET 重建。'
+  },
+  {
+    date: '2025.03',
+    en: 'Awarded the <strong>National Scholarship</strong> for Outstanding Ph.D. Students.',
+    zh: '荣获<strong>博士研究生国家奖学金</strong>。'
+  },
+  {
+    date: '2024.11',
+    en: 'Gave an oral presentation at <strong>RSNA 2024</strong>, Chicago.',
+    zh: '在芝加哥 <strong>RSNA 2024</strong> 年会作口头报告。'
+  },
+  {
+    date: '2024.09',
+    en: 'Started a research visit at [Collaborating Institution].',
+    zh: '开始在[合作机构]进行访学交流。'
+  },
+];
+
+/* ── Research Interests ─────────────────────────────────────────
+   [EDIT] Change icon (emoji), title, description
+   ─────────────────────────────────────────────────────────────── */
+const INTERESTS = [
+  {
+    icon: '🫁',
+    en: { title: 'PET/CT Image Reconstruction',
+          desc: 'Deep learning-based iterative and analytical reconstruction methods for low-dose and ultra-fast PET/CT acquisition.' },
+    zh: { title: 'PET/CT 图像重建',
+          desc: '基于深度学习的迭代与解析重建方法，面向低剂量与超快速 PET/CT 采集。' }
+  },
+  {
+    icon: '🧠',
+    en: { title: 'AI-Enhanced Image Quality',
+          desc: 'Generative models and diffusion-based approaches for noise reduction, super-resolution, and artifact correction in nuclear medicine images.' },
+    zh: { title: 'AI 图像质量增强',
+          desc: '利用生成模型与扩散方法实现核医学图像的降噪、超分辨率及伪影校正。' }
+  },
+  {
+    icon: '🔬',
+    en: { title: 'Quantitative Imaging Biomarkers',
+          desc: 'Automated segmentation and SUV-based quantification for oncology, neurology, and cardiology applications.' },
+    zh: { title: '定量影像生物标志物',
+          desc: '面向肿瘤、神经与心脏应用的自动分割及基于 SUV 的定量分析。' }
+  },
+  {
+    icon: '🩻',
+    en: { title: 'Multi-modal Image Fusion',
+          desc: 'Cross-modal synthesis and registration between PET, CT, MRI, and SPECT for comprehensive diagnostic workflows.' },
+    zh: { title: '多模态图像融合',
+          desc: 'PET、CT、MRI 与 SPECT 之间的跨模态合成与配准，助力综合诊断流程。' }
+  },
+  {
+    icon: '⚕️',
+    en: { title: 'Clinical AI Decision Support',
+          desc: 'Explainable AI systems assisting physicians in diagnosis, staging, and treatment response evaluation.' },
+    zh: { title: '临床 AI 辅助决策',
+          desc: '可解释 AI 系统辅助医生进行诊断、分期及治疗反应评估。' }
+  },
+  {
+    icon: '📡',
+    en: { title: 'Radiation Dose Reduction',
+          desc: 'Protocol optimization and post-processing techniques to minimize patient radiation exposure while maintaining diagnostic image quality.' },
+    zh: { title: '辐射剂量优化',
+          desc: '通过扫描协议优化与后处理技术，在保持诊断质量的同时最大限度降低辐射剂量。' }
+  },
+];
+
+/* ── Publications ───────────────────────────────────────────────
+   [EDIT] Add your papers. Fields:
+     year, venue (e.g. "MICCAI 2025"), type ("Conference" | "Journal" | "Preprint")
+     title_en, title_zh, authors (use **Your Name** for bold)
+     tags: array of strings
+     links: array of { label, url }
+   ─────────────────────────────────────────────────────────────── */
+const PUBLICATIONS = [
+  {
+    year: 2025,
+    venue: 'MICCAI 2025',
+    type: 'Conference',
+    title_en: 'Score-Based Diffusion Models for Low-Dose PET Reconstruction with Anatomical Prior',
+    title_zh: '基于 Score 扩散模型结合解剖先验的低剂量 PET 重建',
+    authors: '**Your Name**, Collaborator A, Collaborator B, Prof. Advisor',
+    tags: ['PET Reconstruction', 'Diffusion Model', 'Low-dose'],
+    links: [
+      { label: 'Paper', url: '#' },
+      { label: 'Code', url: '#' },
+    ]
+  },
+  {
+    year: 2025,
+    venue: 'Medical Image Analysis',
+    type: 'Journal',
+    title_en: 'Transformer-Based Cross-Modal Synthesis from CT to PET for Radiation Oncology',
+    title_zh: '面向放射肿瘤学的基于 Transformer 的 CT 到 PET 跨模态合成',
+    authors: 'Collaborator A, **Your Name**, Collaborator C, Prof. Advisor',
+    tags: ['Cross-modal Synthesis', 'Transformer', 'Radiation Oncology'],
+    links: [
+      { label: 'Paper', url: '#' },
+      { label: 'Dataset', url: '#' },
+    ]
+  },
+  {
+    year: 2024,
+    venue: 'MICCAI 2024',
+    type: 'Conference',
+    title_en: 'Uncertainty-Aware Lesion Segmentation in Whole-Body PET/CT Scans',
+    title_zh: '全身 PET/CT 扫描中的不确定性感知病灶分割',
+    authors: '**Your Name**, Collaborator D, Prof. Advisor',
+    tags: ['Segmentation', 'Uncertainty Estimation', 'PET/CT'],
+    links: [
+      { label: 'Paper', url: '#' },
+      { label: 'Poster', url: '#' },
+    ]
+  },
+  {
+    year: 2024,
+    venue: 'European Journal of Nuclear Medicine',
+    type: 'Journal',
+    title_en: 'Deep Learning-Driven SUVmax Standardization Across Multi-Center PET Datasets',
+    title_zh: '多中心 PET 数据集 SUVmax 深度学习标准化方法',
+    authors: 'Collaborator E, **Your Name**, Collaborator F, Prof. Advisor',
+    tags: ['SUV Quantification', 'Multi-center', 'Standardization'],
+    links: [
+      { label: 'Paper', url: '#' },
+    ]
+  },
+  {
+    year: 2024,
+    venue: 'arXiv',
+    type: 'Preprint',
+    title_en: 'A Survey of Deep Learning Methods in Nuclear Medicine Imaging: From Reconstruction to Diagnosis',
+    title_zh: '深度学习在核医学成像中的应用综述：从重建到诊断',
+    authors: '**Your Name**, Collaborator G, Prof. Advisor',
+    tags: ['Survey', 'Deep Learning', 'Nuclear Medicine'],
+    links: [
+      { label: 'arXiv', url: '#' },
+    ]
+  },
+];
+
+/* ── Personal Notes ─────────────────────────────────────────────
+   [EDIT] Add your blog notes / reading notes
+   ─────────────────────────────────────────────────────────────── */
+const NOTES = [
+  {
+    category_en: 'Paper Reading',
+    category_zh: '论文精读',
+    date: '2025-04-28',
+    title_en: 'Notes on Denoising Diffusion Probabilistic Models (DDPM)',
+    title_zh: 'DDPM 去噪扩散概率模型笔记',
+    excerpt_en: 'A deep dive into Ho et al. 2020, covering forward/reverse processes, the ELBO objective, and how it applies to medical image synthesis.',
+    excerpt_zh: '深入解析 Ho et al. 2020，涵盖前向/逆向过程、ELBO 目标函数，及其在医学图像合成中的应用。',
+    tags: ['Diffusion', 'Generative Model'],
+    url: '#'
+  },
+  {
+    category_en: 'Technical Blog',
+    category_zh: '技术博客',
+    date: '2025-03-15',
+    title_en: 'Setting Up a PET/CT Preprocessing Pipeline with Python',
+    title_zh: '用 Python 搭建 PET/CT 预处理流水线',
+    excerpt_en: 'Step-by-step guide covering DICOM parsing, registration to MNI space, SUV normalization, and data augmentation strategies.',
+    excerpt_zh: '从 DICOM 解析、配准到 MNI 空间、SUV 归一化到数据增强的完整指南。',
+    tags: ['Python', 'DICOM', 'Preprocessing'],
+    url: '#'
+  },
+  {
+    category_en: 'Study Notes',
+    category_zh: '学习笔记',
+    date: '2025-02-20',
+    title_en: 'Understanding Attention Mechanisms for 3D Medical Volumes',
+    title_zh: '3D 医学图像中注意力机制详解',
+    excerpt_en: 'Comparing self-attention, cross-attention, and windowed attention (Swin) for volumetric data — computational trade-offs and practical tips.',
+    excerpt_zh: '对比自注意力、交叉注意力与窗口注意力（Swin）在体积数据上的计算权衡与实用技巧。',
+    tags: ['Transformer', 'Attention', '3D Vision'],
+    url: '#'
+  },
+  {
+    category_en: 'Research Reflection',
+    category_zh: '科研感悟',
+    date: '2025-01-10',
+    title_en: 'How I Approach Reviewer Comments Constructively',
+    title_zh: '如何建设性地回应审稿意见',
+    excerpt_en: 'Personal experience organizing rebuttal documents, responding point-by-point, and using reviewer feedback to genuinely improve papers.',
+    excerpt_zh: '整理 Rebuttal 文件、逐条回应及利用审稿意见真正提升论文质量的个人经验。',
+    tags: ['Academic Writing', 'Rebuttal'],
+    url: '#'
+  },
+  {
+    category_en: 'Paper Reading',
+    category_zh: '论文精读',
+    date: '2024-12-05',
+    title_en: 'nnU-Net: A Self-configuring Method for Deep Learning Segmentation',
+    title_zh: 'nnU-Net：深度学习分割自配置方法详解',
+    excerpt_en: 'Breaking down the nnU-Net framework: automatic preprocessing, architecture search, and why it remains a strong baseline for medical segmentation.',
+    excerpt_zh: '解析 nnU-Net 框架：自动预处理、架构搜索，以及为何其仍是医学分割的强基线。',
+    tags: ['Segmentation', 'nnU-Net', 'Auto-ML'],
+    url: '#'
+  },
+  {
+    category_en: 'Life & PhD',
+    category_zh: '博士生活',
+    date: '2024-11-18',
+    title_en: 'First Time Presenting at RSNA — What I Learned',
+    title_zh: '初次在 RSNA 做报告的收获与反思',
+    excerpt_en: 'Reflections on presenting research internationally, navigating poster sessions, networking with radiologists, and collecting feedback from clinical users.',
+    excerpt_zh: '首次国际会议报告的体会：海报展示、与放射科医生的交流以及收集临床用户反馈。',
+    tags: ['Conference', 'RSNA', 'Networking'],
+    url: '#'
+  },
+];
+
+/* ═══════════════════════════════════════════════════════════════
+   ──────────────  ENGINE (no need to edit below)  ─────────────
+   ═══════════════════════════════════════════════════════════════ */
+
+let currentLang = 'en';
+
+function setLang(lang) {
+  currentLang = lang;
+  document.querySelectorAll('.lang-btn').forEach(b => {
+    b.classList.toggle('active', b.textContent.trim().toLowerCase() === lang ||
+      (lang === 'zh' && b.textContent.includes('中')));
+  });
+  // Update simple i18n elements
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (I18N[lang][key] !== undefined) el.innerHTML = I18N[lang][key];
+  });
+  document.getElementById('page-title').textContent =
+    lang === 'zh'
+      ? `${I18N.zh.name} | 核医学研究`
+      : `${I18N.en.name} | Nuclear Medicine Researcher`;
+  // Re-render dynamic sections
+  renderNews();
+  renderInterests();
+  renderPubs(currentFilter);
+  renderNotes();
+}
+
+/* ── News ── */
+function renderNews() {
+  const list = document.getElementById('news-list');
+  list.innerHTML = NEWS.map(n => `
+    <div class="news-item">
+      <span class="news-date">${n.date}</span>
+      <span class="news-text">${currentLang === 'zh' ? n.zh : n.en}</span>
+    </div>
+  `).join('');
+}
+
+/* ── Interests ── */
+function renderInterests() {
+  const grid = document.getElementById('interests-grid');
+  grid.innerHTML = INTERESTS.map(it => {
+    const d = it[currentLang];
+    return `
+      <div class="interest-card">
+        <div class="interest-icon">${it.icon}</div>
+        <h3>${d.title}</h3>
+        <p>${d.desc}</p>
+      </div>`;
+  }).join('');
+}
+
+/* ── Publications ── */
+let currentFilter = 'All';
+function renderPubFilters() {
+  const types = ['All', ...new Set(PUBLICATIONS.map(p => p.type))];
+  const container = document.getElementById('pub-filters');
+  container.innerHTML = types.map(t => `
+    <button class="filter-btn${t === currentFilter ? ' active' : ''}"
+            onclick="filterPubs('${t}')">${t}</button>
+  `).join('');
+}
+function filterPubs(type) {
+  currentFilter = type;
+  document.querySelectorAll('.filter-btn').forEach(b => {
+    b.classList.toggle('active', b.textContent === type);
+  });
+  renderPubs(type);
+}
+function renderPubs(filter) {
+  const list = document.getElementById('pub-list');
+  const filtered = filter === 'All' ? PUBLICATIONS : PUBLICATIONS.filter(p => p.type === filter);
+  list.innerHTML = filtered.map(p => {
+    const title = currentLang === 'zh' ? p.title_zh : p.title_en;
+    const authors = p.authors.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+    const links = p.links.map(l => `<a class="pub-link" href="${l.url}" target="_blank">${l.label}</a>`).join('');
+    const tags = p.tags.map(t => `<span class="pub-tag">${t}</span>`).join('');
+    return `
+      <div class="pub-card">
+        <div>
+          <span class="pub-venue">${p.venue}</span>
+          <div class="pub-title">${title}</div>
+          <div class="pub-authors">${authors}</div>
+          <div class="pub-tags">${tags}</div>
+        </div>
+        <div class="pub-links">
+          <span class="pub-year">${p.year}</span>
+          ${links}
+        </div>
+      </div>`;
+  }).join('');
+}
+
+/* ── Notes ── */
+function renderNotes() {
+  const grid = document.getElementById('notes-grid');
+  grid.innerHTML = NOTES.map(n => {
+    const title = currentLang === 'zh' ? n.title_zh : n.title_en;
+    const excerpt = currentLang === 'zh' ? n.excerpt_zh : n.excerpt_en;
+    const cat = currentLang === 'zh' ? n.category_zh : n.category_en;
+    const tags = n.tags.map(t => `<span class="pub-tag">${t}</span>`).join('');
+    return `
+      <a class="note-card" href="${n.url}" style="color:inherit;text-decoration:none;">
+        <div class="note-meta">
+          <span class="note-cat">${cat}</span>
+          <span class="note-date">${n.date}</span>
+        </div>
+        <div class="note-title">${title}</div>
+        <div class="note-excerpt">${excerpt}</div>
+        <div class="note-footer">${tags}</div>
+      </a>`;
+  }).join('');
+}
+
+/* ── Nav active state on scroll ── */
+function updateNav() {
+  const sections = ['about','interests','research','notes'];
+  let current = 'about';
+  for (const id of sections) {
+    const el = document.getElementById(id);
+    if (el && window.scrollY >= el.offsetTop - 100) current = id;
+  }
+  document.querySelectorAll('.nav-links a').forEach(a => {
+    a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+  });
+}
+window.addEventListener('scroll', updateNav, { passive: true });
+
+/* ── Init ── */
+(function init() {
+  renderNews();
+  renderInterests();
+  renderPubFilters();
+  renderPubs('All');
+  renderNotes();
+  updateNav();
+})();
+</script>
 </body>
 </html>
