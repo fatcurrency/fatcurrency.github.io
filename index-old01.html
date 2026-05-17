@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title id="page-title">Your Name | Nuclear Medicine Researcher</title>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       QUICK EDIT GUIDE
+       ─────────────────────────────────────────────────────────
+       1. Search for [EDIT: ...] tags to find all editable blocks
+       2. Change SITE_DATA object (below) to update core info
+       3. Add publications in the PUBLICATIONS array
+       4. Add notes in the NOTES array
+       ═══════════════════════════════════════════════════════════ -->
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ── Design Tokens ── */
+    :root {
+      --bg:          #f5f7fa;
+      --surface:     #ffffff;
+      --surface-alt: #eef2f8;
+      --border:      #dde3ed;
+      --accent:      #1a6fa8;
+      --accent-2:    #0e9aa7;
+      --accent-dark: #10517d;
+      --text:        #1a2336;
+      --text-2:      #4a5568;
+      --text-3:      #7a8799;
+      --tag-bg:      #e8f1fb;
+      --tag-text:    #1a6fa8;
+      --nav-h:       64px;
+      --radius:      12px;
+      --shadow-sm:   0 1px 4px rgba(0,0,0,.07);
+      --shadow:      0 4px 20px rgba(0,0,0,.09);
+      --shadow-lg:   0 8px 40px rgba(0,0,0,.13);
+      --transition:  .22s cubic-bezier(.4,0,.2,1);
+    }
+
+    /* ── Reset ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body {
+      font-family: 'Inter', 'Noto Sans SC', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    img { max-width: 100%; }
+    ul { list-style: none; }
+
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+    /* ═══════════════ NAVIGATION ═══════════════ */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      height: var(--nav-h);
+      background: rgba(255,255,255,.92);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center;
+      padding: 0 clamp(1rem, 5vw, 3rem);
+      gap: 2rem;
+      box-shadow: var(--shadow-sm);
+    }
+    .nav-logo {
+      font-weight: 700; font-size: 1rem;
+      color: var(--accent-dark);
+      white-space: nowrap;
+      letter-spacing: -.3px;
+    }
+    .nav-logo span { color: var(--accent-2); }
+    .nav-links {
+      display: flex; align-items: center; gap: .25rem;
+      flex: 1;
+    }
+    .nav-links a {
+      padding: .4rem .85rem;
+      border-radius: 7px;
+      font-size: .88rem; font-weight: 500;
+      color: var(--text-2);
+      transition: background var(--transition), color var(--transition);
+    }
+    .nav-links a:hover,
+    .nav-links a.active { background: var(--tag-bg); color: var(--accent); text-decoration: none; }
+
+    .lang-toggle {
+      display: flex; align-items: center;
+      background: var(--surface-alt);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 3px;
+      gap: 2px;
+      flex-shrink: 0;
+    }
+    .lang-btn {
+      padding: .3rem .75rem;
+      border-radius: 16px;
+      border: none; cursor: pointer;
+      font-size: .8rem; font-weight: 600;
+      background: transparent;
+      color: var(--text-3);
+      transition: all var(--transition);
+    }
+    .lang-btn.active {
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(26,111,168,.35);
+    }
+
+    /* ═══════════════ LAYOUT ═══════════════ */
+    main { padding-top: var(--nav-h); }
+    section {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 5rem clamp(1.25rem, 5vw, 2.5rem);
+    }
+    section + section {
+      border-top: 1px solid var(--border);
+    }
+
+    /* Section heading */
+    .sec-label {
+      font-size: .75rem; font-weight: 700; letter-spacing: 1.5px;
+      text-transform: uppercase; color: var(--accent-2);
+      margin-bottom: .5rem;
+    }
+    .sec-title {
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      font-weight: 700; color: var(--text);
+      margin-bottom: 2.5rem;
+      line-height: 1.3;
+    }
+    .sec-title em { color: var(--accent); font-style: normal; }
+
+    /* ═══════════════ HERO / ABOUT ═══════════════ */
+    #about {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 4rem;
+      align-items: start;
+      padding-top: 5.5rem;
+    }
+    .about-text {}
+    .about-name {
+      font-size: clamp(1.9rem, 4vw, 2.75rem);
+      font-weight: 700; line-height: 1.2;
+      margin-bottom: .5rem;
+    }
+    .about-name .accent { color: var(--accent); }
+    .about-role {
+      font-size: 1.05rem; color: var(--text-2);
+      font-weight: 500; margin-bottom: .3rem;
+    }
+    .about-inst {
+      font-size: .95rem; color: var(--text-3);
+      margin-bottom: 1.75rem;
+    }
+    .about-bio {
+      font-size: .97rem; color: var(--text-2);
+      max-width: 620px; margin-bottom: 2rem;
+      line-height: 1.85;
+    }
+    .about-bio p + p { margin-top: .9rem; }
+
+    /* Social links */
+    .social-links {
+      display: flex; flex-wrap: wrap; gap: .6rem;
+      margin-bottom: 2rem;
+    }
+    .social-btn {
+      display: inline-flex; align-items: center; gap: .4rem;
+      padding: .45rem 1rem;
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: .83rem; font-weight: 600;
+      color: var(--text-2);
+      transition: all var(--transition);
+      text-decoration: none;
+    }
+    .social-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--tag-bg);
+      text-decoration: none;
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-sm);
+    }
+    .social-btn svg { width: 15px; height: 15px; flex-shrink: 0; }
+
+    /* Profile card */
+    .profile-card {
+      width: 280px;
+      flex-shrink: 0;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+    .profile-avatar {
+      width: 100%; aspect-ratio: 1;
+      object-fit: cover;
+      background: linear-gradient(135deg, #1a6fa8 0%, #0e9aa7 100%);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 5rem; color: rgba(255,255,255,.6);
+      user-select: none;
+    }
+    .profile-avatar img {
+      width: 100%; height: 100%; object-fit: cover;
+    }
+    .profile-info {
+      padding: 1.25rem;
+    }
+    .profile-info h3 {
+      font-size: .9rem; font-weight: 700; color: var(--text);
+      margin-bottom: .25rem;
+    }
+    .profile-info p {
+      font-size: .78rem; color: var(--text-3);
+      line-height: 1.5;
+    }
+    .profile-divider {
+      height: 1px; background: var(--border);
+      margin: .8rem 0;
+    }
+    .profile-stat {
+      display: flex; justify-content: space-around;
+      text-align: center;
+    }
+    .profile-stat-item strong {
+      display: block;
+      font-size: 1.15rem; font-weight: 700; color: var(--accent);
+    }
+    .profile-stat-item span {
+      font-size: .72rem; color: var(--text-3);
+    }
+
+    /* News ticker */
+    .news-list {
+      display: flex; flex-direction: column; gap: .6rem;
+      margin-top: .5rem;
+    }
+    .news-item {
+      display: flex; align-items: flex-start; gap: .75rem;
+      padding: .75rem 1rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent-2);
+      border-radius: 8px;
+      font-size: .88rem;
+      transition: box-shadow var(--transition);
+    }
+    .news-item:hover { box-shadow: var(--shadow-sm); }
+    .news-date {
+      flex-shrink: 0;
+      font-size: .75rem; font-weight: 600;
+      color: var(--accent); white-space: nowrap;
+      padding-top: .1rem;
+    }
+    .news-text { color: var(--text-2); }
+
+    /* ═══════════════ RESEARCH INTERESTS ═══════════════ */
+    .interests-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.25rem;
+    }
+    .interest-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.75rem;
+      transition: all var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+    .interest-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      opacity: 0;
+      transition: opacity var(--transition);
+    }
+    .interest-card:hover { box-shadow: var(--shadow); transform: translateY(-3px); }
+    .interest-card:hover::before { opacity: 1; }
+    .interest-icon {
+      width: 44px; height: 44px;
+      background: var(--tag-bg);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 1rem;
+      font-size: 1.4rem;
+    }
+    .interest-card h3 {
+      font-size: .97rem; font-weight: 700;
+      color: var(--text); margin-bottom: .5rem;
+    }
+    .interest-card p {
+      font-size: .84rem; color: var(--text-3); line-height: 1.65;
+    }
+
+    /* ═══════════════ RESEARCH / PUBLICATIONS ═══════════════ */
+    .pub-filters {
+      display: flex; flex-wrap: wrap; gap: .5rem;
+      margin-bottom: 2rem;
+    }
+    .filter-btn {
+      padding: .4rem .9rem;
+      border: 1.5px solid var(--border);
+      border-radius: 20px;
+      background: var(--surface);
+      font-size: .8rem; font-weight: 600;
+      color: var(--text-3);
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+    .filter-btn:hover, .filter-btn.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+
+    .pub-list { display: flex; flex-direction: column; gap: 1.25rem; }
+    .pub-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.6rem 1.75rem;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 1rem;
+      transition: all var(--transition);
+    }
+    .pub-card:hover { box-shadow: var(--shadow); transform: translateY(-2px); }
+    .pub-venue {
+      display: inline-block;
+      font-size: .72rem; font-weight: 700;
+      letter-spacing: .5px; text-transform: uppercase;
+      color: var(--accent-2); margin-bottom: .4rem;
+    }
+    .pub-title {
+      font-size: .97rem; font-weight: 600;
+      color: var(--text); margin-bottom: .35rem;
+      line-height: 1.45;
+    }
+    .pub-authors {
+      font-size: .82rem; color: var(--text-3);
+      margin-bottom: .5rem;
+    }
+    .pub-authors strong { color: var(--accent-dark); }
+    .pub-tags { display: flex; flex-wrap: wrap; gap: .4rem; }
+    .pub-tag {
+      padding: .2rem .6rem;
+      background: var(--tag-bg);
+      color: var(--tag-text);
+      border-radius: 4px;
+      font-size: .73rem; font-weight: 600;
+    }
+    .pub-links {
+      display: flex; flex-direction: column;
+      align-items: flex-end; gap: .5rem;
+      flex-shrink: 0;
+    }
+    .pub-link {
+      display: inline-flex; align-items: center; gap: .3rem;
+      padding: .35rem .75rem;
+      background: var(--tag-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: .75rem; font-weight: 600;
+      color: var(--accent);
+      white-space: nowrap;
+      transition: all var(--transition);
+      text-decoration: none;
+    }
+    .pub-link:hover {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+      text-decoration: none;
+    }
+    .pub-year {
+      font-size: .8rem; font-weight: 700; color: var(--text-3);
+    }
+
+    /* ═══════════════ NOTES / BLOG ═══════════════ */
+    .notes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.25rem;
+    }
+    .note-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      display: flex; flex-direction: column;
+      transition: all var(--transition);
+      cursor: pointer;
+    }
+    .note-card:hover { box-shadow: var(--shadow); transform: translateY(-3px); }
+    .note-meta {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: .75rem;
+    }
+    .note-cat {
+      font-size: .7rem; font-weight: 700; letter-spacing: .5px;
+      text-transform: uppercase; color: var(--accent-2);
+    }
+    .note-date { font-size: .75rem; color: var(--text-3); }
+    .note-title {
+      font-size: 1rem; font-weight: 700;
+      color: var(--text); margin-bottom: .5rem;
+      line-height: 1.4;
+    }
+    .note-excerpt {
+      font-size: .84rem; color: var(--text-3);
+      line-height: 1.65; flex: 1;
+    }
+    .note-footer {
+      margin-top: 1rem;
+      padding-top: .75rem;
+      border-top: 1px solid var(--border);
+      display: flex; gap: .4rem; flex-wrap: wrap;
+    }
+
+    /* ═══════════════ FOOTER ═══════════════ */
+    footer {
+      text-align: center;
+      padding: 2.5rem 1rem;
+      border-top: 1px solid var(--border);
+      font-size: .8rem; color: var(--text-3);
+      background: var(--surface);
+    }
+    footer a { color: var(--accent); }
+
+    /* ═══════════════ RESPONSIVE ═══════════════ */
+    @media (max-width: 768px) {
+      #about {
+        grid-template-columns: 1fr;
+      }
+      .profile-card {
+        width: 100%;
+        display: grid;
+        grid-template-columns: 120px 1fr;
+      }
+      .profile-avatar { aspect-ratio: auto; height: 120px; }
+      .pub-card { grid-template-columns: 1fr; }
+      .pub-links { flex-direction: row; align-items: flex-start; }
+      .nav-links a { padding: .4rem .55rem; }
+    }
+
+    /* ═══════════════ ANIMATIONS ═══════════════ */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .fade-up { animation: fadeUp .5s ease both; }
+
+    /* Active section highlight (via JS scroll) */
+    .section-anchor { scroll-margin-top: calc(var(--nav-h) + 1rem); }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════
+     NAVIGATION
+     ═══════════════════════════════════════════════════════════ -->
+<nav>
+  <!-- [EDIT: Logo text] -->
+  <div class="nav-logo"><span>NM</span>·Lab</div>
+
+  <div class="nav-links">
+    <a href="#about"     data-i18n="nav_about">About</a>
+    <a href="#interests" data-i18n="nav_interests">Interests</a>
+    <a href="#research"  data-i18n="nav_research">Research</a>
+    <a href="#notes"     data-i18n="nav_notes">Notes</a>
+  </div>
+
+  <div class="lang-toggle">
+    <button class="lang-btn active" onclick="setLang('en')">EN</button>
+    <button class="lang-btn"        onclick="setLang('zh')">中</button>
+  </div>
+</nav>
+
+<main>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SECTION 1 · ABOUT / HOME
+     ═══════════════════════════════════════════════════════════ -->
+<section id="about" class="section-anchor">
+  <div class="about-text fade-up">
+    <!-- [EDIT: Your name] -->
+    <div class="about-name">
+      <span class="accent" data-i18n="name">Your Name</span>
+    </div>
+
+    <!-- [EDIT: Role & Institution] -->
+    <div class="about-role" data-i18n="role">Ph.D. Researcher · Medical Imaging</div>
+    <div class="about-inst" data-i18n="inst">
+      Department of Nuclear Medicine, [Your University], [City, Country]
+    </div>
+
+    <!-- [EDIT: Bio paragraphs] -->
+    <div class="about-bio">
+      <p data-i18n="bio1">
+        I am a Ph.D. researcher at the Department of Nuclear Medicine, [Your University],
+        advised by Prof. [Advisor Name]. My research focuses on the intersection of
+        artificial intelligence and nuclear medicine imaging, with a particular emphasis
+        on PET/CT image reconstruction, image quality enhancement, and AI-driven
+        clinical decision support.
+      </p>
+      <p data-i18n="bio2">
+        I am passionate about translating cutting-edge deep learning methods into
+        clinical practice to improve diagnostic accuracy and reduce radiation dose.
+        I welcome collaborations from researchers in medical physics, radiology,
+        and AI. Feel free to reach out!
+      </p>
+    </div>
+
+    <!-- [EDIT: Social links — replace # with your actual URLs] -->
+    <div class="social-links">
+      <a class="social-btn" href="#" target="_blank">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+        GitHub
+      </a>
+      <a class="social-btn" href="#" target="_blank">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.328 2.002c.53.003 1.067.232 1.457.636l.003.003c.397.41.606.953.594 1.513l-.003 16.696c-.012.558-.225 1.097-.622 1.507l-.003.003c-.4.413-.944.64-1.5.64H2.746c-.558 0-1.103-.228-1.501-.64-.397-.41-.61-.949-.622-1.507V4.154c-.012-.56.197-1.103.594-1.513.39-.404.927-.633 1.457-.636l18.654-.003zM8.33 7.468c-1.035 0-1.875.85-1.875 1.896s.84 1.896 1.875 1.896c1.035 0 1.875-.85 1.875-1.896S9.365 7.468 8.33 7.468zm0 4.79c-2.07 0-3.75 1.696-3.75 3.788v.957h7.5v-.957c0-2.092-1.68-3.788-3.75-3.788zM16.67 11.5h-3.75v1.5h3.75v-1.5zm0-3h-3.75V10h3.75V8.5z"/></svg>
+        Google Scholar
+      </a>
+      <a class="social-btn" href="#" target="_blank">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.338 16.338H13.67V12.16c0-.995-.017-2.277-1.387-2.277-1.389 0-1.601 1.086-1.601 2.207v4.248H8.014v-8.59h2.559v1.174h.037c.356-.675 1.227-1.387 2.526-1.387 2.703 0 3.203 1.778 3.203 4.092v4.711zM5.005 6.575a1.548 1.548 0 11-.003-3.096 1.548 1.548 0 01.003 3.096zm-1.337 9.763H6.34v-8.59H3.667v8.59zM17.668 1H2.328C1.595 1 1 1.581 1 2.298v15.403C1 18.418 1.595 19 2.328 19h15.34c.734 0 1.332-.582 1.332-1.299V2.298C19 1.581 18.402 1 17.668 1z"/></svg>
+        LinkedIn
+      </a>
+      <a class="social-btn" href="#" target="_blank">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        <span data-i18n="cv">CV / Résumé</span>
+      </a>
+      <a class="social-btn" href="mailto:your@email.com">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,12 2,6"/></svg>
+        <!-- [EDIT: your email] -->
+        your@email.com
+      </a>
+    </div>
+
+    <!-- News / Recent Updates -->
+    <div class="sec-label" data-i18n="news_label">Recent News</div>
+    <div class="news-list" id="news-list">
+      <!-- Populated by JS from NEWS array -->
+    </div>
+  </div>
+
+  <!-- Profile card -->
+  <div class="profile-card fade-up" style="animation-delay:.15s">
+    <!-- [EDIT: Replace the emoji with <img src="photo.jpg" alt="photo"> if you have a photo] -->
+    <div class="profile-avatar">
+      <span>🩺</span>
+      <!-- <img src="photo.jpg" alt="Profile photo"> -->
+    </div>
+    <div class="profile-info">
+      <!-- [EDIT: Quick-facts] -->
+      <h3 data-i18n="card_name">Your Name (英文名)</h3>
+      <p data-i18n="card_inst">Nuclear Medicine Dept.<br>[Your University]</p>
+      <div class="profile-divider"></div>
+      <div class="profile-stat">
+        <!-- [EDIT: stats] -->
+        <div class="profile-stat-item">
+          <strong id="stat-pubs">12</strong>
+          <span data-i18n="stat_pub">Papers</span>
+        </div>
+        <div class="profile-stat-item">
+          <strong>3</strong>
+          <span data-i18n="stat_proj">Projects</span>
+        </div>
+        <div class="profile-stat-item">
+          <strong>2026</strong>
+          <span data-i18n="stat_grad">Expected</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SECTION 2 · RESEARCH INTERESTS
+     ═══════════════════════════════════════════════════════════ -->
+<section id="interests" class="section-anchor">
+  <div class="sec-label" data-i18n="int_label">Focus Areas</div>
+  <div class="sec-title" data-i18n="int_title">Research <em>Interests</em></div>
+
+  <div class="interests-grid" id="interests-grid">
+    <!-- Populated by JS from INTERESTS array -->
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SECTION 3 · RESEARCH / PUBLICATIONS
+     ═══════════════════════════════════════════════════════════ -->
+<section id="research" class="section-anchor">
+  <div class="sec-label" data-i18n="pub_label">Selected Works</div>
+  <div class="sec-title" data-i18n="pub_title">Research & <em>Publications</em></div>
+
+  <div class="pub-filters" id="pub-filters">
+    <!-- Populated by JS -->
+  </div>
+  <div class="pub-list" id="pub-list">
+    <!-- Populated by JS from PUBLICATIONS array -->
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SECTION 4 · PERSONAL NOTES
+     ═══════════════════════════════════════════════════════════ -->
+<section id="notes" class="section-anchor">
+  <div class="sec-label" data-i18n="notes_label">Blog / Notes</div>
+  <div class="sec-title" data-i18n="notes_title">Personal <em>Notes</em></div>
+  <div class="notes-grid" id="notes-grid">
+    <!-- Populated by JS from NOTES array -->
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <!-- [EDIT: footer text] -->
+  <p>
+    <span data-i18n="footer_built">Built with ❤️ by</span>
+    <a href="#about" data-i18n="name">Your Name</a> ·
+    <span data-i18n="footer_copy">© 2025 All rights reserved</span>
+  </p>
+</footer>
+
+
+<script>
+/* ═══════════════════════════════════════════════════════════════════
+   ██████████████████  SITE DATA  ██████████████████
+   ────────────────────────────────────────────────────────────────
+   Edit the objects below to customize your site.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── i18n strings ──────────────────────────────────────────────── */
+const I18N = {
+  en: {
+    /* Nav */
+    nav_about:     'About',
+    nav_interests: 'Interests',
+    nav_research:  'Research',
+    nav_notes:     'Notes',
+    /* Hero */
+    name:      'Your Name',           // [EDIT]
+    role:      'Ph.D. Researcher · Medical Imaging',  // [EDIT]
+    inst:      'Department of Nuclear Medicine, [Your University], [City, Country]', // [EDIT]
+    bio1:      'I am a Ph.D. researcher at the Department of Nuclear Medicine, [Your University], advised by Prof. [Advisor Name]. My research focuses on the intersection of artificial intelligence and nuclear medicine imaging, with a particular emphasis on PET/CT image reconstruction, image quality enhancement, and AI-driven clinical decision support.',
+    bio2:      'I am passionate about translating cutting-edge deep learning methods into clinical practice to improve diagnostic accuracy and reduce radiation dose. I welcome collaborations from researchers in medical physics, radiology, and AI. Feel free to reach out!',
+    cv:        'CV / Résumé',
+    news_label:'Recent News',
+    /* Card */
+    card_name: 'Your Name',           // [EDIT]
+    card_inst: 'Nuclear Medicine Dept.<br>[Your University]', // [EDIT]
+    stat_pub:  'Papers',
+    stat_proj: 'Projects',
+    stat_grad: 'Expected',
+    /* Sections */
+    int_label: 'Focus Areas',
+    int_title: 'Research Interests',
+    pub_label: 'Selected Works',
+    pub_title: 'Research & Publications',
+    notes_label:'Blog / Notes',
+    notes_title:'Personal Notes',
+    /* Footer */
+    footer_built: 'Built with ❤️ by',
+    footer_copy:  '© 2025 All rights reserved',
+  },
+  zh: {
+    nav_about:     '关于我',
+    nav_interests: '研究方向',
+    nav_research:  '研究成果',
+    nav_notes:     '个人笔记',
+    name:      '你的姓名',            // [EDIT]
+    role:      '博士研究生 · 医学图像',             // [EDIT]
+    inst:      '核医学科，[你的大学]，[城市，国家]', // [EDIT]
+    bio1:      '我是[你的大学]核医学科博士研究生，师从[导师姓名]教授。我的研究聚焦于人工智能与核医学影像的交叉领域，重点方向包括 PET/CT 图像重建、图像质量增强以及基于 AI 的临床辅助决策。',
+    bio2:      '我致力于将前沿深度学习方法应用于临床实践，以提高诊断精度并降低辐射剂量。欢迎来自医学物理、放射科及 AI 领域的研究者合作交流！',
+    cv:        '个人简历',
+    news_label:'最新动态',
+    card_name: '你的姓名',            // [EDIT]
+    card_inst: '核医学科<br>[你的大学]',            // [EDIT]
+    stat_pub:  '论文',
+    stat_proj: '项目',
+    stat_grad: '预计毕业',
+    int_label: '研究方向',
+    int_title: '研究兴趣',
+    pub_label: '代表性成果',
+    pub_title: '研究与发表',
+    notes_label:'博客 / 笔记',
+    notes_title:'个人笔记',
+    footer_built: '用 ❤️ 构建 by',
+    footer_copy:  '© 2025 版权所有',
+  }
+};
+
+/* ── News / Updates ─────────────────────────────────────────────
+   [EDIT] Add your news items. Each item: { date, en, zh }
+   ─────────────────────────────────────────────────────────────── */
+const NEWS = [
+  {
+    date: '2025.05',
+    en: 'Paper accepted at <strong>MICCAI 2025</strong> – Low-dose PET reconstruction with score-based diffusion.',
+    zh: '论文被 <strong>MICCAI 2025</strong> 录用 – 基于 Score-based 扩散模型的低剂量 PET 重建。'
+  },
+  {
+    date: '2025.03',
+    en: 'Awarded the <strong>National Scholarship</strong> for Outstanding Ph.D. Students.',
+    zh: '荣获<strong>博士研究生国家奖学金</strong>。'
+  },
+  {
+    date: '2024.11',
+    en: 'Gave an oral presentation at <strong>RSNA 2024</strong>, Chicago.',
+    zh: '在芝加哥 <strong>RSNA 2024</strong> 年会作口头报告。'
+  },
+  {
+    date: '2024.09',
+    en: 'Started a research visit at [Collaborating Institution].',
+    zh: '开始在[合作机构]进行访学交流。'
+  },
+];
+
+/* ── Research Interests ─────────────────────────────────────────
+   [EDIT] Change icon (emoji), title, description
+   ─────────────────────────────────────────────────────────────── */
+const INTERESTS = [
+  {
+    icon: '🫁',
+    en: { title: 'PET/CT Image Reconstruction',
+          desc: 'Deep learning-based iterative and analytical reconstruction methods for low-dose and ultra-fast PET/CT acquisition.' },
+    zh: { title: 'PET/CT 图像重建',
+          desc: '基于深度学习的迭代与解析重建方法，面向低剂量与超快速 PET/CT 采集。' }
+  },
+  {
+    icon: '🧠',
+    en: { title: 'AI-Enhanced Image Quality',
+          desc: 'Generative models and diffusion-based approaches for noise reduction, super-resolution, and artifact correction in nuclear medicine images.' },
+    zh: { title: 'AI 图像质量增强',
+          desc: '利用生成模型与扩散方法实现核医学图像的降噪、超分辨率及伪影校正。' }
+  },
+  {
+    icon: '🔬',
+    en: { title: 'Quantitative Imaging Biomarkers',
+          desc: 'Automated segmentation and SUV-based quantification for oncology, neurology, and cardiology applications.' },
+    zh: { title: '定量影像生物标志物',
+          desc: '面向肿瘤、神经与心脏应用的自动分割及基于 SUV 的定量分析。' }
+  },
+  {
+    icon: '🩻',
+    en: { title: 'Multi-modal Image Fusion',
+          desc: 'Cross-modal synthesis and registration between PET, CT, MRI, and SPECT for comprehensive diagnostic workflows.' },
+    zh: { title: '多模态图像融合',
+          desc: 'PET、CT、MRI 与 SPECT 之间的跨模态合成与配准，助力综合诊断流程。' }
+  },
+  {
+    icon: '⚕️',
+    en: { title: 'Clinical AI Decision Support',
+          desc: 'Explainable AI systems assisting physicians in diagnosis, staging, and treatment response evaluation.' },
+    zh: { title: '临床 AI 辅助决策',
+          desc: '可解释 AI 系统辅助医生进行诊断、分期及治疗反应评估。' }
+  },
+  {
+    icon: '📡',
+    en: { title: 'Radiation Dose Reduction',
+          desc: 'Protocol optimization and post-processing techniques to minimize patient radiation exposure while maintaining diagnostic image quality.' },
+    zh: { title: '辐射剂量优化',
+          desc: '通过扫描协议优化与后处理技术，在保持诊断质量的同时最大限度降低辐射剂量。' }
+  },
+];
+
+/* ── Publications ───────────────────────────────────────────────
+   [EDIT] Add your papers. Fields:
+     year, venue (e.g. "MICCAI 2025"), type ("Conference" | "Journal" | "Preprint")
+     title_en, title_zh, authors (use **Your Name** for bold)
+     tags: array of strings
+     links: array of { label, url }
+   ─────────────────────────────────────────────────────────────── */
+const PUBLICATIONS = [
+  {
+    year: 2025,
+    venue: 'MICCAI 2025',
+    type: 'Conference',
+    title_en: 'Score-Based Diffusion Models for Low-Dose PET Reconstruction with Anatomical Prior',
+    title_zh: '基于 Score 扩散模型结合解剖先验的低剂量 PET 重建',
+    authors: '**Your Name**, Collaborator A, Collaborator B, Prof. Advisor',
+    tags: ['PET Reconstruction', 'Diffusion Model', 'Low-dose'],
+    links: [
+      { label: 'Paper', url: '#' },
+      { label: 'Code', url: '#' },
+    ]
+  },
+  {
+    year: 2025,
+    venue: 'Medical Image Analysis',
+    type: 'Journal',
+    title_en: 'Transformer-Based Cross-Modal Synthesis from CT to PET for Radiation Oncology',
+    title_zh: '面向放射肿瘤学的基于 Transformer 的 CT 到 PET 跨模态合成',
+    authors: 'Collaborator A, **Your Name**, Collaborator C, Prof. Advisor',
+    tags: ['Cross-modal Synthesis', 'Transformer', 'Radiation Oncology'],
+    links: [
+      { label: 'Paper', url: '#' },
+      { label: 'Dataset', url: '#' },
+    ]
+  },
+  {
+    year: 2024,
+    venue: 'MICCAI 2024',
+    type: 'Conference',
+    title_en: 'Uncertainty-Aware Lesion Segmentation in Whole-Body PET/CT Scans',
+    title_zh: '全身 PET/CT 扫描中的不确定性感知病灶分割',
+    authors: '**Your Name**, Collaborator D, Prof. Advisor',
+    tags: ['Segmentation', 'Uncertainty Estimation', 'PET/CT'],
+    links: [
+      { label: 'Paper', url: '#' },
+      { label: 'Poster', url: '#' },
+    ]
+  },
+  {
+    year: 2024,
+    venue: 'European Journal of Nuclear Medicine',
+    type: 'Journal',
+    title_en: 'Deep Learning-Driven SUVmax Standardization Across Multi-Center PET Datasets',
+    title_zh: '多中心 PET 数据集 SUVmax 深度学习标准化方法',
+    authors: 'Collaborator E, **Your Name**, Collaborator F, Prof. Advisor',
+    tags: ['SUV Quantification', 'Multi-center', 'Standardization'],
+    links: [
+      { label: 'Paper', url: '#' },
+    ]
+  },
+  {
+    year: 2024,
+    venue: 'arXiv',
+    type: 'Preprint',
+    title_en: 'A Survey of Deep Learning Methods in Nuclear Medicine Imaging: From Reconstruction to Diagnosis',
+    title_zh: '深度学习在核医学成像中的应用综述：从重建到诊断',
+    authors: '**Your Name**, Collaborator G, Prof. Advisor',
+    tags: ['Survey', 'Deep Learning', 'Nuclear Medicine'],
+    links: [
+      { label: 'arXiv', url: '#' },
+    ]
+  },
+];
+
+/* ── Personal Notes ─────────────────────────────────────────────
+   [EDIT] Add your blog notes / reading notes
+   ─────────────────────────────────────────────────────────────── */
+const NOTES = [
+  {
+    category_en: 'Paper Reading',
+    category_zh: '论文精读',
+    date: '2025-04-28',
+    title_en: 'Notes on Denoising Diffusion Probabilistic Models (DDPM)',
+    title_zh: 'DDPM 去噪扩散概率模型笔记',
+    excerpt_en: 'A deep dive into Ho et al. 2020, covering forward/reverse processes, the ELBO objective, and how it applies to medical image synthesis.',
+    excerpt_zh: '深入解析 Ho et al. 2020，涵盖前向/逆向过程、ELBO 目标函数，及其在医学图像合成中的应用。',
+    tags: ['Diffusion', 'Generative Model'],
+    url: '#'
+  },
+  {
+    category_en: 'Technical Blog',
+    category_zh: '技术博客',
+    date: '2025-03-15',
+    title_en: 'Setting Up a PET/CT Preprocessing Pipeline with Python',
+    title_zh: '用 Python 搭建 PET/CT 预处理流水线',
+    excerpt_en: 'Step-by-step guide covering DICOM parsing, registration to MNI space, SUV normalization, and data augmentation strategies.',
+    excerpt_zh: '从 DICOM 解析、配准到 MNI 空间、SUV 归一化到数据增强的完整指南。',
+    tags: ['Python', 'DICOM', 'Preprocessing'],
+    url: '#'
+  },
+  {
+    category_en: 'Study Notes',
+    category_zh: '学习笔记',
+    date: '2025-02-20',
+    title_en: 'Understanding Attention Mechanisms for 3D Medical Volumes',
+    title_zh: '3D 医学图像中注意力机制详解',
+    excerpt_en: 'Comparing self-attention, cross-attention, and windowed attention (Swin) for volumetric data — computational trade-offs and practical tips.',
+    excerpt_zh: '对比自注意力、交叉注意力与窗口注意力（Swin）在体积数据上的计算权衡与实用技巧。',
+    tags: ['Transformer', 'Attention', '3D Vision'],
+    url: '#'
+  },
+  {
+    category_en: 'Research Reflection',
+    category_zh: '科研感悟',
+    date: '2025-01-10',
+    title_en: 'How I Approach Reviewer Comments Constructively',
+    title_zh: '如何建设性地回应审稿意见',
+    excerpt_en: 'Personal experience organizing rebuttal documents, responding point-by-point, and using reviewer feedback to genuinely improve papers.',
+    excerpt_zh: '整理 Rebuttal 文件、逐条回应及利用审稿意见真正提升论文质量的个人经验。',
+    tags: ['Academic Writing', 'Rebuttal'],
+    url: '#'
+  },
+  {
+    category_en: 'Paper Reading',
+    category_zh: '论文精读',
+    date: '2024-12-05',
+    title_en: 'nnU-Net: A Self-configuring Method for Deep Learning Segmentation',
+    title_zh: 'nnU-Net：深度学习分割自配置方法详解',
+    excerpt_en: 'Breaking down the nnU-Net framework: automatic preprocessing, architecture search, and why it remains a strong baseline for medical segmentation.',
+    excerpt_zh: '解析 nnU-Net 框架：自动预处理、架构搜索，以及为何其仍是医学分割的强基线。',
+    tags: ['Segmentation', 'nnU-Net', 'Auto-ML'],
+    url: '#'
+  },
+  {
+    category_en: 'Life & PhD',
+    category_zh: '博士生活',
+    date: '2024-11-18',
+    title_en: 'First Time Presenting at RSNA — What I Learned',
+    title_zh: '初次在 RSNA 做报告的收获与反思',
+    excerpt_en: 'Reflections on presenting research internationally, navigating poster sessions, networking with radiologists, and collecting feedback from clinical users.',
+    excerpt_zh: '首次国际会议报告的体会：海报展示、与放射科医生的交流以及收集临床用户反馈。',
+    tags: ['Conference', 'RSNA', 'Networking'],
+    url: '#'
+  },
+];
+
+/* ═══════════════════════════════════════════════════════════════
+   ──────────────  ENGINE (no need to edit below)  ─────────────
+   ═══════════════════════════════════════════════════════════════ */
+
+let currentLang = 'en';
+
+function setLang(lang) {
+  currentLang = lang;
+  document.querySelectorAll('.lang-btn').forEach(b => {
+    b.classList.toggle('active', b.textContent.trim().toLowerCase() === lang ||
+      (lang === 'zh' && b.textContent.includes('中')));
+  });
+  // Update simple i18n elements
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (I18N[lang][key] !== undefined) el.innerHTML = I18N[lang][key];
+  });
+  document.getElementById('page-title').textContent =
+    lang === 'zh'
+      ? `${I18N.zh.name} | 核医学研究`
+      : `${I18N.en.name} | Nuclear Medicine Researcher`;
+  // Re-render dynamic sections
+  renderNews();
+  renderInterests();
+  renderPubs(currentFilter);
+  renderNotes();
+}
+
+/* ── News ── */
+function renderNews() {
+  const list = document.getElementById('news-list');
+  list.innerHTML = NEWS.map(n => `
+    <div class="news-item">
+      <span class="news-date">${n.date}</span>
+      <span class="news-text">${currentLang === 'zh' ? n.zh : n.en}</span>
+    </div>
+  `).join('');
+}
+
+/* ── Interests ── */
+function renderInterests() {
+  const grid = document.getElementById('interests-grid');
+  grid.innerHTML = INTERESTS.map(it => {
+    const d = it[currentLang];
+    return `
+      <div class="interest-card">
+        <div class="interest-icon">${it.icon}</div>
+        <h3>${d.title}</h3>
+        <p>${d.desc}</p>
+      </div>`;
+  }).join('');
+}
+
+/* ── Publications ── */
+let currentFilter = 'All';
+function renderPubFilters() {
+  const types = ['All', ...new Set(PUBLICATIONS.map(p => p.type))];
+  const container = document.getElementById('pub-filters');
+  container.innerHTML = types.map(t => `
+    <button class="filter-btn${t === currentFilter ? ' active' : ''}"
+            onclick="filterPubs('${t}')">${t}</button>
+  `).join('');
+}
+function filterPubs(type) {
+  currentFilter = type;
+  document.querySelectorAll('.filter-btn').forEach(b => {
+    b.classList.toggle('active', b.textContent === type);
+  });
+  renderPubs(type);
+}
+function renderPubs(filter) {
+  const list = document.getElementById('pub-list');
+  const filtered = filter === 'All' ? PUBLICATIONS : PUBLICATIONS.filter(p => p.type === filter);
+  list.innerHTML = filtered.map(p => {
+    const title = currentLang === 'zh' ? p.title_zh : p.title_en;
+    const authors = p.authors.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+    const links = p.links.map(l => `<a class="pub-link" href="${l.url}" target="_blank">${l.label}</a>`).join('');
+    const tags = p.tags.map(t => `<span class="pub-tag">${t}</span>`).join('');
+    return `
+      <div class="pub-card">
+        <div>
+          <span class="pub-venue">${p.venue}</span>
+          <div class="pub-title">${title}</div>
+          <div class="pub-authors">${authors}</div>
+          <div class="pub-tags">${tags}</div>
+        </div>
+        <div class="pub-links">
+          <span class="pub-year">${p.year}</span>
+          ${links}
+        </div>
+      </div>`;
+  }).join('');
+}
+
+/* ── Notes ── */
+function renderNotes() {
+  const grid = document.getElementById('notes-grid');
+  grid.innerHTML = NOTES.map(n => {
+    const title = currentLang === 'zh' ? n.title_zh : n.title_en;
+    const excerpt = currentLang === 'zh' ? n.excerpt_zh : n.excerpt_en;
+    const cat = currentLang === 'zh' ? n.category_zh : n.category_en;
+    const tags = n.tags.map(t => `<span class="pub-tag">${t}</span>`).join('');
+    return `
+      <a class="note-card" href="${n.url}" style="color:inherit;text-decoration:none;">
+        <div class="note-meta">
+          <span class="note-cat">${cat}</span>
+          <span class="note-date">${n.date}</span>
+        </div>
+        <div class="note-title">${title}</div>
+        <div class="note-excerpt">${excerpt}</div>
+        <div class="note-footer">${tags}</div>
+      </a>`;
+  }).join('');
+}
+
+/* ── Nav active state on scroll ── */
+function updateNav() {
+  const sections = ['about','interests','research','notes'];
+  let current = 'about';
+  for (const id of sections) {
+    const el = document.getElementById(id);
+    if (el && window.scrollY >= el.offsetTop - 100) current = id;
+  }
+  document.querySelectorAll('.nav-links a').forEach(a => {
+    a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+  });
+}
+window.addEventListener('scroll', updateNav, { passive: true });
+
+/* ── Init ── */
+(function init() {
+  renderNews();
+  renderInterests();
+  renderPubFilters();
+  renderPubs('All');
+  renderNotes();
+  updateNav();
+})();
+</script>
+</body>
+</html>

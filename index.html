@@ -1,1072 +1,1406 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title id="page-title">Your Name | Nuclear Medicine Researcher</title>
-
-  <!-- ═══════════════════════════════════════════════════════════
-       QUICK EDIT GUIDE
-       ─────────────────────────────────────────────────────────
-       1. Search for [EDIT: ...] tags to find all editable blocks
-       2. Change SITE_DATA object (below) to update core info
-       3. Add publications in the PUBLICATIONS array
-       4. Add notes in the NOTES array
-       ═══════════════════════════════════════════════════════════ -->
-
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet" />
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lu Yijun · Medical Imaging Researcher</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    /* ── Design Tokens ── */
+    /* ===== DESIGN TOKENS ===== */
     :root {
-      --bg:          #f5f7fa;
-      --surface:     #ffffff;
-      --surface-alt: #eef2f8;
-      --border:      #dde3ed;
-      --accent:      #1a6fa8;
-      --accent-2:    #0e9aa7;
-      --accent-dark: #10517d;
-      --text:        #1a2336;
-      --text-2:      #4a5568;
-      --text-3:      #7a8799;
-      --tag-bg:      #e8f1fb;
-      --tag-text:    #1a6fa8;
-      --nav-h:       64px;
-      --radius:      12px;
-      --shadow-sm:   0 1px 4px rgba(0,0,0,.07);
-      --shadow:      0 4px 20px rgba(0,0,0,.09);
-      --shadow-lg:   0 8px 40px rgba(0,0,0,.13);
-      --transition:  .22s cubic-bezier(.4,0,.2,1);
+      --bg:          #FFFFFF;
+      --fg:          #111827;
+      --primary:     #3B82F6;
+      --primary-dk:  #2563EB;
+      --secondary:   #10B981;
+      --secondary-dk:#059669;
+      --accent:      #F59E0B;
+      --muted:       #F3F4F6;
+      --border:      #E5E7EB;
+      --dark:        #1F2937;
+      --darkest:     #111827;
     }
 
-    /* ── Reset ── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; font-size: 16px; }
+    html { scroll-behavior: smooth; }
+
     body {
-      font-family: 'Inter', 'Noto Sans SC', sans-serif;
+      font-family: 'Outfit', sans-serif;
       background: var(--bg);
-      color: var(--text);
-      line-height: 1.7;
+      color: var(--fg);
+      line-height: 1.65;
+      font-size: 16px;
+      overflow-x: hidden;
     }
-    a { color: var(--accent); text-decoration: none; }
-    a:hover { text-decoration: underline; }
-    img { max-width: 100%; }
-    ul { list-style: none; }
 
-    /* ── Scrollbar ── */
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: var(--bg); }
-    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    /* ===== LANGUAGE SYSTEM ===== */
+    .lang-zh       { display: none; }
+    .lang-zh-block { display: none; }
 
-    /* ═══════════════ NAVIGATION ═══════════════ */
-    nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
-      height: var(--nav-h);
-      background: rgba(255,255,255,.92);
-      backdrop-filter: blur(14px);
-      border-bottom: 1px solid var(--border);
-      display: flex; align-items: center;
-      padding: 0 clamp(1rem, 5vw, 3rem);
-      gap: 2rem;
-      box-shadow: var(--shadow-sm);
+    body.zh .lang-en       { display: none; }
+    body.zh .lang-zh       { display: inline; }
+    body.zh .lang-en-block { display: none; }
+    body.zh .lang-zh-block { display: block; }
+
+    /* ===== NAV ===== */
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: #fff;
+      border-bottom: 2px solid var(--border);
+      padding: 0 48px;
+    }
+    .nav-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
     }
     .nav-logo {
-      font-weight: 700; font-size: 1rem;
-      color: var(--accent-dark);
-      white-space: nowrap;
-      letter-spacing: -.3px;
+      font-weight: 800;
+      font-size: 18px;
+      letter-spacing: -0.02em;
+      color: var(--fg);
+      text-decoration: none;
+      flex-shrink: 0;
     }
-    .nav-logo span { color: var(--accent-2); }
+    .nav-logo span { color: var(--primary); }
     .nav-links {
-      display: flex; align-items: center; gap: .25rem;
-      flex: 1;
+      display: flex;
+      gap: 2px;
+      list-style: none;
+      align-items: center;
     }
     .nav-links a {
-      padding: .4rem .85rem;
-      border-radius: 7px;
-      font-size: .88rem; font-weight: 500;
-      color: var(--text-2);
-      transition: background var(--transition), color var(--transition);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--fg);
+      text-decoration: none;
+      padding: 6px 10px;
+      border-radius: 6px;
+      transition: all 0.2s;
     }
-    .nav-links a:hover,
-    .nav-links a.active { background: var(--tag-bg); color: var(--accent); text-decoration: none; }
-
-    .lang-toggle {
-      display: flex; align-items: center;
-      background: var(--surface-alt);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 3px;
-      gap: 2px;
-      flex-shrink: 0;
-    }
+    .nav-links a:hover { background: var(--muted); color: var(--primary); }
     .lang-btn {
-      padding: .3rem .75rem;
-      border-radius: 16px;
-      border: none; cursor: pointer;
-      font-size: .8rem; font-weight: 600;
-      background: transparent;
-      color: var(--text-3);
-      transition: all var(--transition);
-    }
-    .lang-btn.active {
-      background: var(--accent);
-      color: #fff;
-      box-shadow: 0 2px 8px rgba(26,111,168,.35);
-    }
-
-    /* ═══════════════ LAYOUT ═══════════════ */
-    main { padding-top: var(--nav-h); }
-    section {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 5rem clamp(1.25rem, 5vw, 2.5rem);
-    }
-    section + section {
-      border-top: 1px solid var(--border);
-    }
-
-    /* Section heading */
-    .sec-label {
-      font-size: .75rem; font-weight: 700; letter-spacing: 1.5px;
-      text-transform: uppercase; color: var(--accent-2);
-      margin-bottom: .5rem;
-    }
-    .sec-title {
-      font-size: clamp(1.5rem, 3vw, 2rem);
-      font-weight: 700; color: var(--text);
-      margin-bottom: 2.5rem;
-      line-height: 1.3;
-    }
-    .sec-title em { color: var(--accent); font-style: normal; }
-
-    /* ═══════════════ HERO / ABOUT ═══════════════ */
-    #about {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 4rem;
-      align-items: start;
-      padding-top: 5.5rem;
-    }
-    .about-text {}
-    .about-name {
-      font-size: clamp(1.9rem, 4vw, 2.75rem);
-      font-weight: 700; line-height: 1.2;
-      margin-bottom: .5rem;
-    }
-    .about-name .accent { color: var(--accent); }
-    .about-role {
-      font-size: 1.05rem; color: var(--text-2);
-      font-weight: 500; margin-bottom: .3rem;
-    }
-    .about-inst {
-      font-size: .95rem; color: var(--text-3);
-      margin-bottom: 1.75rem;
-    }
-    .about-bio {
-      font-size: .97rem; color: var(--text-2);
-      max-width: 620px; margin-bottom: 2rem;
-      line-height: 1.85;
-    }
-    .about-bio p + p { margin-top: .9rem; }
-
-    /* Social links */
-    .social-links {
-      display: flex; flex-wrap: wrap; gap: .6rem;
-      margin-bottom: 2rem;
-    }
-    .social-btn {
-      display: inline-flex; align-items: center; gap: .4rem;
-      padding: .45rem 1rem;
-      background: var(--surface);
-      border: 1.5px solid var(--border);
-      border-radius: 8px;
-      font-size: .83rem; font-weight: 600;
-      color: var(--text-2);
-      transition: all var(--transition);
-      text-decoration: none;
-    }
-    .social-btn:hover {
-      border-color: var(--accent);
-      color: var(--accent);
-      background: var(--tag-bg);
-      text-decoration: none;
-      transform: translateY(-1px);
-      box-shadow: var(--shadow-sm);
-    }
-    .social-btn svg { width: 15px; height: 15px; flex-shrink: 0; }
-
-    /* Profile card */
-    .profile-card {
-      width: 280px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 8px 18px;
+      border-radius: 6px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      letter-spacing: 0.05em;
+      transition: all 0.2s;
       flex-shrink: 0;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      overflow: hidden;
-      box-shadow: var(--shadow);
     }
-    .profile-avatar {
-      width: 100%; aspect-ratio: 1;
-      object-fit: cover;
-      background: linear-gradient(135deg, #1a6fa8 0%, #0e9aa7 100%);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 5rem; color: rgba(255,255,255,.6);
-      user-select: none;
-    }
-    .profile-avatar img {
-      width: 100%; height: 100%; object-fit: cover;
-    }
-    .profile-info {
-      padding: 1.25rem;
-    }
-    .profile-info h3 {
-      font-size: .9rem; font-weight: 700; color: var(--text);
-      margin-bottom: .25rem;
-    }
-    .profile-info p {
-      font-size: .78rem; color: var(--text-3);
-      line-height: 1.5;
-    }
-    .profile-divider {
-      height: 1px; background: var(--border);
-      margin: .8rem 0;
-    }
-    .profile-stat {
-      display: flex; justify-content: space-around;
-      text-align: center;
-    }
-    .profile-stat-item strong {
-      display: block;
-      font-size: 1.15rem; font-weight: 700; color: var(--accent);
-    }
-    .profile-stat-item span {
-      font-size: .72rem; color: var(--text-3);
+    .lang-btn:hover { background: var(--primary-dk); transform: scale(1.05); }
+
+    /* ===== LAYOUT ===== */
+    .container { max-width: 1280px; margin: 0 auto; padding: 0 48px; }
+    @media (max-width: 768px) {
+      .container { padding: 0 20px; }
+      .nav { padding: 0 20px; }
     }
 
-    /* News ticker */
-    .news-list {
-      display: flex; flex-direction: column; gap: .6rem;
-      margin-top: .5rem;
+    .section-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      background: var(--primary);
+      color: white;
+      padding: 4px 12px;
+      border-radius: 4px;
+      margin-bottom: 16px;
     }
-    .news-item {
-      display: flex; align-items: flex-start; gap: .75rem;
-      padding: .75rem 1rem;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-left: 3px solid var(--accent-2);
-      border-radius: 8px;
-      font-size: .88rem;
-      transition: box-shadow var(--transition);
-    }
-    .news-item:hover { box-shadow: var(--shadow-sm); }
-    .news-date {
-      flex-shrink: 0;
-      font-size: .75rem; font-weight: 600;
-      color: var(--accent); white-space: nowrap;
-      padding-top: .1rem;
-    }
-    .news-text { color: var(--text-2); }
+    .section-tag.green  { background: var(--secondary); }
+    .section-tag.amber  { background: var(--accent); color: var(--fg); }
+    .section-tag.dark   { background: var(--dark); }
+    .section-tag.white  { background: rgba(255,255,255,0.15); color: white; }
 
-    /* ═══════════════ RESEARCH INTERESTS ═══════════════ */
-    .interests-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 1.25rem;
+    .section-title {
+      font-size: clamp(30px, 4vw, 52px);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      margin-bottom: 48px;
     }
-    .interest-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 1.75rem;
-      transition: all var(--transition);
+
+    /* ===== HERO ===== */
+    .hero {
+      background: var(--primary);
+      padding: 80px 0 100px;
       position: relative;
       overflow: hidden;
     }
-    .interest-card::before {
-      content: '';
-      position: absolute; top: 0; left: 0; right: 0; height: 3px;
-      background: linear-gradient(90deg, var(--accent), var(--accent-2));
-      opacity: 0;
-      transition: opacity var(--transition);
+    .hero-circle-1 {
+      position: absolute; top: -100px; right: -100px;
+      width: 480px; height: 480px; border-radius: 50%;
+      background: rgba(255,255,255,0.06); pointer-events: none;
     }
-    .interest-card:hover { box-shadow: var(--shadow); transform: translateY(-3px); }
-    .interest-card:hover::before { opacity: 1; }
-    .interest-icon {
-      width: 44px; height: 44px;
-      background: var(--tag-bg);
-      border-radius: 10px;
-      display: flex; align-items: center; justify-content: center;
-      margin-bottom: 1rem;
-      font-size: 1.4rem;
+    .hero-circle-2 {
+      position: absolute; bottom: -160px; left: 25%;
+      width: 640px; height: 640px; border-radius: 50%;
+      background: rgba(255,255,255,0.04); pointer-events: none;
     }
-    .interest-card h3 {
-      font-size: .97rem; font-weight: 700;
-      color: var(--text); margin-bottom: .5rem;
+    .hero-square {
+      position: absolute; bottom: 48px; right: 160px;
+      width: 72px; height: 72px; border-radius: 8px;
+      background: rgba(255,255,255,0.09);
+      transform: rotate(45deg); pointer-events: none;
     }
-    .interest-card p {
-      font-size: .84rem; color: var(--text-3); line-height: 1.65;
-    }
-
-    /* ═══════════════ RESEARCH / PUBLICATIONS ═══════════════ */
-    .pub-filters {
-      display: flex; flex-wrap: wrap; gap: .5rem;
-      margin-bottom: 2rem;
-    }
-    .filter-btn {
-      padding: .4rem .9rem;
-      border: 1.5px solid var(--border);
-      border-radius: 20px;
-      background: var(--surface);
-      font-size: .8rem; font-weight: 600;
-      color: var(--text-3);
-      cursor: pointer;
-      transition: all var(--transition);
-    }
-    .filter-btn:hover, .filter-btn.active {
-      background: var(--accent);
-      border-color: var(--accent);
-      color: #fff;
-    }
-
-    .pub-list { display: flex; flex-direction: column; gap: 1.25rem; }
-    .pub-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 1.6rem 1.75rem;
+    .hero-inner {
+      position: relative; z-index: 1;
       display: grid;
       grid-template-columns: 1fr auto;
-      gap: 1rem;
-      transition: all var(--transition);
+      gap: 64px;
+      align-items: center;
     }
-    .pub-card:hover { box-shadow: var(--shadow); transform: translateY(-2px); }
-    .pub-venue {
-      display: inline-block;
-      font-size: .72rem; font-weight: 700;
-      letter-spacing: .5px; text-transform: uppercase;
-      color: var(--accent-2); margin-bottom: .4rem;
+    @media (max-width: 900px) {
+      .hero-inner { grid-template-columns: 1fr; }
+      .hero-photo-wrap { display: none; }
     }
-    .pub-title {
-      font-size: .97rem; font-weight: 600;
-      color: var(--text); margin-bottom: .35rem;
-      line-height: 1.45;
+
+    .hero-eyebrow {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.65);
+      margin-bottom: 20px;
     }
-    .pub-authors {
-      font-size: .82rem; color: var(--text-3);
-      margin-bottom: .5rem;
+    .hero-name {
+      font-size: clamp(52px, 8vw, 96px);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 0.95;
+      color: white;
+      margin-bottom: 6px;
     }
-    .pub-authors strong { color: var(--accent-dark); }
-    .pub-tags { display: flex; flex-wrap: wrap; gap: .4rem; }
-    .pub-tag {
-      padding: .2rem .6rem;
-      background: var(--tag-bg);
-      color: var(--tag-text);
-      border-radius: 4px;
-      font-size: .73rem; font-weight: 600;
+    .hero-name-cn {
+      display: block;
+      font-size: clamp(18px, 2.5vw, 28px);
+      font-weight: 600;
+      color: rgba(255,255,255,0.55);
+      letter-spacing: 0.22em;
+      margin-bottom: 28px;
     }
-    .pub-links {
-      display: flex; flex-direction: column;
-      align-items: flex-end; gap: .5rem;
+    .hero-tagline {
+      font-size: clamp(15px, 1.8vw, 19px);
+      font-weight: 400;
+      color: rgba(255,255,255,0.85);
+      max-width: 540px;
+      line-height: 1.65;
+      margin-bottom: 40px;
+    }
+    .hero-tagline strong { color: white; font-weight: 700; }
+    .hero-badges { display: flex; flex-wrap: wrap; gap: 12px; }
+    .hero-badge {
+      background: rgba(255,255,255,0.12);
+      border-radius: 8px;
+      padding: 10px 16px;
+    }
+    .badge-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.55);
+      margin-bottom: 2px;
+    }
+    .badge-value {
+      font-size: 14px;
+      font-weight: 500;
+      color: white;
+    }
+    .badge-value a {
+      color: white;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(255,255,255,0.4);
+      transition: border-color 0.2s;
+    }
+    .badge-value a:hover { border-color: white; }
+
+    .hero-photo-wrap {
+      width: 260px;
+      height: 320px;
+      border-radius: 8px;
+      overflow: hidden;
+      flex-shrink: 0;
+      background: rgba(255,255,255,0.1);
+      position: relative;
+    }
+    .hero-photo-wrap::after {
+      content: '';
+      position: absolute; inset: 0;
+      border: 2px solid rgba(255,255,255,0.2);
+      border-radius: 8px;
+      pointer-events: none;
+    }
+    .hero-photo-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: center;
+      display: block;
+      background: rgba(255,255,255,0.03);
+    }
+
+    /* ===== STATEMENT ===== */
+    .section-statement { padding: 96px 0; background: var(--bg); }
+    .statement-grid {
+      display: grid;
+      grid-template-columns: 1fr 2.2fr;
+      gap: 80px;
+      align-items: start;
+    }
+    @media (max-width: 780px) { .statement-grid { grid-template-columns: 1fr; gap: 36px; } }
+
+    .statement-lede {
+      font-size: 21px;
+      font-weight: 600;
+      line-height: 1.5;
+      color: var(--primary);
+      padding: 24px 24px 24px 20px;
+      background: #EFF6FF;
+      border-radius: 8px;
+      border-left: 4px solid var(--primary);
+    }
+    .statement-body p {
+      font-size: 16.5px;
+      line-height: 1.85;
+      color: #374151;
+      margin-bottom: 20px;
+    }
+    .statement-body p:last-child { margin-bottom: 0; }
+    .statement-body em { color: var(--primary); font-style: italic; font-weight: 600; }
+
+    /* ===== INTERESTS ===== */
+    .section-interests {
+      padding: 96px 0;
+      background: var(--muted);
+      position: relative;
+      overflow: hidden;
+    }
+    .section-interests::before {
+      content: '';
+      position: absolute; top: -80px; right: -80px;
+      width: 360px; height: 360px; border-radius: 50%;
+      background: rgba(59,130,246,0.05); pointer-events: none;
+    }
+    .interests-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+    @media (max-width: 680px) { .interests-grid { grid-template-columns: 1fr; } }
+
+    .interest-card {
+      border-radius: 8px;
+      padding: 32px;
+      cursor: default;
+      transition: transform 0.2s;
+    }
+    .interest-card:hover { transform: scale(1.02); }
+    .interest-card:nth-child(1) { background: #EFF6FF; }
+    .interest-card:nth-child(1):hover { background: #DBEAFE; }
+    .interest-card:nth-child(2) { background: #ECFDF5; }
+    .interest-card:nth-child(2):hover { background: #D1FAE5; }
+    .interest-card:nth-child(3) { background: #FFFBEB; }
+    .interest-card:nth-child(3):hover { background: #FEF3C7; }
+    .interest-card:nth-child(4) { background: #F5F3FF; }
+    .interest-card:nth-child(4):hover { background: #EDE9FE; }
+
+    .interest-num {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    .interest-card:nth-child(1) .interest-num { color: var(--primary); }
+    .interest-card:nth-child(2) .interest-num { color: var(--secondary); }
+    .interest-card:nth-child(3) .interest-num { color: #D97706; }
+    .interest-card:nth-child(4) .interest-num { color: #7C3AED; }
+
+    .interest-card h3 {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      margin-bottom: 12px;
+      line-height: 1.3;
+    }
+    .interest-card p { font-size: 15px; line-height: 1.72; color: #4B5563; }
+
+    /* ===== PROJECTS ===== */
+    .section-projects { padding: 96px 0; background: var(--bg); }
+
+    .project-item {
+      padding: 56px 0;
+      border-top: 2px solid var(--border);
+    }
+    .project-item:first-of-type { border-top: none; padding-top: 0; }
+
+    .project-header {
+      display: grid;
+      grid-template-columns: 148px 1fr;
+      gap: 48px;
+      margin-bottom: 32px;
+      align-items: start;
+    }
+    @media (max-width: 680px) { .project-header { grid-template-columns: 1fr; gap: 16px; } }
+
+    .project-meta {
+      text-align: center;
+      padding: 20px 14px;
+      border-radius: 8px;
       flex-shrink: 0;
     }
-    .pub-link {
-      display: inline-flex; align-items: center; gap: .3rem;
-      padding: .35rem .75rem;
-      background: var(--tag-bg);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      font-size: .75rem; font-weight: 600;
-      color: var(--accent);
-      white-space: nowrap;
-      transition: all var(--transition);
-      text-decoration: none;
+    .project-meta.blue   { background: #EFF6FF; }
+    .project-meta.green  { background: #ECFDF5; }
+    .project-meta.amber  { background: #FFFBEB; }
+
+    .project-year {
+      font-size: 21px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      margin-bottom: 6px;
     }
-    .pub-link:hover {
-      background: var(--accent);
-      color: #fff;
-      border-color: var(--accent);
-      text-decoration: none;
-    }
-    .pub-year {
-      font-size: .8rem; font-weight: 700; color: var(--text-3);
+    .project-meta.blue .project-year  { color: var(--primary); }
+    .project-meta.green .project-year { color: var(--secondary); }
+    .project-meta.amber .project-year { color: #D97706; }
+
+    .project-role {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #6B7280;
     }
 
-    /* ═══════════════ NOTES / BLOG ═══════════════ */
-    .notes-grid {
+    .project-body h3 {
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      margin-bottom: 6px;
+    }
+    .project-sub {
+      font-size: 15px;
+      color: #6B7280;
+      margin-bottom: 20px;
+      font-style: italic;
+    }
+    .project-body p {
+      font-size: 15.5px;
+      line-height: 1.8;
+      color: #374151;
+      margin-bottom: 14px;
+    }
+    .project-body p:last-child { margin-bottom: 0; }
+    .project-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+    .tag {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      padding: 4px 12px;
+      border-radius: 999px;
+      background: var(--muted);
+      color: #374151;
+    }
+
+    /* Gallery */
+    .project-gallery { margin-top: 32px; }
+    .gallery-featured {
+      width: 100%;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #0F172A;
+      margin-bottom: 12px;
+    }
+    .gallery-featured img {
+      width: 100%;
+      height: auto;
+      max-height: 500px;
+      object-fit: contain;
+      object-position: center;
+      display: block;
+      background: #0F172A;
+    }
+    .gallery-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 1.25rem;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
     }
-    .note-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 1.5rem;
-      display: flex; flex-direction: column;
-      transition: all var(--transition);
+    @media (max-width: 560px) { .gallery-grid { grid-template-columns: 1fr; } }
+
+    .gallery-grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+    @media (max-width: 900px) { .gallery-grid-4 { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 480px) { .gallery-grid-4 { grid-template-columns: 1fr; } }
+
+    .gallery-item {
+      border-radius: 8px;
+      overflow: hidden;
+      background: #0F172A;
+      position: relative;
       cursor: pointer;
+      transition: transform 0.2s;
     }
-    .note-card:hover { box-shadow: var(--shadow); transform: translateY(-3px); }
-    .note-meta {
-      display: flex; align-items: center; justify-content: space-between;
-      margin-bottom: .75rem;
+    .gallery-item:hover { transform: scale(1.02); }
+    .gallery-item img {
+      width: 100%;
+      height: 180px;
+      object-fit: contain;
+      object-position: center;
+      display: block;
+      transition: opacity 0.2s;
+      background: #0F172A;
     }
-    .note-cat {
-      font-size: .7rem; font-weight: 700; letter-spacing: .5px;
-      text-transform: uppercase; color: var(--accent-2);
-    }
-    .note-date { font-size: .75rem; color: var(--text-3); }
-    .note-title {
-      font-size: 1rem; font-weight: 700;
-      color: var(--text); margin-bottom: .5rem;
+    .gallery-item:hover img { opacity: 0.9; }
+    .gallery-item-label {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.82) 0%, transparent 100%);
+      padding: 28px 10px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      color: white;
+      letter-spacing: 0.03em;
       line-height: 1.4;
     }
-    .note-excerpt {
-      font-size: .84rem; color: var(--text-3);
-      line-height: 1.65; flex: 1;
-    }
-    .note-footer {
-      margin-top: 1rem;
-      padding-top: .75rem;
-      border-top: 1px solid var(--border);
-      display: flex; gap: .4rem; flex-wrap: wrap;
+    .gallery-sub-header {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #6B7280;
+      margin: 20px 0 12px;
     }
 
-    /* ═══════════════ FOOTER ═══════════════ */
-    footer {
+    /* ===== EXPERIENCE ===== */
+    .section-experience {
+      padding: 96px 0;
+      background: var(--dark);
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+    .section-experience::before {
+      content: '';
+      position: absolute; top: -100px; right: -100px;
+      width: 400px; height: 400px; border-radius: 50%;
+      background: rgba(16,185,129,0.06); pointer-events: none;
+    }
+    .section-experience .section-title { color: white; }
+    .timeline {
+      position: relative;
+      padding-left: 32px;
+      border-left: 2px solid rgba(255,255,255,0.12);
+    }
+    .tl-entry { position: relative; padding-bottom: 52px; }
+    .tl-entry:last-child { padding-bottom: 0; }
+    .tl-entry::before {
+      content: '';
+      position: absolute;
+      left: -40px; top: 5px;
+      width: 14px; height: 14px;
+      border-radius: 50%;
+      background: var(--secondary);
+    }
+    .tl-when {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--secondary);
+      margin-bottom: 6px;
+    }
+    .tl-entry h4 {
+      font-size: 22px;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 4px;
+      letter-spacing: -0.01em;
+    }
+    .tl-org {
+      font-size: 14px;
+      color: rgba(255,255,255,0.45);
+      margin-bottom: 14px;
+    }
+    .tl-entry p {
+      font-size: 15px;
+      line-height: 1.78;
+      color: rgba(255,255,255,0.72);
+      margin-bottom: 8px;
+    }
+    .tl-highlight {
+      color: var(--secondary) !important;
+      font-style: italic;
+      font-weight: 500;
+    }
+
+    /* ===== EDUCATION ===== */
+    .section-education { padding: 96px 0; background: var(--muted); }
+    .edu-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+    }
+    @media (max-width: 780px) { .edu-grid { grid-template-columns: 1fr; gap: 48px; } }
+
+    .edu-entry {
+      padding: 24px 0;
+      border-top: 2px solid var(--border);
+    }
+    .edu-entry:first-of-type { border-top: none; padding-top: 0; }
+    .edu-degree {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--primary);
+      margin-bottom: 6px;
+    }
+    .edu-degree.amber { color: #D97706; }
+    .edu-degree.green { color: var(--secondary); }
+    .edu-entry h4 {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      margin-bottom: 4px;
+    }
+    .edu-when { font-size: 13px; color: #6B7280; margin-bottom: 10px; }
+    .edu-entry p { font-size: 14.5px; line-height: 1.72; color: #4B5563; }
+
+    /* ===== SKILLS ===== */
+    .section-skills {
+      padding: 96px 0;
+      background: var(--darkest);
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+    .section-skills::after {
+      content: '';
+      position: absolute; bottom: -80px; left: -80px;
+      width: 320px; height: 320px; border-radius: 50%;
+      background: rgba(59,130,246,0.06); pointer-events: none;
+    }
+    .section-skills .section-title { color: white; }
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+    }
+    @media (max-width: 780px) { .skills-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 520px) { .skills-grid { grid-template-columns: 1fr; } }
+
+    .skill-block h5 {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--primary);
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid rgba(255,255,255,0.07);
+    }
+    .skill-block ul { list-style: none; }
+    .skill-block li {
+      font-size: 14px;
+      padding: 7px 0;
+      color: rgba(255,255,255,0.72);
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .skill-block li::before {
+      content: '';
+      display: inline-block;
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--primary);
+      flex-shrink: 0;
+    }
+
+    /* ===== FOOTER ===== */
+    .footer {
+      background: var(--darkest);
+      border-top: 2px solid rgba(255,255,255,0.06);
+      padding: 80px 0 60px;
       text-align: center;
-      padding: 2.5rem 1rem;
-      border-top: 1px solid var(--border);
-      font-size: .8rem; color: var(--text-3);
-      background: var(--surface);
+      color: white;
     }
-    footer a { color: var(--accent); }
-
-    /* ═══════════════ RESPONSIVE ═══════════════ */
-    @media (max-width: 768px) {
-      #about {
-        grid-template-columns: 1fr;
-      }
-      .profile-card {
-        width: 100%;
-        display: grid;
-        grid-template-columns: 120px 1fr;
-      }
-      .profile-avatar { aspect-ratio: auto; height: 120px; }
-      .pub-card { grid-template-columns: 1fr; }
-      .pub-links { flex-direction: row; align-items: flex-start; }
-      .nav-links a { padding: .4rem .55rem; }
+    .footer-mark {
+      font-size: 56px;
+      font-weight: 800;
+      color: var(--primary);
+      letter-spacing: -0.03em;
+      line-height: 1;
+      margin-bottom: 20px;
+    }
+    .footer-tagline {
+      font-size: 18px;
+      color: rgba(255,255,255,0.65);
+      max-width: 560px;
+      margin: 0 auto 36px;
+      line-height: 1.6;
+    }
+    .footer-links { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; }
+    .footer-link {
+      display: inline-block;
+      padding: 14px 32px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      letter-spacing: 0.03em;
+      transition: all 0.2s;
+    }
+    .footer-link.primary { background: var(--primary); color: white; }
+    .footer-link.primary:hover { background: var(--primary-dk); transform: scale(1.05); }
+    .footer-link.outline { border: 2px solid rgba(255,255,255,0.28); color: white; }
+    .footer-link.outline:hover { border-color: white; transform: scale(1.05); }
+    .footer-copy {
+      margin-top: 52px;
+      font-size: 12px;
+      color: rgba(255,255,255,0.25);
+      letter-spacing: 0.04em;
     }
 
-    /* ═══════════════ ANIMATIONS ═══════════════ */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to   { opacity: 1; transform: translateY(0); }
+    /* ===== LIGHTBOX ===== */
+    .lightbox {
+      position: fixed; inset: 0; z-index: 1000;
+      background: rgba(0,0,0,0.92);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
     }
-    .fade-up { animation: fadeUp .5s ease both; }
+    .lightbox.active { opacity: 1; pointer-events: all; }
+    .lightbox img {
+      max-width: 100%;
+      max-height: 88vh;
+      object-fit: contain;
+      border-radius: 8px;
+    }
+    .lightbox-close {
+      position: absolute; top: 20px; right: 24px;
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.1);
+      border: none;
+      color: white;
+      font-size: 18px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+      font-family: 'Outfit', sans-serif;
+    }
+    .lightbox-close:hover { background: rgba(255,255,255,0.22); }
 
-    /* Active section highlight (via JS scroll) */
-    .section-anchor { scroll-margin-top: calc(var(--nav-h) + 1rem); }
+    @media (max-width: 900px) { .nav-links { display: none; } }
+    ::selection { background: var(--primary); color: white; }
   </style>
 </head>
 <body>
 
-<!-- ═══════════════════════════════════════════════════════════
-     NAVIGATION
-     ═══════════════════════════════════════════════════════════ -->
-<nav>
-  <!-- [EDIT: Logo text] -->
-  <div class="nav-logo"><span>NM</span>·Lab</div>
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <img id="lightbox-img" src="" alt="">
+</div>
 
-  <div class="nav-links">
-    <a href="#about"     data-i18n="nav_about">About</a>
-    <a href="#interests" data-i18n="nav_interests">Interests</a>
-    <a href="#research"  data-i18n="nav_research">Research</a>
-    <a href="#notes"     data-i18n="nav_notes">Notes</a>
-  </div>
-
-  <div class="lang-toggle">
-    <button class="lang-btn active" onclick="setLang('en')">EN</button>
-    <button class="lang-btn"        onclick="setLang('zh')">中</button>
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">Lu <span>·</span> Yijun</a>
+    <ul class="nav-links">
+      <li><a href="#statement"><span class="lang-en">Statement</span><span class="lang-zh">研究陈述</span></a></li>
+      <li><a href="#interests"><span class="lang-en">Interests</span><span class="lang-zh">研究方向</span></a></li>
+      <li><a href="#projects"><span class="lang-en">Projects</span><span class="lang-zh">项目</span></a></li>
+      <li><a href="#experience"><span class="lang-en">Experience</span><span class="lang-zh">经历</span></a></li>
+      <li><a href="#education"><span class="lang-en">Education</span><span class="lang-zh">教育</span></a></li>
+      <li><a href="#skills"><span class="lang-en">Skills</span><span class="lang-zh">技能</span></a></li>
+    </ul>
+    <button class="lang-btn" onclick="toggleLang()" id="lang-btn">中文</button>
   </div>
 </nav>
 
-<main>
-
-<!-- ═══════════════════════════════════════════════════════════
-     SECTION 1 · ABOUT / HOME
-     ═══════════════════════════════════════════════════════════ -->
-<section id="about" class="section-anchor">
-  <div class="about-text fade-up">
-    <!-- [EDIT: Your name] -->
-    <div class="about-name">
-      <span class="accent" data-i18n="name">Your Name</span>
-    </div>
-
-    <!-- [EDIT: Role & Institution] -->
-    <div class="about-role" data-i18n="role">Ph.D. Researcher · Medical Imaging</div>
-    <div class="about-inst" data-i18n="inst">
-      Department of Nuclear Medicine, [Your University], [City, Country]
-    </div>
-
-    <!-- [EDIT: Bio paragraphs] -->
-    <div class="about-bio">
-      <p data-i18n="bio1">
-        I am a Ph.D. researcher at the Department of Nuclear Medicine, [Your University],
-        advised by Prof. [Advisor Name]. My research focuses on the intersection of
-        artificial intelligence and nuclear medicine imaging, with a particular emphasis
-        on PET/CT image reconstruction, image quality enhancement, and AI-driven
-        clinical decision support.
-      </p>
-      <p data-i18n="bio2">
-        I am passionate about translating cutting-edge deep learning methods into
-        clinical practice to improve diagnostic accuracy and reduce radiation dose.
-        I welcome collaborations from researchers in medical physics, radiology,
-        and AI. Feel free to reach out!
-      </p>
-    </div>
-
-    <!-- [EDIT: Social links — replace # with your actual URLs] -->
-    <div class="social-links">
-      <a class="social-btn" href="#" target="_blank">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
-        GitHub
-      </a>
-      <a class="social-btn" href="#" target="_blank">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.328 2.002c.53.003 1.067.232 1.457.636l.003.003c.397.41.606.953.594 1.513l-.003 16.696c-.012.558-.225 1.097-.622 1.507l-.003.003c-.4.413-.944.64-1.5.64H2.746c-.558 0-1.103-.228-1.501-.64-.397-.41-.61-.949-.622-1.507V4.154c-.012-.56.197-1.103.594-1.513.39-.404.927-.633 1.457-.636l18.654-.003zM8.33 7.468c-1.035 0-1.875.85-1.875 1.896s.84 1.896 1.875 1.896c1.035 0 1.875-.85 1.875-1.896S9.365 7.468 8.33 7.468zm0 4.79c-2.07 0-3.75 1.696-3.75 3.788v.957h7.5v-.957c0-2.092-1.68-3.788-3.75-3.788zM16.67 11.5h-3.75v1.5h3.75v-1.5zm0-3h-3.75V10h3.75V8.5z"/></svg>
-        Google Scholar
-      </a>
-      <a class="social-btn" href="#" target="_blank">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.338 16.338H13.67V12.16c0-.995-.017-2.277-1.387-2.277-1.389 0-1.601 1.086-1.601 2.207v4.248H8.014v-8.59h2.559v1.174h.037c.356-.675 1.227-1.387 2.526-1.387 2.703 0 3.203 1.778 3.203 4.092v4.711zM5.005 6.575a1.548 1.548 0 11-.003-3.096 1.548 1.548 0 01.003 3.096zm-1.337 9.763H6.34v-8.59H3.667v8.59zM17.668 1H2.328C1.595 1 1 1.581 1 2.298v15.403C1 18.418 1.595 19 2.328 19h15.34c.734 0 1.332-.582 1.332-1.299V2.298C19 1.581 18.402 1 17.668 1z"/></svg>
-        LinkedIn
-      </a>
-      <a class="social-btn" href="#" target="_blank">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-        <span data-i18n="cv">CV / Résumé</span>
-      </a>
-      <a class="social-btn" href="mailto:your@email.com">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,12 2,6"/></svg>
-        <!-- [EDIT: your email] -->
-        your@email.com
-      </a>
-    </div>
-
-    <!-- News / Recent Updates -->
-    <div class="sec-label" data-i18n="news_label">Recent News</div>
-    <div class="news-list" id="news-list">
-      <!-- Populated by JS from NEWS array -->
+<!-- ===== HERO ===== -->
+<section class="hero">
+  <div class="hero-circle-1"></div>
+  <div class="hero-circle-2"></div>
+  <div class="hero-square"></div>
+  <div class="container">
+    <div class="hero-inner">
+      <div>
+        <div class="hero-eyebrow">
+          <span class="lang-en">A researcher in medical imaging</span>
+          <span class="lang-zh">医学影像研究者</span>
+        </div>
+        <div class="hero-name">Lu Yijun</div>
+        <span class="hero-name-cn">卢 逸 君</span>
+        <div class="hero-tagline">
+          <span class="lang-en">Building the bridge between <strong>algorithms</strong> and the <strong>clinic</strong> — through quantitative analysis of nuclear medicine and multi-modal imaging.</span>
+          <span class="lang-zh">在<strong>算法</strong>与<strong>临床</strong>之间架起桥梁——通过核医学与多模态影像的定量分析。</span>
+        </div>
+        <div class="hero-badges">
+          <div class="hero-badge">
+            <div class="badge-label"><span class="lang-en">Field</span><span class="lang-zh">领域</span></div>
+            <div class="badge-value">
+              <span class="lang-en">Biomedical Engineering · Medical Imaging</span>
+              <span class="lang-zh">生物医学工程 · 医学影像</span>
+            </div>
+          </div>
+          <div class="hero-badge">
+            <div class="badge-label"><span class="lang-en">Based in</span><span class="lang-zh">所在地</span></div>
+            <div class="badge-value">
+              <span class="lang-en">Guangzhou, Guangdong</span>
+              <span class="lang-zh">广东 广州</span>
+            </div>
+          </div>
+          <div class="hero-badge">
+            <div class="badge-label">Email</div>
+            <div class="badge-value"><a href="mailto:louisfatcoin@gmail.com">louisfatcoin@gmail.com</a></div>
+          </div>
+          <div class="hero-badge">
+            <div class="badge-label">GitHub</div>
+            <div class="badge-value"><a href="https://github.com/fatcurrency" target="_blank">fatcurrency</a></div>
+          </div>
+        </div>
+      </div>
+      <div class="hero-photo-wrap">
+        <img src="pic/个人网页本人展示照片.png" alt="Lu Yijun">
+      </div>
     </div>
   </div>
+</section>
 
-  <!-- Profile card -->
-  <div class="profile-card fade-up" style="animation-delay:.15s">
-    <!-- [EDIT: Replace the emoji with <img src="photo.jpg" alt="photo"> if you have a photo] -->
-    <div class="profile-avatar">
-      <span>🩺</span>
-      <!-- <img src="photo.jpg" alt="Profile photo"> -->
+<!-- ===== RESEARCH STATEMENT ===== -->
+<section class="section-statement" id="statement">
+  <div class="container">
+    <div class="section-tag">
+      <span class="lang-en">§ I — Research Statement</span>
+      <span class="lang-zh">§ I — 研究陈述</span>
     </div>
-    <div class="profile-info">
-      <!-- [EDIT: Quick-facts] -->
-      <h3 data-i18n="card_name">Your Name (英文名)</h3>
-      <p data-i18n="card_inst">Nuclear Medicine Dept.<br>[Your University]</p>
-      <div class="profile-divider"></div>
-      <div class="profile-stat">
-        <!-- [EDIT: stats] -->
-        <div class="profile-stat-item">
-          <strong id="stat-pubs">12</strong>
-          <span data-i18n="stat_pub">Papers</span>
+    <h2 class="section-title">
+      <span class="lang-en">What I work on, and why.</span>
+      <span class="lang-zh">我的研究方向与动机</span>
+    </h2>
+    <div class="statement-grid">
+      <div class="statement-lede">
+        <span class="lang-en">I am drawn to the moment where a quantitative measurement becomes a clinical decision — and to the engineering problems that lie between them.</span>
+        <span class="lang-zh">我着迷于那个定量测量转化为临床决策的时刻——以及横亘其间的工程问题。</span>
+      </div>
+      <div class="statement-body">
+        <div class="lang-en-block">
+          <p>My path began in automation engineering, where I learned to think in systems — signals in, decisions out. During my master's at Southern Medical University, that habit of mind found a richer subject: the human body imaged through PET, CT, and MR. I came to see medical images not as pictures, but as <em>spatially resolved physiological measurements</em>, and the analyst's task as preserving the integrity of that measurement from acquisition to clinical interpretation.</p>
+          <p>Working on a PET/CT post-processing platform for myocardial perfusion and metabolism, and later on a multi-modal 3D reconstruction system, I became fascinated by problems that sit between pure computer vision and clinical reality: how to make automated segmentation robust enough to trust, how to fuse anatomy and function in a way clinicians actually reason with, how to turn a 4D image into a quantitative trend rather than a movie.</p>
+          <p>Since joining the Department of Nuclear Medicine at Guangdong Provincial People's Hospital as a technologist, I have been on the other side of this equation — running scanners, performing QC, and seeing how analytical tools succeed or fail in daily clinical use. This experience is shaping the questions I most want to pursue in doctoral research: <em>quantitative nuclear medicine imaging, AI-assisted functional image analysis, and the design of clinically grounded image processing systems</em>. I am actively seeking a Ph.D. position where I can continue this line of work.</p>
         </div>
-        <div class="profile-stat-item">
-          <strong>3</strong>
-          <span data-i18n="stat_proj">Projects</span>
-        </div>
-        <div class="profile-stat-item">
-          <strong>2026</strong>
-          <span data-i18n="stat_grad">Expected</span>
+        <div class="lang-zh-block">
+          <p>我的研究起点是自动化工程——在那里，我学会了以系统思维思考问题：信号输入，决策输出。在南方医科大学攻读硕士期间，这种思维方式找到了更丰富的研究对象：通过PET、CT和MR呈现的人体图像。我逐渐认识到，医学影像不仅仅是图片，而是<em>空间分辨率的生理测量</em>，而分析者的任务是从采集到临床解读全程保持测量数据的完整性。</p>
+          <p>在参与心肌灌注与代谢的PET/CT后处理平台开发，以及后续多模态三维重建系统的工作中，我开始着迷于纯计算机视觉与临床现实之间的问题：如何使自动分割足够可靠以值得信赖，如何以临床医生实际思考的方式融合解剖与功能信息，如何将4D图像转化为定量趋势而非简单的动态影像。</p>
+          <p>加入广东省人民医院核医学科担任技师后，我站在了这一方程式的另一侧——操作扫描仪、执行质控，亲眼见证分析工具在日常临床中的成功与局限。这段经历正在塑造我最希望在博士研究中深入探索的问题：<em>定量核医学影像、AI辅助功能影像分析，以及临床导向的影像处理系统设计</em>。我正积极寻求博士研究机会，以延续这一研究方向。</p>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════════════════
-     SECTION 2 · RESEARCH INTERESTS
-     ═══════════════════════════════════════════════════════════ -->
-<section id="interests" class="section-anchor">
-  <div class="sec-label" data-i18n="int_label">Focus Areas</div>
-  <div class="sec-title" data-i18n="int_title">Research <em>Interests</em></div>
+<!-- ===== RESEARCH INTERESTS ===== -->
+<section class="section-interests" id="interests">
+  <div class="container">
+    <div class="section-tag">
+      <span class="lang-en">§ II — Research Interests</span>
+      <span class="lang-zh">§ II — 研究方向</span>
+    </div>
+    <h2 class="section-title">
+      <span class="lang-en">Directions I want to pursue.</span>
+      <span class="lang-zh">我希望深入探索的方向</span>
+    </h2>
+    <div class="interests-grid">
 
-  <div class="interests-grid" id="interests-grid">
-    <!-- Populated by JS from INTERESTS array -->
+      <div class="interest-card">
+        <div class="interest-num">— I —</div>
+        <h3>
+          <span class="lang-en">Quantitative Nuclear Medicine Imaging</span>
+          <span class="lang-zh">定量核医学影像</span>
+        </h3>
+        <p>
+          <span class="lang-en">Robust quantification of perfusion, metabolism, and tracer kinetics from PET/CT and SPECT data — with particular attention to reproducibility, motion correction, and the gap between research-grade and clinical-grade pipelines.</span>
+          <span class="lang-zh">从PET/CT和SPECT数据中对灌注、代谢和示踪剂动力学进行稳健定量——特别关注可重复性、运动校正，以及研究级与临床级处理流程之间的差距。</span>
+        </p>
+      </div>
+
+      <div class="interest-card">
+        <div class="interest-num">— II —</div>
+        <h3>
+          <span class="lang-en">Deep Learning for Functional Imaging</span>
+          <span class="lang-zh">功能影像的深度学习</span>
+        </h3>
+        <p>
+          <span class="lang-en">Application of CNN and U-Net family architectures to segmentation, lesion detection, and parametric mapping in low-signal, low-resolution modalities where data is scarce and physics-aware priors matter.</span>
+          <span class="lang-zh">将CNN和U-Net系列架构应用于低信号、低分辨率模态中的分割、病灶检测和参数映射——这些模态数据稀缺，且物理先验知识至关重要。</span>
+        </p>
+      </div>
+
+      <div class="interest-card">
+        <div class="interest-num">— III —</div>
+        <h3>
+          <span class="lang-en">Multi-modal Image Fusion & 3D Visualization</span>
+          <span class="lang-zh">多模态图像融合与三维可视化</span>
+        </h3>
+        <p>
+          <span class="lang-en">Registration and joint interpretation of PET / CT / MR — including 4D dynamic series — to support clinical reasoning that crosses anatomy and function. Especially interested in cardiac and oncologic applications.</span>
+          <span class="lang-zh">PET/CT/MR的配准与联合解读——包括4D动态序列——以支持跨越解剖与功能边界的临床推理。尤其关注心脏和肿瘤学应用。</span>
+        </p>
+      </div>
+
+      <div class="interest-card">
+        <div class="interest-num">— IV —</div>
+        <h3>
+          <span class="lang-en">Clinically-grounded Imaging Software</span>
+          <span class="lang-zh">临床导向的影像软件</span>
+        </h3>
+        <p>
+          <span class="lang-en">The engineering of medical image processing systems that survive contact with the clinic: DICOM-faithful pipelines, real-time interaction, validation against ground truth, and workflows that respect how clinicians actually read images.</span>
+          <span class="lang-zh">开发能够在临床环境中经受考验的医学图像处理系统：忠于DICOM标准的处理流程、实时交互、对照真值的验证，以及符合临床医生实际阅片习惯的工作流程。</span>
+        </p>
+      </div>
+
+    </div>
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════════════════
-     SECTION 3 · RESEARCH / PUBLICATIONS
-     ═══════════════════════════════════════════════════════════ -->
-<section id="research" class="section-anchor">
-  <div class="sec-label" data-i18n="pub_label">Selected Works</div>
-  <div class="sec-title" data-i18n="pub_title">Research & <em>Publications</em></div>
+<!-- ===== PROJECTS ===== -->
+<section class="section-projects" id="projects">
+  <div class="container">
+    <div class="section-tag">
+      <span class="lang-en">§ III — Research Projects</span>
+      <span class="lang-zh">§ III — 研究项目</span>
+    </div>
+    <h2 class="section-title">
+      <span class="lang-en">Selected work.</span>
+      <span class="lang-zh">代表性项目</span>
+    </h2>
 
-  <div class="pub-filters" id="pub-filters">
-    <!-- Populated by JS -->
-  </div>
-  <div class="pub-list" id="pub-list">
-    <!-- Populated by JS from PUBLICATIONS array -->
+    <!-- Project 1 -->
+    <div class="project-item">
+      <div class="project-header">
+        <div class="project-meta blue">
+          <div class="project-year">2024—25</div>
+          <div class="project-role">
+            <span class="lang-en">Core Developer</span>
+            <span class="lang-zh">核心开发者</span>
+          </div>
+        </div>
+        <div class="project-body">
+          <h3>
+            <span class="lang-en">PET/CT Post-processing for Myocardial Perfusion &amp; Metabolism</span>
+            <span class="lang-zh">PET 心肌医学影像分析平台</span>
+          </h3>
+          <div class="project-sub">
+            <span class="lang-en">Quantitative analysis pipeline for cardiac nuclear medicine</span>
+            <span class="lang-zh">心脏核医学定量分析处理平台</span>
+          </div>
+          <div class="lang-en-block">
+            <p>Designed a full PET/CT post-processing workflow targeting cardiac applications — from DICOM ingestion and pre-processing (cropping, reorientation) to deep-learning-assisted automatic/semi-automatic myocardial segmentation.</p>
+            <p>Built a quantification module computing myocardial blood flow, automatically identifying ischemic regions and grading their severity, and tracking perfusion change across multiple time points. Integrated joint analysis of PET perfusion and metabolic images, with bull's-eye plots, 3D myocardial reconstructions, and time-curve visualizations to support clinical reading of metabolic abnormalities.</p>
+          </div>
+          <div class="lang-zh-block">
+            <p>设计了完整的PET/CT心脏应用后处理工作流——从DICOM摄取和预处理（裁剪、重定向）到深度学习辅助的自动/半自动心肌分割。</p>
+            <p>构建了心肌血流量化模块，自动识别缺血区域并对其严重程度进行分级，追踪多个时间点的灌注变化。集成了PET灌注和代谢图像的联合分析，包括靶心图、心肌三维重建和时间曲线可视化，以支持代谢异常的临床阅读。</p>
+          </div>
+          <div class="project-tags">
+            <span class="tag">C++</span>
+            <span class="tag">ITK / VTK</span>
+            <span class="tag">Qt</span>
+            <span class="tag">U-Net</span>
+            <span class="tag">DICOM</span>
+            <span class="tag">Cardiac PET</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="project-gallery">
+        <div class="gallery-featured">
+          <img src="pic/（1）PET心肌医学影像分析平台.png" alt="PET Myocardial Analysis Platform — Overview">
+        </div>
+        <div class="gallery-grid">
+          <div class="gallery-item" onclick="openLightbox('pic/（1.1）主界面图像可视化.gif')">
+            <img src="pic/（1.1）主界面图像可视化.gif" alt="Main Interface Visualization">
+            <div class="gallery-item-label">
+              <span class="lang-en">Main Interface Visualization</span>
+              <span class="lang-zh">主界面图像可视化</span>
+            </div>
+          </div>
+          <div class="gallery-item" onclick="openLightbox('pic/（1.2）静态心脏靶心图处理.gif')">
+            <img src="pic/（1.2）静态心脏靶心图处理.gif" alt="Static Cardiac Bull's-Eye Plot">
+            <div class="gallery-item-label">
+              <span class="lang-en">Static Cardiac Bull's-Eye Processing</span>
+              <span class="lang-zh">静态心脏靶心图处理</span>
+            </div>
+          </div>
+          <div class="gallery-item" onclick="openLightbox('pic/（1.3）静息-负荷靶心图对比分析.gif')">
+            <img src="pic/（1.3）静息-负荷靶心图对比分析.gif" alt="Rest-Stress Bull's-Eye Comparison">
+            <div class="gallery-item-label">
+              <span class="lang-en">Rest-Stress Bull's-Eye Comparison</span>
+              <span class="lang-zh">静息-负荷靶心图对比分析</span>
+            </div>
+          </div>
+          <div class="gallery-item" onclick="openLightbox('pic/（1.4）心脏门控图像分析.gif')">
+            <img src="pic/（1.4）心脏门控图像分析.gif" alt="Cardiac Gated Image Analysis">
+            <div class="gallery-item-label">
+              <span class="lang-en">Cardiac Gated Image Analysis</span>
+              <span class="lang-zh">心脏门控图像分析</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Project 2 -->
+    <div class="project-item">
+      <div class="project-header">
+        <div class="project-meta green">
+          <div class="project-year">2023—24</div>
+          <div class="project-role">
+            <span class="lang-en">Core Developer</span>
+            <span class="lang-zh">核心开发者</span>
+          </div>
+        </div>
+        <div class="project-body">
+          <h3>
+            <span class="lang-en">Multi-modal 3D Reconstruction &amp; AR Visualization Platform</span>
+            <span class="lang-zh">多模态三维重建与增强现实可视化平台</span>
+          </h3>
+          <div class="project-sub">
+            <span class="lang-en">A general-purpose viewer for PET-CT / MR with 4D support and augmented reality rendering</span>
+            <span class="lang-zh">支持4D成像与增强现实渲染的PET-CT/MR通用影像平台</span>
+          </div>
+          <div class="lang-en-block">
+            <p>Implemented 3D reconstruction, slice-based browsing, volumetric visualization, and interactive manipulation for PET-CT and MR data on top of ITK and VTK. Supported multi-modal fusion display so that annotations and segmentation results overlay correctly across anatomy and function.</p>
+            <p>Extended the system to 4D (time-resolved) imaging, with dynamic loading and frame-by-frame rendering — a prerequisite for analyzing functional and perfusion sequences. Developed an augmented reality rendering layer enabling immersive visualization for clinical education and communication.</p>
+          </div>
+          <div class="lang-zh-block">
+            <p>基于ITK和VTK实现了PET-CT和MR数据的三维重建、切片浏览、体积可视化和交互式操作，支持多模态融合显示，确保注释和分割结果在解剖与功能维度上正确叠加。</p>
+            <p>将系统扩展至4D（时间分辨）影像，实现动态加载和逐帧渲染——这是分析功能和灌注序列的前提。开发了增强现实渲染层，支持沉浸式可视化，用于临床教育和医患沟通。</p>
+          </div>
+          <div class="project-tags">
+            <span class="tag">ITK</span>
+            <span class="tag">VTK</span>
+            <span class="tag">Qt</span>
+            <span class="tag">AR</span>
+            <span class="tag">3D Reconstruction</span>
+            <span class="tag">Image Fusion</span>
+            <span class="tag">4D Imaging</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="project-gallery">
+        <div class="gallery-featured">
+          <img src="pic/（2）增强现实下医学影像渲染平台.png" alt="AR Medical Imaging Rendering Platform — Overview">
+        </div>
+        <div class="gallery-grid">
+          <div class="gallery-item" onclick="openLightbox('pic/（2.1）增强现实下三维医学影像学习.jpg')">
+            <img src="pic/（2.1）增强现实下三维医学影像学习.jpg" alt="AR 3D Medical Imaging Learning">
+            <div class="gallery-item-label">
+              <span class="lang-en">AR 3D Medical Imaging Learning</span>
+              <span class="lang-zh">增强现实下三维医学影像学习</span>
+            </div>
+          </div>
+          <div class="gallery-item" onclick="openLightbox('pic/（2.2）增强现实下PET-CT融合图像.png')">
+            <img src="pic/（2.2）增强现实下PET-CT融合图像.png" alt="AR PET-CT Fusion Image">
+            <div class="gallery-item-label">
+              <span class="lang-en">AR PET-CT Fusion Image</span>
+              <span class="lang-zh">增强现实下 PET-CT 融合图像</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="gallery-sub-header">
+          <span class="lang-en">Imaging Tools — Interactive Demos</span>
+          <span class="lang-zh">影像工具 — 交互演示</span>
+        </div>
+        <div class="gallery-grid-4">
+          <div class="gallery-item" onclick="openLightbox('pic/（3.1）影像工具-PET图像三维渲染.gif')">
+            <img src="pic/（3.1）影像工具-PET图像三维渲染.gif" alt="PET 3D Rendering">
+            <div class="gallery-item-label">
+              <span class="lang-en">PET 3D Volume Rendering</span>
+              <span class="lang-zh">PET 图像三维渲染</span>
+            </div>
+          </div>
+          <div class="gallery-item" onclick="openLightbox('pic/（3.2）影像工具-PET-CT图像融合.gif')">
+            <img src="pic/（3.2）影像工具-PET-CT图像融合.gif" alt="PET-CT Image Fusion">
+            <div class="gallery-item-label">
+              <span class="lang-en">PET-CT Image Fusion</span>
+              <span class="lang-zh">PET-CT 图像融合</span>
+            </div>
+          </div>
+          <div class="gallery-item" onclick="openLightbox('pic/（3.3）影像工具-短轴切片视图下的PET心脏.gif')">
+            <img src="pic/（3.3）影像工具-短轴切片视图下的PET心脏.gif" alt="Short-axis PET Cardiac">
+            <div class="gallery-item-label">
+              <span class="lang-en">Short-axis PET Cardiac Slice</span>
+              <span class="lang-zh">短轴切片视图下的 PET 心脏</span>
+            </div>
+          </div>
+          <div class="gallery-item" onclick="openLightbox('pic/（3.4）影像工具-任意角度视图下的PET心脏.gif')">
+            <img src="pic/（3.4）影像工具-任意角度视图下的PET心脏.gif" alt="Multi-angle PET Cardiac">
+            <div class="gallery-item-label">
+              <span class="lang-en">Multi-angle PET Cardiac View</span>
+              <span class="lang-zh">任意角度视图下的 PET 心脏</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Project 3 -->
+    <div class="project-item">
+      <div class="project-header">
+        <div class="project-meta amber">
+          <div class="project-year">2021—22</div>
+          <div class="project-role">
+            <span class="lang-en">Core Developer</span>
+            <span class="lang-zh">核心开发者</span>
+          </div>
+        </div>
+        <div class="project-body">
+          <h3>
+            <span class="lang-en">Multi-parameter Patient Monitor Display System</span>
+            <span class="lang-zh">多参数患者监护仪显示系统</span>
+          </h3>
+          <div class="project-sub">
+            <span class="lang-en">Real-time waveform rendering for clinical monitoring</span>
+            <span class="lang-zh">临床监护实时波形渲染系统</span>
+          </div>
+          <div class="lang-en-block">
+            <p>Designed the display interface of a multi-parameter monitor using Qt and OpenGL, including waveform-and-parameter region layout and dynamic configuration of line, font, and color properties. Implemented timed waveform refresh and redrawing via Qt's signal–slot mechanism, and integrated communication with the upstream data-acquisition system.</p>
+          </div>
+          <div class="lang-zh-block">
+            <p>使用Qt和OpenGL设计了多参数监护仪的显示界面，包括波形与参数区域布局，以及线条、字体和颜色属性的动态配置。通过Qt的信号槽机制实现了定时波形刷新和重绘，并集成了与上游数据采集系统的通信。</p>
+          </div>
+          <div class="project-tags">
+            <span class="tag">Qt</span>
+            <span class="tag">OpenGL</span>
+            <span class="tag">Real-time UI</span>
+            <span class="tag">Embedded Comm.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════════════════
-     SECTION 4 · PERSONAL NOTES
-     ═══════════════════════════════════════════════════════════ -->
-<section id="notes" class="section-anchor">
-  <div class="sec-label" data-i18n="notes_label">Blog / Notes</div>
-  <div class="sec-title" data-i18n="notes_title">Personal <em>Notes</em></div>
-  <div class="notes-grid" id="notes-grid">
-    <!-- Populated by JS from NOTES array -->
+<!-- ===== EXPERIENCE ===== -->
+<section class="section-experience" id="experience">
+  <div class="container">
+    <div class="section-tag green">
+      <span class="lang-en">§ IV — Experience</span>
+      <span class="lang-zh">§ IV — 工作经历</span>
+    </div>
+    <h2 class="section-title">
+      <span class="lang-en">From algorithm to bedside.</span>
+      <span class="lang-zh">从算法到床旁</span>
+    </h2>
+    <div class="timeline">
+
+      <div class="tl-entry">
+        <div class="tl-when">
+          <span class="lang-en">July 2025 — Present</span>
+          <span class="lang-zh">2025年7月 — 至今</span>
+        </div>
+        <h4>
+          <span class="lang-en">Nuclear Medicine Technologist</span>
+          <span class="lang-zh">核医学技师</span>
+        </h4>
+        <div class="tl-org">
+          <span class="lang-en">Department of Nuclear Medicine, Guangdong Provincial People's Hospital</span>
+          <span class="lang-zh">广东省人民医院 核医学科</span>
+        </div>
+        <div class="lang-en-block">
+          <p>Operating PET/CT and SPECT scanners; acquiring, processing, and quality-controlling nuclear medicine image data in a clinical workflow. Assisting physicians with post-processing and analysis — particularly in myocardial perfusion and tumor metabolism studies — which has deepened my understanding of how imaging biomarkers are actually used in diagnosis and follow-up.</p>
+          <p class="tl-highlight">This direct clinical exposure is the empirical foundation of my doctoral research interests.</p>
+        </div>
+        <div class="lang-zh-block">
+          <p>操作PET/CT和SPECT扫描仪，在临床工作流中采集、处理和质控核医学影像数据。协助医生进行后处理和分析——尤其是心肌灌注和肿瘤代谢研究——这深化了我对影像生物标志物在诊断和随访中实际应用的理解。</p>
+          <p class="tl-highlight">这段直接的临床接触，是我博士研究兴趣的实证基础。</p>
+        </div>
+      </div>
+
+      <div class="tl-entry">
+        <div class="tl-when">
+          <span class="lang-en">July 2024 — Feb 2025</span>
+          <span class="lang-zh">2024年7月 — 2025年2月</span>
+        </div>
+        <h4>
+          <span class="lang-en">Lecturer (Internship)</span>
+          <span class="lang-zh">讲师（实习）</span>
+        </h4>
+        <div class="tl-org">
+          <span class="lang-en">Guangzhou Vocational College of Science and Trade</span>
+          <span class="lang-zh">广州科技贸易职业学院</span>
+        </div>
+        <div class="lang-en-block">
+          <p>Taught courses in the Intelligent Medical Equipment and Health Big Data program, including microcontroller principles and applications, and fundamentals of big data — reinforcing my own technical foundations in embedded systems and data processing.</p>
+        </div>
+        <div class="lang-zh-block">
+          <p>在智能医疗设备与健康大数据专业授课，包括单片机原理与应用、大数据基础——巩固了我在嵌入式系统和数据处理方面的技术基础。</p>
+        </div>
+      </div>
+
+    </div>
   </div>
 </section>
 
-</main>
+<!-- ===== EDUCATION ===== -->
+<section class="section-education" id="education">
+  <div class="container">
+    <div class="section-tag amber">
+      <span class="lang-en">§ V — Education &amp; Recognition</span>
+      <span class="lang-zh">§ V — 教育与荣誉</span>
+    </div>
+    <h2 class="section-title">
+      <span class="lang-en">Academic background.</span>
+      <span class="lang-zh">学术背景</span>
+    </h2>
+    <div class="edu-grid">
+      <div>
+        <div class="edu-entry">
+          <div class="edu-degree">
+            <span class="lang-en">M.Eng. · 2022 — 2025</span>
+            <span class="lang-zh">工程硕士 · 2022 — 2025</span>
+          </div>
+          <h4>
+            <span class="lang-en">Southern Medical University</span>
+            <span class="lang-zh">南方医科大学</span>
+          </h4>
+          <div class="edu-when">
+            <span class="lang-en">Biomedical Engineering — Medical Imaging Science</span>
+            <span class="lang-zh">生物医学工程 — 医学影像学</span>
+          </div>
+          <p>
+            <span class="lang-en">Coursework: Mathematical Statistics &amp; Stochastic Processes, Numerical Analysis, Digital Image Processing, Machine Learning.</span>
+            <span class="lang-zh">课程：数理统计与随机过程、数值分析、数字图像处理、机器学习。</span>
+          </p>
+        </div>
 
-<footer>
-  <!-- [EDIT: footer text] -->
-  <p>
-    <span data-i18n="footer_built">Built with ❤️ by</span>
-    <a href="#about" data-i18n="name">Your Name</a> ·
-    <span data-i18n="footer_copy">© 2025 All rights reserved</span>
-  </p>
+        <div class="edu-entry">
+          <div class="edu-degree">
+            <span class="lang-en">B.Eng. · 2018 — 2022</span>
+            <span class="lang-zh">工学学士 · 2018 — 2022</span>
+          </div>
+          <h4>
+            <span class="lang-en">Guangdong University of Technology</span>
+            <span class="lang-zh">广东工业大学</span>
+          </h4>
+          <div class="edu-when">
+            <span class="lang-en">Automation — Honors / Innovation Class</span>
+            <span class="lang-zh">自动化 — 荣誉/创新班</span>
+          </div>
+          <p>
+            <span class="lang-en">Coursework: Data Structures, Digital &amp; Analog Electronics, Automatic Control Theory, Pattern Recognition. CET-4: 480 · CET-6: 435.</span>
+            <span class="lang-zh">课程：数据结构、数字与模拟电子、自动控制理论、模式识别。英语四级：480 · 英语六级：435。</span>
+          </p>
+        </div>
+      </div>
+
+      <div>
+        <div class="edu-entry">
+          <div class="edu-degree amber">
+            <span class="lang-en">Honors</span>
+            <span class="lang-zh">荣誉</span>
+          </div>
+          <h4>
+            <span class="lang-en">Bronze Medal</span>
+            <span class="lang-zh">铜奖</span>
+          </h4>
+          <div class="edu-when">
+            <span class="lang-en">8th China International "Internet+" Innovation &amp; Entrepreneurship Competition</span>
+            <span class="lang-zh">第八届中国国际"互联网+"大学生创新创业大赛</span>
+          </div>
+          <p>
+            <span class="lang-en">Recognition for an interdisciplinary medical-imaging project combining clinical need analysis with engineering implementation.</span>
+            <span class="lang-zh">该奖项表彰了一个将临床需求分析与工程实现相结合的跨学科医学影像项目。</span>
+          </p>
+        </div>
+
+        <div class="edu-entry">
+          <div class="edu-degree green">
+            <span class="lang-en">Self-portrait</span>
+            <span class="lang-zh">个人特质</span>
+          </div>
+          <h4>
+            <span class="lang-en">How I work</span>
+            <span class="lang-zh">工作风格</span>
+          </h4>
+          <div class="edu-when">
+            <span class="lang-en">A short note</span>
+            <span class="lang-zh">简述</span>
+          </div>
+          <p>
+            <span class="lang-en">Steady and self-directed; comfortable owning a project across its full lifecycle, and equally comfortable translating between engineers and clinicians. I learn new technical stacks quickly and prefer depth over breadth.</span>
+            <span class="lang-zh">沉稳自主，能够驾驭项目的完整生命周期，同时善于在工程师和临床医生之间架起沟通的桥梁。我能快速掌握新的技术栈，更偏向于深度而非广度。</span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SKILLS ===== -->
+<section class="section-skills" id="skills">
+  <div class="container">
+    <div class="section-tag">
+      <span class="lang-en">§ VI — Technical Toolkit</span>
+      <span class="lang-zh">§ VI — 技术工具</span>
+    </div>
+    <h2 class="section-title">
+      <span class="lang-en">Methods &amp; instruments.</span>
+      <span class="lang-zh">技术方法与工具</span>
+    </h2>
+    <div class="skills-grid">
+
+      <div class="skill-block">
+        <h5>
+          <span class="lang-en">Languages &amp; Core</span>
+          <span class="lang-zh">语言与核心技术</span>
+        </h5>
+        <ul>
+          <li><span class="lang-en">C / C++ (advanced)</span><span class="lang-zh">C / C++（高级）</span></li>
+          <li>Python</li>
+          <li><span class="lang-en">CMake build systems</span><span class="lang-zh">CMake 构建系统</span></li>
+          <li><span class="lang-en">Multi-threading</span><span class="lang-zh">多线程编程</span></li>
+          <li><span class="lang-en">Performance optimization</span><span class="lang-zh">性能优化</span></li>
+        </ul>
+      </div>
+
+      <div class="skill-block">
+        <h5>
+          <span class="lang-en">Medical Imaging</span>
+          <span class="lang-zh">医学影像</span>
+        </h5>
+        <ul>
+          <li><span class="lang-en">ITK · VTK (advanced)</span><span class="lang-zh">ITK · VTK（高级）</span></li>
+          <li>OpenCV</li>
+          <li><span class="lang-en">DICOM protocol &amp; parsing</span><span class="lang-zh">DICOM 协议与解析</span></li>
+          <li><span class="lang-en">3D reconstruction</span><span class="lang-zh">三维重建</span></li>
+          <li><span class="lang-en">Multi-modal fusion</span><span class="lang-zh">多模态融合</span></li>
+          <li><span class="lang-en">4D / time-series imaging</span><span class="lang-zh">4D / 时序影像</span></li>
+        </ul>
+      </div>
+
+      <div class="skill-block">
+        <h5>
+          <span class="lang-en">AI &amp; Frameworks</span>
+          <span class="lang-zh">AI 与框架</span>
+        </h5>
+        <ul>
+          <li><span class="lang-en">Deep learning (CNN, U-Net)</span><span class="lang-zh">深度学习（CNN, U-Net）</span></li>
+          <li><span class="lang-en">Model deployment &amp; inference</span><span class="lang-zh">模型部署与推理</span></li>
+          <li><span class="lang-en">C++ / Python inference pipelines</span><span class="lang-zh">C++ / Python 推理流程</span></li>
+          <li><span class="lang-en">Qt cross-platform GUI</span><span class="lang-zh">Qt 跨平台 GUI</span></li>
+          <li><span class="lang-en">OpenGL rendering</span><span class="lang-zh">OpenGL 渲染</span></li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-mark">LYJ</div>
+    <p class="footer-tagline">
+      <span class="lang-en">Open to opportunities in medical imaging, quantitative nuclear medicine, and clinically-grounded AI for image analysis.</span>
+      <span class="lang-zh">欢迎医学影像、定量核医学及临床导向AI影像分析方向的研究机会。</span>
+    </p>
+    <div class="footer-links">
+      <a href="mailto:louisfatcoin@gmail.com" class="footer-link primary">
+        <span class="lang-en">Write to me</span>
+        <span class="lang-zh">联系我</span>
+      </a>
+      <a href="https://github.com/fatcurrency" target="_blank" class="footer-link outline">
+        <span class="lang-en">View code on GitHub</span>
+        <span class="lang-zh">查看 GitHub</span>
+      </a>
+    </div>
+    <div class="footer-copy">
+      <span class="lang-en">China · Guangzhou, 2026</span>
+      <span class="lang-zh">中国 · 广州，2026</span>
+    </div>
+  </div>
 </footer>
 
-
 <script>
-/* ═══════════════════════════════════════════════════════════════════
-   ██████████████████  SITE DATA  ██████████████████
-   ────────────────────────────────────────────────────────────────
-   Edit the objects below to customize your site.
-   ═══════════════════════════════════════════════════════════════════ */
+  let currentLang = 'en';
 
-/* ── i18n strings ──────────────────────────────────────────────── */
-const I18N = {
-  en: {
-    /* Nav */
-    nav_about:     'About',
-    nav_interests: 'Interests',
-    nav_research:  'Research',
-    nav_notes:     'Notes',
-    /* Hero */
-    name:      'Your Name',           // [EDIT]
-    role:      'Ph.D. Researcher · Medical Imaging',  // [EDIT]
-    inst:      'Department of Nuclear Medicine, [Your University], [City, Country]', // [EDIT]
-    bio1:      'I am a Ph.D. researcher at the Department of Nuclear Medicine, [Your University], advised by Prof. [Advisor Name]. My research focuses on the intersection of artificial intelligence and nuclear medicine imaging, with a particular emphasis on PET/CT image reconstruction, image quality enhancement, and AI-driven clinical decision support.',
-    bio2:      'I am passionate about translating cutting-edge deep learning methods into clinical practice to improve diagnostic accuracy and reduce radiation dose. I welcome collaborations from researchers in medical physics, radiology, and AI. Feel free to reach out!',
-    cv:        'CV / Résumé',
-    news_label:'Recent News',
-    /* Card */
-    card_name: 'Your Name',           // [EDIT]
-    card_inst: 'Nuclear Medicine Dept.<br>[Your University]', // [EDIT]
-    stat_pub:  'Papers',
-    stat_proj: 'Projects',
-    stat_grad: 'Expected',
-    /* Sections */
-    int_label: 'Focus Areas',
-    int_title: 'Research Interests',
-    pub_label: 'Selected Works',
-    pub_title: 'Research & Publications',
-    notes_label:'Blog / Notes',
-    notes_title:'Personal Notes',
-    /* Footer */
-    footer_built: 'Built with ❤️ by',
-    footer_copy:  '© 2025 All rights reserved',
-  },
-  zh: {
-    nav_about:     '关于我',
-    nav_interests: '研究方向',
-    nav_research:  '研究成果',
-    nav_notes:     '个人笔记',
-    name:      '你的姓名',            // [EDIT]
-    role:      '博士研究生 · 医学图像',             // [EDIT]
-    inst:      '核医学科，[你的大学]，[城市，国家]', // [EDIT]
-    bio1:      '我是[你的大学]核医学科博士研究生，师从[导师姓名]教授。我的研究聚焦于人工智能与核医学影像的交叉领域，重点方向包括 PET/CT 图像重建、图像质量增强以及基于 AI 的临床辅助决策。',
-    bio2:      '我致力于将前沿深度学习方法应用于临床实践，以提高诊断精度并降低辐射剂量。欢迎来自医学物理、放射科及 AI 领域的研究者合作交流！',
-    cv:        '个人简历',
-    news_label:'最新动态',
-    card_name: '你的姓名',            // [EDIT]
-    card_inst: '核医学科<br>[你的大学]',            // [EDIT]
-    stat_pub:  '论文',
-    stat_proj: '项目',
-    stat_grad: '预计毕业',
-    int_label: '研究方向',
-    int_title: '研究兴趣',
-    pub_label: '代表性成果',
-    pub_title: '研究与发表',
-    notes_label:'博客 / 笔记',
-    notes_title:'个人笔记',
-    footer_built: '用 ❤️ 构建 by',
-    footer_copy:  '© 2025 版权所有',
+  function toggleLang() {
+    currentLang = currentLang === 'en' ? 'zh' : 'en';
+    const body = document.body;
+    const btn = document.getElementById('lang-btn');
+    if (currentLang === 'zh') {
+      body.classList.add('zh');
+      btn.textContent = 'English';
+      document.documentElement.lang = 'zh-CN';
+    } else {
+      body.classList.remove('zh');
+      btn.textContent = '中文';
+      document.documentElement.lang = 'en';
+    }
   }
-};
 
-/* ── News / Updates ─────────────────────────────────────────────
-   [EDIT] Add your news items. Each item: { date, en, zh }
-   ─────────────────────────────────────────────────────────────── */
-const NEWS = [
-  {
-    date: '2025.05',
-    en: 'Paper accepted at <strong>MICCAI 2025</strong> – Low-dose PET reconstruction with score-based diffusion.',
-    zh: '论文被 <strong>MICCAI 2025</strong> 录用 – 基于 Score-based 扩散模型的低剂量 PET 重建。'
-  },
-  {
-    date: '2025.03',
-    en: 'Awarded the <strong>National Scholarship</strong> for Outstanding Ph.D. Students.',
-    zh: '荣获<strong>博士研究生国家奖学金</strong>。'
-  },
-  {
-    date: '2024.11',
-    en: 'Gave an oral presentation at <strong>RSNA 2024</strong>, Chicago.',
-    zh: '在芝加哥 <strong>RSNA 2024</strong> 年会作口头报告。'
-  },
-  {
-    date: '2024.09',
-    en: 'Started a research visit at [Collaborating Institution].',
-    zh: '开始在[合作机构]进行访学交流。'
-  },
-];
-
-/* ── Research Interests ─────────────────────────────────────────
-   [EDIT] Change icon (emoji), title, description
-   ─────────────────────────────────────────────────────────────── */
-const INTERESTS = [
-  {
-    icon: '🫁',
-    en: { title: 'PET/CT Image Reconstruction',
-          desc: 'Deep learning-based iterative and analytical reconstruction methods for low-dose and ultra-fast PET/CT acquisition.' },
-    zh: { title: 'PET/CT 图像重建',
-          desc: '基于深度学习的迭代与解析重建方法，面向低剂量与超快速 PET/CT 采集。' }
-  },
-  {
-    icon: '🧠',
-    en: { title: 'AI-Enhanced Image Quality',
-          desc: 'Generative models and diffusion-based approaches for noise reduction, super-resolution, and artifact correction in nuclear medicine images.' },
-    zh: { title: 'AI 图像质量增强',
-          desc: '利用生成模型与扩散方法实现核医学图像的降噪、超分辨率及伪影校正。' }
-  },
-  {
-    icon: '🔬',
-    en: { title: 'Quantitative Imaging Biomarkers',
-          desc: 'Automated segmentation and SUV-based quantification for oncology, neurology, and cardiology applications.' },
-    zh: { title: '定量影像生物标志物',
-          desc: '面向肿瘤、神经与心脏应用的自动分割及基于 SUV 的定量分析。' }
-  },
-  {
-    icon: '🩻',
-    en: { title: 'Multi-modal Image Fusion',
-          desc: 'Cross-modal synthesis and registration between PET, CT, MRI, and SPECT for comprehensive diagnostic workflows.' },
-    zh: { title: '多模态图像融合',
-          desc: 'PET、CT、MRI 与 SPECT 之间的跨模态合成与配准，助力综合诊断流程。' }
-  },
-  {
-    icon: '⚕️',
-    en: { title: 'Clinical AI Decision Support',
-          desc: 'Explainable AI systems assisting physicians in diagnosis, staging, and treatment response evaluation.' },
-    zh: { title: '临床 AI 辅助决策',
-          desc: '可解释 AI 系统辅助医生进行诊断、分期及治疗反应评估。' }
-  },
-  {
-    icon: '📡',
-    en: { title: 'Radiation Dose Reduction',
-          desc: 'Protocol optimization and post-processing techniques to minimize patient radiation exposure while maintaining diagnostic image quality.' },
-    zh: { title: '辐射剂量优化',
-          desc: '通过扫描协议优化与后处理技术，在保持诊断质量的同时最大限度降低辐射剂量。' }
-  },
-];
-
-/* ── Publications ───────────────────────────────────────────────
-   [EDIT] Add your papers. Fields:
-     year, venue (e.g. "MICCAI 2025"), type ("Conference" | "Journal" | "Preprint")
-     title_en, title_zh, authors (use **Your Name** for bold)
-     tags: array of strings
-     links: array of { label, url }
-   ─────────────────────────────────────────────────────────────── */
-const PUBLICATIONS = [
-  {
-    year: 2025,
-    venue: 'MICCAI 2025',
-    type: 'Conference',
-    title_en: 'Score-Based Diffusion Models for Low-Dose PET Reconstruction with Anatomical Prior',
-    title_zh: '基于 Score 扩散模型结合解剖先验的低剂量 PET 重建',
-    authors: '**Your Name**, Collaborator A, Collaborator B, Prof. Advisor',
-    tags: ['PET Reconstruction', 'Diffusion Model', 'Low-dose'],
-    links: [
-      { label: 'Paper', url: '#' },
-      { label: 'Code', url: '#' },
-    ]
-  },
-  {
-    year: 2025,
-    venue: 'Medical Image Analysis',
-    type: 'Journal',
-    title_en: 'Transformer-Based Cross-Modal Synthesis from CT to PET for Radiation Oncology',
-    title_zh: '面向放射肿瘤学的基于 Transformer 的 CT 到 PET 跨模态合成',
-    authors: 'Collaborator A, **Your Name**, Collaborator C, Prof. Advisor',
-    tags: ['Cross-modal Synthesis', 'Transformer', 'Radiation Oncology'],
-    links: [
-      { label: 'Paper', url: '#' },
-      { label: 'Dataset', url: '#' },
-    ]
-  },
-  {
-    year: 2024,
-    venue: 'MICCAI 2024',
-    type: 'Conference',
-    title_en: 'Uncertainty-Aware Lesion Segmentation in Whole-Body PET/CT Scans',
-    title_zh: '全身 PET/CT 扫描中的不确定性感知病灶分割',
-    authors: '**Your Name**, Collaborator D, Prof. Advisor',
-    tags: ['Segmentation', 'Uncertainty Estimation', 'PET/CT'],
-    links: [
-      { label: 'Paper', url: '#' },
-      { label: 'Poster', url: '#' },
-    ]
-  },
-  {
-    year: 2024,
-    venue: 'European Journal of Nuclear Medicine',
-    type: 'Journal',
-    title_en: 'Deep Learning-Driven SUVmax Standardization Across Multi-Center PET Datasets',
-    title_zh: '多中心 PET 数据集 SUVmax 深度学习标准化方法',
-    authors: 'Collaborator E, **Your Name**, Collaborator F, Prof. Advisor',
-    tags: ['SUV Quantification', 'Multi-center', 'Standardization'],
-    links: [
-      { label: 'Paper', url: '#' },
-    ]
-  },
-  {
-    year: 2024,
-    venue: 'arXiv',
-    type: 'Preprint',
-    title_en: 'A Survey of Deep Learning Methods in Nuclear Medicine Imaging: From Reconstruction to Diagnosis',
-    title_zh: '深度学习在核医学成像中的应用综述：从重建到诊断',
-    authors: '**Your Name**, Collaborator G, Prof. Advisor',
-    tags: ['Survey', 'Deep Learning', 'Nuclear Medicine'],
-    links: [
-      { label: 'arXiv', url: '#' },
-    ]
-  },
-];
-
-/* ── Personal Notes ─────────────────────────────────────────────
-   [EDIT] Add your blog notes / reading notes
-   ─────────────────────────────────────────────────────────────── */
-const NOTES = [
-  {
-    category_en: 'Paper Reading',
-    category_zh: '论文精读',
-    date: '2025-04-28',
-    title_en: 'Notes on Denoising Diffusion Probabilistic Models (DDPM)',
-    title_zh: 'DDPM 去噪扩散概率模型笔记',
-    excerpt_en: 'A deep dive into Ho et al. 2020, covering forward/reverse processes, the ELBO objective, and how it applies to medical image synthesis.',
-    excerpt_zh: '深入解析 Ho et al. 2020，涵盖前向/逆向过程、ELBO 目标函数，及其在医学图像合成中的应用。',
-    tags: ['Diffusion', 'Generative Model'],
-    url: '#'
-  },
-  {
-    category_en: 'Technical Blog',
-    category_zh: '技术博客',
-    date: '2025-03-15',
-    title_en: 'Setting Up a PET/CT Preprocessing Pipeline with Python',
-    title_zh: '用 Python 搭建 PET/CT 预处理流水线',
-    excerpt_en: 'Step-by-step guide covering DICOM parsing, registration to MNI space, SUV normalization, and data augmentation strategies.',
-    excerpt_zh: '从 DICOM 解析、配准到 MNI 空间、SUV 归一化到数据增强的完整指南。',
-    tags: ['Python', 'DICOM', 'Preprocessing'],
-    url: '#'
-  },
-  {
-    category_en: 'Study Notes',
-    category_zh: '学习笔记',
-    date: '2025-02-20',
-    title_en: 'Understanding Attention Mechanisms for 3D Medical Volumes',
-    title_zh: '3D 医学图像中注意力机制详解',
-    excerpt_en: 'Comparing self-attention, cross-attention, and windowed attention (Swin) for volumetric data — computational trade-offs and practical tips.',
-    excerpt_zh: '对比自注意力、交叉注意力与窗口注意力（Swin）在体积数据上的计算权衡与实用技巧。',
-    tags: ['Transformer', 'Attention', '3D Vision'],
-    url: '#'
-  },
-  {
-    category_en: 'Research Reflection',
-    category_zh: '科研感悟',
-    date: '2025-01-10',
-    title_en: 'How I Approach Reviewer Comments Constructively',
-    title_zh: '如何建设性地回应审稿意见',
-    excerpt_en: 'Personal experience organizing rebuttal documents, responding point-by-point, and using reviewer feedback to genuinely improve papers.',
-    excerpt_zh: '整理 Rebuttal 文件、逐条回应及利用审稿意见真正提升论文质量的个人经验。',
-    tags: ['Academic Writing', 'Rebuttal'],
-    url: '#'
-  },
-  {
-    category_en: 'Paper Reading',
-    category_zh: '论文精读',
-    date: '2024-12-05',
-    title_en: 'nnU-Net: A Self-configuring Method for Deep Learning Segmentation',
-    title_zh: 'nnU-Net：深度学习分割自配置方法详解',
-    excerpt_en: 'Breaking down the nnU-Net framework: automatic preprocessing, architecture search, and why it remains a strong baseline for medical segmentation.',
-    excerpt_zh: '解析 nnU-Net 框架：自动预处理、架构搜索，以及为何其仍是医学分割的强基线。',
-    tags: ['Segmentation', 'nnU-Net', 'Auto-ML'],
-    url: '#'
-  },
-  {
-    category_en: 'Life & PhD',
-    category_zh: '博士生活',
-    date: '2024-11-18',
-    title_en: 'First Time Presenting at RSNA — What I Learned',
-    title_zh: '初次在 RSNA 做报告的收获与反思',
-    excerpt_en: 'Reflections on presenting research internationally, navigating poster sessions, networking with radiologists, and collecting feedback from clinical users.',
-    excerpt_zh: '首次国际会议报告的体会：海报展示、与放射科医生的交流以及收集临床用户反馈。',
-    tags: ['Conference', 'RSNA', 'Networking'],
-    url: '#'
-  },
-];
-
-/* ═══════════════════════════════════════════════════════════════
-   ──────────────  ENGINE (no need to edit below)  ─────────────
-   ═══════════════════════════════════════════════════════════════ */
-
-let currentLang = 'en';
-
-function setLang(lang) {
-  currentLang = lang;
-  document.querySelectorAll('.lang-btn').forEach(b => {
-    b.classList.toggle('active', b.textContent.trim().toLowerCase() === lang ||
-      (lang === 'zh' && b.textContent.includes('中')));
-  });
-  // Update simple i18n elements
-  document.querySelectorAll('[data-i18n]').forEach(el => {
-    const key = el.getAttribute('data-i18n');
-    if (I18N[lang][key] !== undefined) el.innerHTML = I18N[lang][key];
-  });
-  document.getElementById('page-title').textContent =
-    lang === 'zh'
-      ? `${I18N.zh.name} | 核医学研究`
-      : `${I18N.en.name} | Nuclear Medicine Researcher`;
-  // Re-render dynamic sections
-  renderNews();
-  renderInterests();
-  renderPubs(currentFilter);
-  renderNotes();
-}
-
-/* ── News ── */
-function renderNews() {
-  const list = document.getElementById('news-list');
-  list.innerHTML = NEWS.map(n => `
-    <div class="news-item">
-      <span class="news-date">${n.date}</span>
-      <span class="news-text">${currentLang === 'zh' ? n.zh : n.en}</span>
-    </div>
-  `).join('');
-}
-
-/* ── Interests ── */
-function renderInterests() {
-  const grid = document.getElementById('interests-grid');
-  grid.innerHTML = INTERESTS.map(it => {
-    const d = it[currentLang];
-    return `
-      <div class="interest-card">
-        <div class="interest-icon">${it.icon}</div>
-        <h3>${d.title}</h3>
-        <p>${d.desc}</p>
-      </div>`;
-  }).join('');
-}
-
-/* ── Publications ── */
-let currentFilter = 'All';
-function renderPubFilters() {
-  const types = ['All', ...new Set(PUBLICATIONS.map(p => p.type))];
-  const container = document.getElementById('pub-filters');
-  container.innerHTML = types.map(t => `
-    <button class="filter-btn${t === currentFilter ? ' active' : ''}"
-            onclick="filterPubs('${t}')">${t}</button>
-  `).join('');
-}
-function filterPubs(type) {
-  currentFilter = type;
-  document.querySelectorAll('.filter-btn').forEach(b => {
-    b.classList.toggle('active', b.textContent === type);
-  });
-  renderPubs(type);
-}
-function renderPubs(filter) {
-  const list = document.getElementById('pub-list');
-  const filtered = filter === 'All' ? PUBLICATIONS : PUBLICATIONS.filter(p => p.type === filter);
-  list.innerHTML = filtered.map(p => {
-    const title = currentLang === 'zh' ? p.title_zh : p.title_en;
-    const authors = p.authors.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-    const links = p.links.map(l => `<a class="pub-link" href="${l.url}" target="_blank">${l.label}</a>`).join('');
-    const tags = p.tags.map(t => `<span class="pub-tag">${t}</span>`).join('');
-    return `
-      <div class="pub-card">
-        <div>
-          <span class="pub-venue">${p.venue}</span>
-          <div class="pub-title">${title}</div>
-          <div class="pub-authors">${authors}</div>
-          <div class="pub-tags">${tags}</div>
-        </div>
-        <div class="pub-links">
-          <span class="pub-year">${p.year}</span>
-          ${links}
-        </div>
-      </div>`;
-  }).join('');
-}
-
-/* ── Notes ── */
-function renderNotes() {
-  const grid = document.getElementById('notes-grid');
-  grid.innerHTML = NOTES.map(n => {
-    const title = currentLang === 'zh' ? n.title_zh : n.title_en;
-    const excerpt = currentLang === 'zh' ? n.excerpt_zh : n.excerpt_en;
-    const cat = currentLang === 'zh' ? n.category_zh : n.category_en;
-    const tags = n.tags.map(t => `<span class="pub-tag">${t}</span>`).join('');
-    return `
-      <a class="note-card" href="${n.url}" style="color:inherit;text-decoration:none;">
-        <div class="note-meta">
-          <span class="note-cat">${cat}</span>
-          <span class="note-date">${n.date}</span>
-        </div>
-        <div class="note-title">${title}</div>
-        <div class="note-excerpt">${excerpt}</div>
-        <div class="note-footer">${tags}</div>
-      </a>`;
-  }).join('');
-}
-
-/* ── Nav active state on scroll ── */
-function updateNav() {
-  const sections = ['about','interests','research','notes'];
-  let current = 'about';
-  for (const id of sections) {
-    const el = document.getElementById(id);
-    if (el && window.scrollY >= el.offsetTop - 100) current = id;
+  function openLightbox(src) {
+    const lb = document.getElementById('lightbox');
+    const img = document.getElementById('lightbox-img');
+    img.src = src;
+    lb.classList.add('active');
+    document.body.style.overflow = 'hidden';
   }
-  document.querySelectorAll('.nav-links a').forEach(a => {
-    a.classList.toggle('active', a.getAttribute('href') === '#' + current);
-  });
-}
-window.addEventListener('scroll', updateNav, { passive: true });
 
-/* ── Init ── */
-(function init() {
-  renderNews();
-  renderInterests();
-  renderPubFilters();
-  renderPubs('All');
-  renderNotes();
-  updateNav();
-})();
+  function closeLightbox() {
+    const lb = document.getElementById('lightbox');
+    lb.classList.remove('active');
+    document.getElementById('lightbox-img').src = '';
+    document.body.style.overflow = '';
+  }
+
+  document.getElementById('lightbox').addEventListener('click', function(e) {
+    if (e.target === this) closeLightbox();
+  });
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeLightbox();
+  });
 </script>
 </body>
 </html>
