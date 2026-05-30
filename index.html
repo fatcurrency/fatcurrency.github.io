@@ -105,6 +105,29 @@
     }
     .lang-btn:hover { background: var(--primary-dk); transform: scale(1.05); }
 
+    .old-home-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      color: var(--fg);
+      border: 2px solid var(--border);
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      letter-spacing: 0.05em;
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+    .old-home-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+      transform: scale(1.05);
+    }
+
     /* ===== LAYOUT ===== */
     .container { max-width: 1280px; margin: 0 auto; padding: 0 48px; }
     @media (max-width: 768px) {
@@ -747,6 +770,10 @@
       <li><a href="#education"><span class="lang-en">Education</span><span class="lang-zh">教育</span></a></li>
       <li><a href="#skills"><span class="lang-en">Skills</span><span class="lang-zh">技能</span></a></li>
     </ul>
+    <a class="old-home-btn" href="index-old00.html">
+      <span class="lang-en">Old Homepage</span>
+      <span class="lang-zh">旧版主页</span>
+    </a>
     <button class="lang-btn" onclick="toggleLang()" id="lang-btn">中文</button>
   </div>
 </nav>
